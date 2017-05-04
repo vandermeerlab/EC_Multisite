@@ -29,7 +29,7 @@ PARAMS.Subjects = {'R102', 'R104', 'R122', 'R123'}; %list of subjects
 PARAMS.Sub_xpiri = {'R122', 'R123'};  % subjects with electrodes spanning the piriform cortex
 %% Extract the data from each recroding phase within each session and separate pot vs track sections
 
-cd(PARAMS.data_dir) % move to the data folder   
+cd(PARAMS.data_dir) % move to the data folder  
 for iSub = 1:2%:length(PARAMS.Subjects)
     cd([PARAMS.data_dir '\' PARAMS.Subjects{iSub}])
     
