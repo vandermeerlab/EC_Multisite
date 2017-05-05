@@ -25,8 +25,11 @@ cfg= ProcessConfig2(cfg_def, cfg_in);
 
 %% load the data fpr each phase within the session.
 for iPhase = 1:length(PARAMS.Phases)
-    
-    cd([PARAMS.data_dir '\' cfg.fname(1:4) '\' cfg.fname '\' cfg.fname '_' PARAMS.Phases{iPhase}])
+    if isunix
+        cd([PARAMS.data_dir '/' cfg.fname(1:4) '/' cfg.fname '/' cfg.fname '_' PARAMS.Phases{iPhase}])
+    else
+        cd([PARAMS.data_dir '\' cfg.fname(1:4) '\' cfg.fname '\' cfg.fname '_' PARAMS.Phases{iPhase}])
+    end
     LoadExpKeys()
     
     evt= LoadEvents([]);
@@ -117,8 +120,8 @@ for iPhase = 1:length(PARAMS.Phases)
             data.(PARAMS.Phases{iPhase}).PL_trk = restrict(PL_csc,evt.t{start_idx}(trk_idx),evt.t{stop_idx}(trk_idx));
             
         end
-        % PL, NAc, CG, and piriform cortex (PC).  
-        elseif strcmp(ExpKeys.ratID, 'R102')
+        % PL, NAc, CG, and piriform cortex (PC).
+    elseif strcmp(ExpKeys.ratID, 'R102')
         cfg_load = [];
         % get the PL
         cfg_load.fc = ExpKeys.Chan_to_use(1);
@@ -163,6 +166,6 @@ for iPhase = 1:length(PARAMS.Phases)
     cfg_load = [];
     pos = LoadPos(cfg_load);
     data.(PARAMS.Phases{iPhase}).pos.pot = restrict(pos,evt.t{start_idx}(1),evt.t{stop_idx}(1));
-        data.(PARAMS.Phases{iPhase}).pos.trk = restrict(pos,evt.t{start_idx}(2),evt.t{stop_idx}(2));
+    data.(PARAMS.Phases{iPhase}).pos.trk = restrict(pos,evt.t{start_idx}(2),evt.t{stop_idx}(2));
     
 end

@@ -29,9 +29,13 @@ PARAMS.Subjects = {'R102', 'R104', 'R122', 'R123'}; %list of subjects
 PARAMS.Sub_xpiri = {'R122', 'R123'};  % subjects with electrodes spanning the piriform cortex
 %% Extract the data from each recroding phase within each session and separate pot vs track sections
 
-cd(PARAMS.data_dir) % move to the data folder   
-for iSub = 1:2%:length(PARAMS.Subjects)
-    cd([PARAMS.data_dir '\' PARAMS.Subjects{iSub}])
+cd(PARAMS.data_dir) % move to the data folder
+for iSub = 1%:length(PARAMS.Subjects)
+    if isunix
+        cd([PARAMS.data_dir '/' PARAMS.Subjects{iSub}])
+    else
+        cd([PARAMS.data_dir '\' PARAMS.Subjects{iSub}])
+    end
     
     dir_files = dir(); % get all the sessions for the current subject
     dir_files(1:2) = [];
@@ -42,7 +46,7 @@ for iSub = 1:2%:length(PARAMS.Subjects)
         end
     end
     sess_list = cellstr(sess_list);
-    % load the data for each session within the current subject. 
+    % load the data for each session within the current subject.
     for iSess = 1:length(sess_list)
         cfg_loading = [];
         cfg_loading.fname = sess_list{iSess};
@@ -54,5 +58,9 @@ for iSub = 1:2%:length(PARAMS.Subjects)
     end
 end
 
+%% get the gamma event counts per phase
 
+%[Naris, cfg_count] = MS_gamma_count(cfg_count, data)
+
+%% generate PSDs and Coherence metrics
 
