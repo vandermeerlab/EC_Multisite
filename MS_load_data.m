@@ -80,7 +80,7 @@ for iPhase = 1:length(PARAMS.Phases)
         data.(PARAMS.Phases{iPhase}).CG_trk = restrict(CG_csc,evt.t{start_idx}(2),evt.t{stop_idx}(2));
         
         % subjects with PL, OFC, NAc, CG
-    elseif strcmp(ExpKeys.ratID, 'R547607') || strcmp(ExpKeys.ratID, 'R547577') || strcmp(ExpKeys.ratID, 'R102') || strcmp(ExpKeys.ratID, 'R104')
+    elseif strcmp(ExpKeys.ratID, 'R547607') || strcmp(ExpKeys.ratID, 'R547577') || strcmp(ExpKeys.ratID, 'R104')
         cfg_load = [];
         % get the PL
         cfg_load.fc = ExpKeys.Chan_to_use(1);
@@ -167,5 +167,7 @@ for iPhase = 1:length(PARAMS.Phases)
     pos = LoadPos(cfg_load);
     data.(PARAMS.Phases{iPhase}).pos.pot = restrict(pos,evt.t{start_idx}(1),evt.t{stop_idx}(1));
     data.(PARAMS.Phases{iPhase}).pos.trk = restrict(pos,evt.t{start_idx}(2),evt.t{stop_idx}(2));
+    
+    data.(PARAMS.Phases{iPhase}).ExpKeys = ExpKeys;
     
 end

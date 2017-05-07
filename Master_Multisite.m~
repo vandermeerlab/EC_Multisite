@@ -62,8 +62,8 @@ end
 %% get the gamma event counts per phase
 
 for iSub = 1%:length(PARAMS.Subjects)
-    for iSess  = 1:length(fieldnames(data.(PARAMS.Subjects{iSub})))
-        [Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), evts] = MS_extract_gamma([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))); 
+    for iSess  = length(fieldnames(data.(PARAMS.Subjects{iSub})))
+        [Naris, cfg_count] = MS_extract_gamma(cfg,data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))); 
 
     end
 
