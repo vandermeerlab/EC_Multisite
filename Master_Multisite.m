@@ -6,7 +6,13 @@
 %
 
 
-
+% terminology:
+%    - subject: each rat used.  Two experiments "multisite" and xpiri
+%       
+%    - session: recording day which included four phases
+%        - phase : recording phases of the naris protocol as "pre", "ipsi",
+%                  "contra", "post"
+%   
 
 %% initialize default PARAMeters
 clear all; close all
@@ -59,9 +65,9 @@ for iSub = 1%:length(PARAMS.Subjects)
 end
 
 
-%% get the gamma event counts per phase
+%% get the gamma event counts per recording phase
 
-for iSub = 1%:length(PARAMS.Subjects)
+for iSub = 2%:length(PARAMS.Subjects)
     for iSess  = 1:length(fieldnames(data.(PARAMS.Subjects{iSub})))
         [Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), evts] = MS_extract_gamma([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))); 
 
@@ -69,7 +75,12 @@ for iSub = 1%:length(PARAMS.Subjects)
 
 end
 %% generate PSDs 
+for iSub = 1%:length(PARAMS.Subjects)
+    for iSess  = 1:length(fieldnames(data.(PARAMS.Subjects{iSub})))
+        Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_collect_psd([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))); 
 
+    end
+end
 
 %% Get the phase coherence metrics
 

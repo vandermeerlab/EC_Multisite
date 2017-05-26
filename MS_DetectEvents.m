@@ -29,7 +29,7 @@ cfg_def.spindle_thr = 4; % z-score of spindle band envelope must be smaller than
 
 cfg = ProcessConfig2(cfg_def, cfg_in);
 % some flags to enable visualization
-debug = 0; debug2 = 1;
+debug = 0; debug2 = 0;
 
 %% main loop over sessions
 
@@ -51,7 +51,7 @@ evt_artif = ResizeIV(cfg_temp,evt_artif);
 if debug
     cfg_plot.display = 'tsd'; % tsd, iv
     PlotTSDfromIV(cfg_plot,evt_artif,csc);
-    pause; close all;
+    pause(2); close all;
 end
 
 %% NaN out artifacts to improve reliability of subsequent z-scoring
@@ -74,7 +74,7 @@ evt_chew = ResizeIV(cfg_temp,evt_chew);
 if debug
     cfg_plot.display = 'tsd'; % tsd, iv
     PlotTSDfromIV(cfg_plot,evt_chew,csc);
-    pause; close all;
+    pause(2); close all;
 end
 
 %% NaN out artifacts to improve reliability of subsequent z-scoring
@@ -96,7 +96,7 @@ evt_spindl = ResizeIV(cfg_temp,evt_spindl);
 if debug
     cfg_plot.display = 'tsd'; % tsd, iv
     PlotTSDfromIV(cfg_plot,evt_spindl,csc);
-    pause; close all;
+    pause(2); close all;
 end
 
 %% now, loop over frequency bands to process
@@ -126,7 +126,7 @@ for iFreq = 1:length(cfg.f_label)
     if debug
         cfg_plot = []; cfg_plot.display = 'iv'; cfg_plot.mode = 'center'; cfg_plot.width = 0.2;
         PlotTSDfromIV(cfg_plot,evt,csc);
-        pause; close all;
+        pause(2); close all;
     end
     
     %% remove artifacts
@@ -241,7 +241,7 @@ if isempty(evt.tstart) ==0
         % raw LFP only
         cfg_plot = []; cfg_plot.display = 'iv'; cfg_plot.mode = 'center'; cfg_plot.width = 0.2; cfg_plot.title = 'mean_filt';
         PlotTSDfromIV(cfg_plot,evt,csc);
-        pause; close all;
+        pause(2); close all;
     end
         % TFR version
         %             cfg_convert = []; cfg_convert.mode = 'resample';
