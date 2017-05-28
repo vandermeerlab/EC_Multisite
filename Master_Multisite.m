@@ -84,3 +84,7 @@ end
 
 %% Get the phase coherence metrics
 
+%% plot the PSDs
+
+[PSD_plot_out] = MS_plot_psd([], Naris)
+
