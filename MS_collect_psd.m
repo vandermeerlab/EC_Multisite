@@ -1,4 +1,4 @@
-function out = MS_collect_psd(cfg_in, MS_data_in)
+function MS_data_in = MS_collect_psd(cfg_in, MS_data_in)
 %%MS_collect_psd: Collects the psd values for each phase and recording
 %    site.  
 %

@@ -8,11 +8,11 @@
 
 % terminology:
 %    - subject: each rat used.  Two experiments "multisite" and xpiri
-%       
+%
 %    - session: recording day which included four phases
 %        - phase : recording phases of the naris protocol as "pre", "ipsi",
 %                  "contra", "post"
-%   
+%
 
 %% initialize default PARAMeters
 clear all; close all
@@ -36,7 +36,7 @@ PARAMS.Sub_xpiri = {'R122', 'R123'};  % subjects with electrodes spanning the pi
 %% Extract the data from each recroding phase within each session and separate pot vs track sections
 
 cd(PARAMS.data_dir) % move to the data folder
-for iSub = 1%:length(PARAMS.Subjects)
+for iSub = 1:length(PARAMS.Subjects)
     if isunix
         cd([PARAMS.data_dir '/' PARAMS.Subjects{iSub}])
     else
@@ -56,7 +56,7 @@ for iSub = 1%:length(PARAMS.Subjects)
     for iSess = 1:length(sess_list)
         cfg_loading = [];
         cfg_loading.fname = sess_list{iSess};
-        [data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_loading] = MS_load_data(cfg_loading);
+        [data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_loading] = MS_load_data_fast(cfg_loading);
     end
     % ensure the correct number of sessions exist per rat
     if length(fieldnames(data.(PARAMS.Subjects{iSub}))) ~=4
@@ -66,19 +66,21 @@ end
 
 
 %% get the gamma event counts per recording phase
-
-for iSub = 2%:length(PARAMS.Subjects)
-    for iSess  = 1:length(fieldnames(data.(PARAMS.Subjects{iSub})))
-        [Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), evts] = MS_extract_gamma([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))); 
-
+for iSub = 1:length(PARAMS.Subjects)-2
+    sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
+    for iSess  = 1:length(sess_list)
+        
+        [Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), evts] = MS_extract_gamma([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+        
     end
-
+    
 end
-%% generate PSDs 
-for iSub = 1%:length(PARAMS.Subjects)
-    for iSess  = 1:length(fieldnames(data.(PARAMS.Subjects{iSub})))
-        Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_collect_psd([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))); 
-
+%% generate PSDs
+for iSub = 1:length(PARAMS.Subjects)-2
+    sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
+    for iSess  = 1:1:length(sess_list)
+        Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_collect_psd([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+        
     end
 end
 

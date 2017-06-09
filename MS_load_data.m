@@ -161,6 +161,55 @@ for iPhase = 1:length(PARAMS.Phases)
             data.(PARAMS.Phases{iPhase}).PL_trk = restrict(PL_csc,evt.t{start_idx}(trk_idx),evt.t{stop_idx}(trk_idx));
             
         end
+        
+        elseif strcmp(ExpKeys.ratID, 'R122') || strcmp(ExpKeys.ratID, 'R123')
+        cfg_load = [];
+        % get the Piri_OFC
+        cfg_load.fc = ExpKeys.Chan_to_use(1);
+        Piri_OFC_csc = LoadCSC(cfg_load);
+        Piri_OFC_csc.data_label = ExpKeys.Chan_to_use_labels{1};
+        % get the OFC
+        cfg_load.fc = ExpKeys.Chan_to_use(2);
+        OFC_csc = LoadCSC(cfg_load);
+        OFC_csc.data_label = ExpKeys.Chan_to_use_labels{2};
+        % get the NAc
+        cfg_load.fc = ExpKeys.Chan_to_use(3);
+        NAc_csc = LoadCSC(cfg_load);
+        NAc_csc.data_label = ExpKeys.Chan_to_use_labels{3};
+        % get the Piri_NAc
+        cfg_load.fc = ExpKeys.Chan_to_use(4);
+        Piri_NAc_csc = LoadCSC(cfg_load);
+        Piri_NAc_csc.data_label = ExpKeys.Chan_to_use_labels{4};
+        %CG
+        cfg_load.fc = ExpKeys.Chan_to_use(5);
+        CG_csc = LoadCSC(cfg_load);
+        CG_csc.data_label = ExpKeys.Chan_to_use_labels{5};
+
+        
+        
+        % split into pot and track.
+        data.(PARAMS.Phases{iPhase}).Piri_OFC_pot = restrict(Piri_OFC_csc,evt.t{start_idx}(1),evt.t{stop_idx}(1));
+        data.(PARAMS.Phases{iPhase}).OFC_pot = restrict(OFC_csc,evt.t{start_idx}(1),evt.t{stop_idx}(1));
+        data.(PARAMS.Phases{iPhase}).NAc_pot = restrict(NAc_csc,evt.t{start_idx}(1),evt.t{stop_idx}(1));
+        data.(PARAMS.Phases{iPhase}).CG_pot = restrict(CG_csc,evt.t{start_idx}(1),evt.t{stop_idx}(1));
+        data.(PARAMS.Phases{iPhase}).Piri_NAc_pot = restrict(Piri_NAc_csc,evt.t{start_idx}(1),evt.t{stop_idx}(1));
+        
+        
+        % collect the data
+        if isempty(trk_idx)
+            data.(PARAMS.Phases{iPhase}).Piri_OFC_trk = restrict(Piri_OFC_csc,evt.t{start_idx}(2),evt.t{stop_idx}(2));
+            data.(PARAMS.Phases{iPhase}).OFC_trk = restrict(OFC_csc,evt.t{start_idx}(2),evt.t{stop_idx}(2));
+            data.(PARAMS.Phases{iPhase}).NAc_trk = restrict(NAc_csc,evt.t{start_idx}(2),evt.t{stop_idx}(2));
+            data.(PARAMS.Phases{iPhase}).CG_trk = restrict(CG_csc,evt.t{start_idx}(2),evt.t{stop_idx}(2));
+            data.(PARAMS.Phases{iPhase}).Piri_NAc_trk = restrict(Piri_NAc_csc,evt.t{start_idx}(2),evt.t{stop_idx}(2));
+        else
+            data.(PARAMS.Phases{iPhase}).Piri_OFC_trk = restrict(Piri_OFC_csc,evt.t{start_idx}(trk_idx),evt.t{stop_idx}(trk_idx));
+            data.(PARAMS.Phases{iPhase}).OFC_trk = restrict(OFC_csc,evt.t{start_idx}(trk_idx),evt.t{stop_idx}(trk_idx));
+            data.(PARAMS.Phases{iPhase}).NAc_trk = restrict(NAc_csc,evt.t{start_idx}(trk_idx),evt.t{stop_idx}(trk_idx));
+            data.(PARAMS.Phases{iPhase}).CG_trk = restrict(CG_csc,evt.t{start_idx}(trk_idx),evt.t{stop_idx}(trk_idx));
+            data.(PARAMS.Phases{iPhase}).Piri_NAc_trk = restrict(Piri_NAc_csc,evt.t{start_idx}(trk_idx),evt.t{stop_idx}(trk_idx));
+            
+        end
     end
     % get the position for each phase
     cfg_load = [];
