@@ -1,4 +1,4 @@
-function MS_data_in = MS_collect_psd(cfg_in, MS_data_in)
+function MS_data_out = MS_collect_psd(cfg_in, MS_data_in)
 %%MS_collect_psd: Collects the psd values for each phase and recording
 %    site.  
 %
@@ -22,7 +22,8 @@ for iPhase = 1:length(phases)
     
     % get the psd for each site. 
     for iSite = 1:length(sites)
-       MS_data_in.(phases{iPhase}).(sites{iSite}).psd = MS_get_psd([], MS_data_in.(phases{iPhase}).(sites{iSite})); 
+       fprintf(['\n' 'Processing Phase: '  phases{iPhase} '  Site: ' sites{iSite}])
+       MS_data_out.(phases{iPhase}).(sites{iSite}).psd = MS_get_psd([], MS_data_in.(phases{iPhase}).(sites{iSite})); 
     end
     
 end
