@@ -75,21 +75,21 @@ end
 
 %% split data into pot and track for faster processing
 for iSub = 1:length(PARAMS.Subjects)
-    sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
+    sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
     for iSess  = 1:length(sess_list)
         for iPhase = 1:length(PARAMS.Phases);
-            data_list = fieldnames(data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}));
+            data_list = fieldnames(Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}));
             for iData = 1:length(data_list)
                 if strfind(data_list{iData}, 'pot')
-                    pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData}) = data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData});
+                    Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData}) = Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData});
                 elseif strfind(data_list{iData}, 'trk')
-                    trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData}) = data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData});
+                    Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData}) = Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData});
                 elseif strfind(data_list{iData}, 'ExpKeys')
-                    pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData}) = data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData});
-                    trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData}) = data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData});
+                    Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData}) = Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData});
+                    Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData}) = Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData});
                 elseif strfind(data_list{iData}, 'pos')
-                    pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData}) = data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData});
-                    trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData}) = data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData});
+                    Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData}) = Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData});
+                    Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData}) = Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).(PARAMS.Phases{iPhase}).(data_list{iData});
                 end
             end
         end
@@ -97,7 +97,6 @@ for iSub = 1:length(PARAMS.Subjects)
     end
 end
 
-save(
 
 %% get the gamma event counts per recording phase
 for iSub = 1:length(PARAMS.Subjects)
