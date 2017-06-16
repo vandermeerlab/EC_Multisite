@@ -23,7 +23,7 @@ if isunix
     PARAMS.data_dir = '/Users/jericcarmichael/Documents/Multisite'; % where to find the raw data
     PARAMS.inter_dir = '/Users/jericcarmichael/Documents/Multisite/Temp'; % where to put intermediate files
     PARAMS.stats_out = '/Users/jericcarmichael/Documents/Multisite/Stats'; % where to put the statistical output .txt
-    PARAMS.code_base_dir = '/Users/jericcarmichael/Documents/GitHub\vandermeerlab/code-matlab/shared'; % where the codebase repo can be found
+    PARAMS.code_base_dir = '/Users/jericcarmichael/Documents/GitHub/vandermeerlab/code-matlab/shared'; % where the codebase repo can be found
     PARAMS.code_MS_dir = '/Users/jericcarmichael/Documents/GitHub/EC_Multisite'; % where the multisite repo can be found
     
 else
