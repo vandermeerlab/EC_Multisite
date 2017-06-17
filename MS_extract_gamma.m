@@ -1,4 +1,4 @@
-function [Naris, evts] = MS_extract_gamma(cfg_in, data)
+function evts = MS_extract_gamma(cfg_in, data)
 
 %% MS_extractgamma : find and extract all the gamma events in an LFP trace
 %
