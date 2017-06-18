@@ -17,7 +17,7 @@ function evts = MS_extract_gamma(cfg_in, data)
 
 
 %% Overall
-cfg_def = []; 
+cfg_def = [];
 cfg_def.debug = 0;
 
 cfg = ProcessConfig2(cfg_def, cfg_in);
@@ -27,7 +27,7 @@ Phases = {'pre', 'ipsi', 'contra', 'post'};
 %% count the gamma event occurance
 % Phases = {'control', 'ipsi', 'contra'};
 sites = fieldnames(data.pre);
-sites = sites(1:end-2); % removes the position data subfield from the list. 
+sites = sites(1:end-2); % removes the position data subfield from the list.
 
 for iSite = 1:length(sites)
     Naris.(sites{iSite}).control = UnionTSD([], data.pre.(sites{iSite}), data.post.(sites{iSite}));
@@ -54,8 +54,12 @@ for iExp = 1:length(exp)
             [evts.(sites{iSite}).(exp{iExp}), ~, evt_thr.(sites{iSite}).control] = MS_DetectEvents_thresholds([], Naris.(sites{iSite}).(exp{iExp}), data.pre.ExpKeys);
         else
             cfg= []; cfg.detect_method = 'raw'; cfg.detect_thr = evt_thr.(sites{iSite}).control;
-            cfg.f_bandpass = {[40 55],[70 85],[40 55], [70 85]};
+            cfg.f_bandpass = {[45 65],[70 90],[45 65], [70 90]};
             [evts.(sites{iSite}).(exp{iExp}), ~, ~] = MS_DetectEvents(cfg, Naris.(sites{iSite}).(exp{iExp}), data.(exp{iExp}).ExpKeys);
+        end
+        bands = fieldnames(evts.(sites{iSite}).(exp{iExp}));
+        for iBand = 1:length(bands)
+            evts.(sites{iSite}).(exp{iExp}).(bands{iBand}).rate = length(evts.(sites{iSite}).(exp{iExp}).(bands{iBand}).tstart)/((Naris.(sites{iSite}).(exp{iExp}).tvec(end)-Naris.(sites{iSite}).(exp{iExp}).tvec(1))/60);
         end
     end
 end
@@ -64,7 +68,7 @@ end
 % %% get the phase lag for each pair
 % pairs = ExpKeys.GoodPairs;
 % type = {'low', 'high'};
-% 
+%
 % if isempty(pairs{1})
 %     for iPhase = 1:length(Phases)
 %         phase_lag_out.(Phases{iPhase}).low = NaN*ones(4,4);
@@ -90,7 +94,7 @@ end
 %                 trials = evts.([site_12{id} '_pot']).(Phases{iPhase}).(type{itype});
 %                 tstart_idx = nearest_idx3(trials.tstart,data.(Phases{iPhase}).([site_12{1} '_pot']).tvec);
 %                 tend_idx = nearest_idx3(trials.tend,data.(Phases{iPhase}).([site_12{1} '_pot']).tvec);
-%                 
+%
 %                 % filter the entire signal
 %                 cfg_filter = [];
 %                 cfg_filter.f = f_bandpass{itype};
@@ -99,7 +103,7 @@ end
 %                 data_in_1 = FilterLFP(cfg_filter, data.(Phases{iPhase}).([site_12{1} '_pot']));
 %                 data_in_2 = FilterLFP(cfg_filter, data.(Phases{iPhase}).([site_12{2} '_pot']));
 %                 Add_ft()
-%                 
+%
 %                 % loop over events and compare the phase of
 %                 for itrial = 1:length(trials.tstart)
 %                     data_in_cycle = restrict( data_in_1, trials.tstart(itrial), trials.tend(itrial));
@@ -115,15 +119,15 @@ end
 %                         continue
 %                     end
 %                     cycle_idx = tstart_idx(itrial):tend_idx(itrial);
-%                     
+%
 %                     [Cxy,F] = cpsd(data_in_1.data(cycle_idx(cycle.prev.idx(1):cycle.next.idx(2))),data_in_2.data(cycle_idx(cycle.prev.idx(1):cycle.next.idx(2))),hamming(cfg.spec_window/2),cfg.spec_window/4,cfg.NFFT,data_in_1.cfg.hdr{1}.SamplingFrequency);
 %                     coh_spec_fake = -angle(Cxy); %higher value means leading. outputs radians
 %                     all_coh_spec.(Phases{iPhase}).(type{itype})(itrial) =circ_mean(coh_spec_fake(nearest(F,cfg_filter.f(1)):nearest(F,cfg_filter.f(2))));
-%                     
+%
 %                     [Cxy,F] = cpsd(data_in_2.data(cycle_idx(cycle.prev.idx(1):cycle.next.idx(2))),data_in_1.data(cycle_idx(cycle.prev.idx(1):cycle.next.idx(2))),hamming(cfg.spec_window/2),cfg.spec_window/4,cfg.NFFT,data_in_1.cfg.hdr{1}.SamplingFrequency);
 %                     coh_spec_fake = -angle(Cxy); %higher value means leading. outputs radians
 %                     all_coh_spec_21.(Phases{iPhase}).(type{itype})(itrial) = circ_mean(coh_spec_fake(nearest(F,cfg_filter.f(1)):nearest(F,cfg_filter.f(2))));
-%                     
+%
 %                 end
 %                 all_coh_spec.(Phases{iPhase}).(type{itype})(all_coh_spec.(Phases{iPhase}).(type{itype})==0) =[];
 %                 all_coh_spec_21.(Phases{iPhase}).(type{itype})(all_coh_spec_21.(Phases{iPhase}).(type{itype})==0) =[];
@@ -151,7 +155,7 @@ end
 %         end
 %     end
 % end
-% 
+%
 % %% make a plot of the gamma events over time of recording for each phase/site
 % count = [];
 % exp = {'control', 'ipsi', 'contra'};
@@ -178,7 +182,7 @@ end
 %             count_H(iSite, iExp) = length(evts.(sites{iSite}).(exp{iExp}).(type{2}).tstart)/((length(Naris.(sites{iSite}).(exp{iExp}).data)/Naris.(sites{iSite}).(exp{iExp}).cfg.hdr{1}.SamplingFrequency)/60);
 %         end
 %         labels{iSite,1} = sites{iSite};
-%         
+%
 %     end
 % end
 % % out = [label'; num2cell(count)]

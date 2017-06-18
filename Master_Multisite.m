@@ -104,9 +104,10 @@ for iSub = 1:length(PARAMS.Subjects)
     for iSess  = 1:length(sess_list)
         [Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))] = MS_extract_gamma([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
     end
-    % summary of naris events
-
 end
+    % summary of naris events
+    
+    stats = MS_gamma_stats([], Events);
 %% generate PSDs
 for iSub = 4%:length(PARAMS.Subjects)-2
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
@@ -120,6 +121,10 @@ end
 %% Get the phase coherence metrics
 
 %% plot the PSDs
-
 [PSD_plot_out] = MS_plot_psd([], Naris);
+
+
+
+%% get an example event from each session and plot all sites together for the same event.  
+
 
