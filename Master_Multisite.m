@@ -109,7 +109,7 @@ end
     
     stats = MS_gamma_stats([], Events);
 %% generate PSDs
-for iSub = 4%:length(PARAMS.Subjects)-2
+for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess  = 1:length(sess_list)
         fprintf(['Session ' sess_list{iSess} '\n'])
@@ -119,6 +119,16 @@ end
 
 
 %% Get the phase coherence metrics
+
+% create pairs of channels for detected events.  
+
+for iSub = 1:length(PARAMS.Subjects)
+    sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
+    for iSess = 1:length(sess_list)
+        [Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))]  = MS_event_pairs([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+    end    
+end
+
 
 %% plot the PSDs
 [PSD_plot_out] = MS_plot_psd([], Naris);
