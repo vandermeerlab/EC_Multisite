@@ -17,7 +17,7 @@ cfg  = ProcessConfig2(cfg_def, cfg_in);
 
 %% calculate the PSD
 
-[out.Pxx, out.F] = pwelch(data_in.data, hanning(cfg.hann_win), cfg.hann_win/2, length(data_in.data), data_in.cfg.hdr{1}.SamplingFrequency);
+[out.Pxx, out.F] = pwelch(data_in.data, hanning(cfg.hann_win), cfg.hann_win/2, length(data_in.data) , data_in.cfg.hdr{1}.SamplingFrequency);
 out.cfg_psd = cfg;
 
 if strcmp(cfg.whitefilter, 'on')
@@ -26,7 +26,8 @@ if strcmp(cfg.whitefilter, 'on')
 end
 
 %% if needed for checking the PSD
-% plot(F, 10*log10(Pxx));
+% figure(100)
+% plot(out.F, 10*log10(out.Pxx));
 % xlim([0 120])
 % hold on
 % plot(White_F, 10*log10(White_Pxx), 'k');

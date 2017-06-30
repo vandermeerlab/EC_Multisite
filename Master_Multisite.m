@@ -45,7 +45,7 @@ cd(PARAMS.data_dir) % move to the data folder
 
 %% Extract the data from each recroding phase within each session and separate pot vs track sections
 
-for iSub = 1:length(PARAMS.Subjects)
+for iSub = 1%:length(PARAMS.Subjects)
     if isunix
         cd([PARAMS.data_dir '/' PARAMS.Subjects{iSub}])
     else
@@ -131,7 +131,7 @@ end
 
 
 %% plot the PSDs
-[PSD_plot_out] = MS_plot_psd([], Naris);
+MS_plot_psd([], Naris);
 
 
 

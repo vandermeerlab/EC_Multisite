@@ -24,13 +24,20 @@ cfg= ProcessConfig2(cfg_def, cfg_in);
 
 
 %% load the data fpr each phase within the session.
+if isunix
+    cd([PARAMS.data_dir '/' cfg.fname(1:4) '/' cfg.fname ])
+else
+    cd([PARAMS.data_dir '\' cfg.fname(1:4) '\' cfg.fname ])
+end
+
+LoadExpKeys()
+%%
 for iPhase = 1:length(PARAMS.Phases)
     if isunix
         cd([PARAMS.data_dir '/' cfg.fname(1:4) '/' cfg.fname '/' cfg.fname '_' PARAMS.Phases{iPhase}])
     else
         cd([PARAMS.data_dir '\' cfg.fname(1:4) '\' cfg.fname '\' cfg.fname '_' PARAMS.Phases{iPhase}])
     end
-    LoadExpKeys()
     
     evt= LoadEvents([]);
     % check to see if I was dumb and didnt stop recording between the pot
@@ -54,6 +61,7 @@ for iPhase = 1:length(PARAMS.Phases)
     % subjects with only OFC, NAc, CG.
     for iChan = 1:length(ExpKeys.Chan_to_use)
         cfg_load.fc = ExpKeys.Chan_to_use(iChan);
+        cfg_load.resample = 2000; 
         csc_out.(ExpKeys.Chan_to_use_labels{iChan}(1:end-1)) = LoadCSC(cfg_load);
         
         
