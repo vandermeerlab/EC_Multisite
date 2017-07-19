@@ -138,3 +138,14 @@ MS_plot_psd([], Naris);
 %% get an example event from each session and plot all sites together for the same event.  
 
 
+%% generate a spectrogram across each session for each site. 
+
+for iSub = 1:length(PARAMS.Subjects)
+    sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
+    for iSess = 1:length(sess_list)
+        MS_spec_fig([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+    end    
+end
+
+
+

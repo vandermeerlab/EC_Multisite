@@ -33,16 +33,16 @@ for iType = 1:length(types)
         end
         for iPhase = 1:length(PARAMS.Phases)
             for iBand = 1:length(bands)
-                evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts = [];
+                %                 evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).pairs = [];
                 % collect the events using the current site
                 if isfield(evts_in.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}), 'evts')
-                evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.(sites{1}) = evts_in.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts; 
-                for iEvt = length(evts_in.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).tstart):-1:1
-                    evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.(sites{2}){iEvt} = restrict(data.(phases{iPhase}).([sites{1} types{iType}]), evts_in.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).tstart(iEvt),evts_in.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).tend(iEvt));
-                end
+                    evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.pairs.(pairs{iPair}).(sites{1}) = evts_in.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts;
+                    for iEvt = length(evts_in.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).tstart):-1:1
+                        evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.pairs.(pairs{iPair}).(sites{2}){iEvt} = restrict(data.(phases{iPhase}).([sites{1} types{iType}]), evts_in.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).tstart(iEvt),evts_in.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).tend(iEvt));
+                    end
                 else
-                   evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.(sites{1}) = {}; 
-                   evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.(sites{2}) = {};
+                    evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.pairs.(pairs{iPair}).(sites{1}) = {};
+                    evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.pairs.(pairs{iPair}).(sites{2}) = {};
                 end
             end
         end
