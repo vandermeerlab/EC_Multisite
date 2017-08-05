@@ -14,7 +14,7 @@ csc = data;
 %% set params
 % gamma event detection
 cfg_def.f_label = {'low','high'};%, 'low_low_tr', 'high_low_tr'};
-cfg_def.f_bandpass = {[45 65],[70 90]};%,[40 55], [70 85]}; % frequency bands for event detection
+cfg_def.f_bandpass = {[40 55],[70 85]};%,[40 55], [70 85]}; % frequency bands for event detection
 cfg_def.detect_thr = [0.95 .95 0.90 .90]; % threshold for event detection: 95th percentile of (amplitude) envelope
 cfg_def.detect_method = 'percentile'; %'raw'; % 'raw', 'zscore', 'percentile'
 cfg_def.detect_nCycles = 4; % require minimum number of gamma cycles
@@ -289,9 +289,6 @@ evts.spindles.firstTimestamp = csc.tvec(1);
 
 for iFreq = 1:length(cfg.f_label)
     fprintf(['\n ' cfg.f_label{iFreq} ' found: ' num2str(length(evts.(cfg.f_label{iFreq}).tstart)) ' events'])
-    for ii = length(evts.(cfg.f_label{iFreq}).tstart):-1:1
-        evts.(cfg.f_label{iFreq}).evts{ii}  = restrict(csc,evts.(cfg.f_label{iFreq}).tstart(ii),evts.(cfg.f_label{iFreq}).tend(ii));
-    end
 end
 
 fprintf(['\nSpindles found:'  num2str(length(evts.spindles.tstart)) ' events'])

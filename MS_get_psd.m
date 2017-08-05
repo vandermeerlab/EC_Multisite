@@ -17,12 +17,12 @@ cfg  = ProcessConfig2(cfg_def, cfg_in);
 
 %% calculate the PSD
 
-[out.Pxx, out.F] = pwelch(data_in.data, hanning(cfg.hann_win), cfg.hann_win/2, length(data_in.data) , data_in.cfg.hdr{1}.SamplingFrequency);
+[out.Pxx, out.F] = pwelch(data_in.data, hanning(cfg.hann_win), cfg.hann_win/2, 2*cfg.hann_win, data_in.cfg.hdr{1}.SamplingFrequency);
 out.cfg_psd = cfg;
 
 if strcmp(cfg.whitefilter, 'on')
     %do the same for the "white filtered" data to remove the 1/f trend
-    [out.White_Pxx, out.White_F] = pwelch(diff(data_in.data), hanning(cfg.hann_win), cfg.hann_win/2, length(diff(data_in.data)), data_in.cfg.hdr{1}.SamplingFrequency);
+    [out.White_Pxx, out.White_F] = pwelch(diff(data_in.data), hanning(cfg.hann_win), cfg.hann_win/2, 2*cfg.hann_win, data_in.cfg.hdr{1}.SamplingFrequency);
 end
 
 %% if needed for checking the PSD

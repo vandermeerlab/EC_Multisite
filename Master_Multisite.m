@@ -35,8 +35,8 @@ else
 end
 
 PARAMS.Phases = {'pre', 'ipsi', 'contra', 'post'}; % recording phases within each session
-PARAMS.Subjects = {'R102', 'R104', 'R122', 'R123'}; %list of subjects
-PARAMS.Sub_xpiri = {'R122', 'R123'};  % subjects with electrodes spanning the piriform cortex
+PARAMS.Subjects = {'R102', 'R104', 'R108', 'R122', 'R123'}; %list of subjects
+PARAMS.Sub_xpiri = {'R108', 'R122', 'R123'};  % subjects with electrodes spanning the piriform cortex
 
 % add the required code
 addpath(genpath(PARAMS.code_base_dir));
@@ -45,7 +45,7 @@ cd(PARAMS.data_dir) % move to the data folder
 
 %% Extract the data from each recroding phase within each session and separate pot vs track sections
 
-for iSub = 1%:length(PARAMS.Subjects)
+for iSub = 3%:length(PARAMS.Subjects)
     if isunix
         cd([PARAMS.data_dir '/' PARAMS.Subjects{iSub}])
     else
@@ -69,12 +69,12 @@ for iSub = 1%:length(PARAMS.Subjects)
     end
     % ensure the correct number of sessions exist per rat
     if length(fieldnames(data.(PARAMS.Subjects{iSub}))) ~=4
-        error('too many sessions for multisite experiment.  Should only contain 4 per rat')
+        error('too many or too few sessions for multisite experiment.  Should only contain 4 per rat')
     end
 end
 
 %% split data into pot and track for faster processing
-for iSub = 1:length(PARAMS.Subjects)
+for iSub = 3%:length(PARAMS.Subjects)
     sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
     for iSess  = 1:length(sess_list)
         for iPhase = 1:length(PARAMS.Phases);
@@ -107,16 +107,20 @@ for iSub = 1:length(PARAMS.Subjects)
 end
     % summary of naris events
     
-%     stats = MS_gamma_stats([], Events);
-%% generate PSDs
-for iSub = 1:length(PARAMS.Subjects)
+    stats = MS_gamma_stats([], Events);
+%% generate PSDs & get the relative power ratios
+for iSub = 3%1:length(PARAMS.Subjects)
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess  = 1:length(sess_list)
         fprintf(['Session ' sess_list{iSess} '\n'])
         Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_collect_psd([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+    
+%         Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio([],Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
     end
 end
 
+%% plot the gamma band power ratios
+MS_plot_power([], Naris);
 
 %% Get the phase coherence metrics
 
@@ -135,8 +139,15 @@ MS_plot_psd([], Naris);
 
 
 
-%% get an example event from each session and plot all sites together for the same event.  
+%% get an example event from each session and plot all sites together for the same event. 
 
+for iSub = 1:length(PARAMS.Subjects)
+% iSess = 1; iSub = 1;     
+sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
+    for iSess = 1:length(sess_list)
+        MS_event_fig([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+    end    
+end
 
 %% generate a spectrogram across each session for each site. 
 
