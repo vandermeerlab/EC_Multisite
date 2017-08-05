@@ -107,7 +107,7 @@ for iSub = 1:length(PARAMS.Subjects)
 end
     % summary of naris events
     
-    stats = MS_gamma_stats([], Events);
+%     stats = MS_gamma_stats([], Events);
 %% generate PSDs
 for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));

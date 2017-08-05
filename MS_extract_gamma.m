@@ -59,7 +59,9 @@ for iExp = 1:length(exp)
         end
         bands = fieldnames(evts.(sites{iSite}).(exp{iExp}));
         for iBand = 1:length(bands)
-            evts.(sites{iSite}).(exp{iExp}).(bands{iBand}).rate = length(evts.(sites{iSite}).(exp{iExp}).(bands{iBand}).tstart)/((Naris.(sites{iSite}).(exp{iExp}).tvec(end)-Naris.(sites{iSite}).(exp{iExp}).tvec(1))/60);
+            % get the rate of gamma events /min using the number of samples
+            % in the time vector for the given phase / Fs
+            evts.(sites{iSite}).(exp{iExp}).(bands{iBand}).rate = length(evts.(sites{iSite}).(exp{iExp}).(bands{iBand}).tstart)/((length(Naris.(sites{iSite}).(exp{iExp}).tvec)/Naris.(sites{iSite}).(exp{iExp}).cfg.hdr{1}.SamplingFrequency)/60);
         end
     end
 end
