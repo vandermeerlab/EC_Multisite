@@ -41,11 +41,11 @@ switch cfg.type
                     xlim([0 120])
                     xlabel('Frequency (Hz)')
                     ylabel('Power')
-                    title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
+%                     title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
                     %legend(PARAMS.Phases)
                     SetFigure([], h_site.(['n' num2str(iSite)]))
                     saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite}], 'png')
-                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite}], 'eps')
+                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite}], 'epsc')
                     close(h_site.(['n' num2str(iSite)]));
                     if strcmp(site_list{iSite}(end-2:end), 'trk')
                         h_all_trk= figure((iSub)*1000 + (iSess));
@@ -83,9 +83,9 @@ switch cfg.type
                     mkdir(PARAMS.inter_dir, sum_dir)
                 end
                 saveas(h_all_pot, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_pot'], 'png')
-                saveas(h_all_pot, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_pot'], 'eps')
+                saveas(h_all_pot, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_pot'], 'epsc')
                 saveas(h_all_trk, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_trk'], 'png')
-                saveas(h_all_trk, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_trk'], 'eps')
+                saveas(h_all_trk, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_trk'], 'epsc')
                 close all
             end
         end
@@ -109,11 +109,11 @@ switch cfg.type
                     xlim([0 120])
                     xlabel('Frequency (Hz)')
                     ylabel('Power')
-                    title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
+%                     title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
                     %legend(PARAMS.Phases)
                     SetFigure([], h_site.(['n' num2str(iSite)]))
                     saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite} '_white'], 'png')
-                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite} '_white'], 'eps')
+                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite} '_white'], 'epsc')
                     close(h_site.(['n' num2str(iSite)]));
                     if strcmp(site_list{iSite}(end-2:end), 'trk')
                         h_all_trk= figure((iSub)*1000 + (iSess));
@@ -151,9 +151,9 @@ switch cfg.type
                     mkdir(PARAMS.inter_dir, sum_dir)
                 end
                 saveas(h_all_pot, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_white_pot'], 'png')
-                saveas(h_all_pot, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_white_pot'], 'eps')
+                saveas(h_all_pot, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_white_pot'], 'epsc')
                 saveas(h_all_trk, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_white_trk'], 'png')
-                saveas(h_all_trk, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_white_trk'], 'eps')
+                saveas(h_all_trk, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_white_trk'], 'epsc')
                 close all
             end
         end
@@ -178,11 +178,11 @@ switch cfg.type
                     xlim([0 120])
                     xlabel('Frequency (Hz)')
                     ylabel('Power')
-                    title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
+%                     title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
                     %legend(PARAMS.Phases)
                     SetFigure([], h_site.(['n' num2str(iSite)]))
                     saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite}], 'png')
-                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite}], 'eps')
+                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite}], 'epsc')
                     close(h_site.(['n' num2str(iSite)]));
                     if strcmp(site_list{iSite}(end-2:end), 'trk')
                         h_all_trk= figure((iSub)*1000 + (iSess));
@@ -220,9 +220,9 @@ switch cfg.type
                     mkdir(PARAMS.inter_dir, sum_dir)
                 end
                 saveas(h_all_pot, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_pot'], 'png')
-                saveas(h_all_pot, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_pot'], 'eps')
+                saveas(h_all_pot, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_pot'], 'epsc')
                 saveas(h_all_trk, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_trk'], 'png')
-                saveas(h_all_trk, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_trk'], 'eps')
+                saveas(h_all_trk, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_trk'], 'epsc')
                 close all
                 
             end
@@ -246,12 +246,12 @@ switch cfg.type
                     xlim([0 120])
                     xlabel('Frequency (Hz)')
                     ylabel('Power')
-                    title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
+%                     title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
                     %legend(PARAMS.Phases)
                     SetFigure([], h_site.(['n' num2str(iSite)]))
-                    Square_subplots
+%                     %Square_subplots
                     saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite} '_white'], 'png')
-                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite} '_white'], 'eps')
+                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite} '_white'], 'epsc')
                     close(h_site.(['n' num2str(iSite)]));
                     if strcmp(site_list{iSite}(end-2:end), 'trk')
                         h_all_trk= figure((iSub)*1000 + (iSess));
@@ -289,9 +289,9 @@ switch cfg.type
                     mkdir(PARAMS.inter_dir, sum_dir)
                 end
                 saveas(h_all_pot, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_white_pot'], 'png')
-                saveas(h_all_pot, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_white_pot'], 'eps')
+                saveas(h_all_pot, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_white_pot'], 'epsc')
                 saveas(h_all_trk, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_white_trk'], 'png')
-                saveas(h_all_trk, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_white_trk'], 'eps')
+                saveas(h_all_trk, [PARAMS.inter_dir sum_dir sess_list{iSess} '_all_white_trk'], 'epsc')
                 close all
             end
         end

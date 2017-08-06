@@ -35,8 +35,8 @@ else
 end
 
 PARAMS.Phases = {'pre', 'ipsi', 'contra', 'post'}; % recording phases within each session
-PARAMS.Subjects = {'R102', 'R104', 'R108', 'R122', 'R123'}; %list of subjects
-PARAMS.Sub_xpiri = {'R108', 'R122', 'R123'};  % subjects with electrodes spanning the piriform cortex
+PARAMS.Subjects = {'R102', 'R104','R107', 'R108', 'R112', 'R122', 'R123'}; %list of subjects
+PARAMS.Sub_xpiri = {'R108', 'R112', 'R122', 'R123'};  % subjects with electrodes spanning the piriform cortex
 
 % add the required code
 addpath(genpath(PARAMS.code_base_dir));
@@ -45,7 +45,7 @@ cd(PARAMS.data_dir) % move to the data folder
 
 %% Extract the data from each recroding phase within each session and separate pot vs track sections
 
-for iSub = 3%:length(PARAMS.Subjects)
+for iSub = 3:5%:length(PARAMS.Subjects)
     if isunix
         cd([PARAMS.data_dir '/' PARAMS.Subjects{iSub}])
     else
@@ -109,7 +109,7 @@ end
     
     stats = MS_gamma_stats([], Events);
 %% generate PSDs & get the relative power ratios
-for iSub = 3%1:length(PARAMS.Subjects)
+for iSub = 3:4%1:length(PARAMS.Subjects)
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess  = 1:length(sess_list)
         fprintf(['Session ' sess_list{iSess} '\n'])
