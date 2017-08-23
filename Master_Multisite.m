@@ -45,7 +45,7 @@ cd(PARAMS.data_dir) % move to the data folder
 
 %% Extract the data from each recroding phase within each session and separate pot vs track sections
 
-for iSub = 3:5%:length(PARAMS.Subjects)
+for iSub = 5%:length(PARAMS.Subjects)
     if isunix
         cd([PARAMS.data_dir '/' PARAMS.Subjects{iSub}])
     else
@@ -115,7 +115,7 @@ for iSub = 3:4%1:length(PARAMS.Subjects)
         fprintf(['Session ' sess_list{iSess} '\n'])
         Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_collect_psd([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
     
-%         Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio([],Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+        Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio([],Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
     end
 end
 
@@ -126,13 +126,16 @@ MS_plot_power([], Naris);
 
 % create pairs of channels for detected events.  
 
-for iSub = 1:length(PARAMS.Subjects)
+for iSub = 1%:length(PARAMS.Subjects)
     sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
-        [Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))]  = MS_event_pairs([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+        [Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), Coh_mat.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))]  = MS_event_pairs([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
     end    
 end
 
+%% plot the COH metrics 
+
+stats_coh =  MS_coh_plot_stats(Coh_mat);
 
 %% plot the PSDs
 MS_plot_psd([], Naris);
