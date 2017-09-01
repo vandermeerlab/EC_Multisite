@@ -10,7 +10,7 @@ function [evts_out, mat_out] = MS_event_pairs(cfg_in, evts_in, mat)
 
 
 cfg_def = [];
-cfg_def.wsize = 2048; % keep in base 2 for speed.
+cfg_def.wsize = 2^12; % keep in base 2 for speed. used for the entire session.  events are done using the length of the data.
 cfg_def.f = [45 65; 70 90];
 cfg = ProcessConfig2(cfg_def, cfg_in);
 
@@ -81,7 +81,7 @@ end
 
 %%
 for iType = 1:length(types)
-    for iPair = 1:length(pairs)
+    for iPair = 5:length(pairs)
         sites = strsplit(pairs{iPair}, '_');
         if length(sites) >2
             newsites{1} = [sites{1} sites{2}];
@@ -98,34 +98,48 @@ for iType = 1:length(types)
                 [x_idx,y_idx] = find(not(cellfun('isempty', idx)));
                 
                 %get the coherence across the entire session for each channel
-                [Coh_temp.c, Coh_temp.f] = mscohere(mat.(phases{iPhase}).([sites{1} types{iType}]).data,mat.(phases{iPhase}).([sites{2} types{iType}]).data,hanning(cfg.wsize),...
-                cfg.wsize/2,2*cfg.wsize,mat.(phases{iPhase}).([sites{1} types{iType}]).cfg.hdr{1}.SamplingFrequency);
+                [Coh_sess_temp.c, Coh_sess_temp.f] = mscohere(mat.(phases{iPhase}).([sites{1} types{iType}]).data,mat.(phases{iPhase}).([sites{2} types{iType}]).data,...
+                    hanning(round(cfg.wsize/2)),cfg.wsize/4,cfg.wsize,...
+                    mat.(phases{iPhase}).([sites{1} types{iType}]).cfg.hdr{1}.SamplingFrequency);
                 
-                f_idx = find(Coh_temp.f > cfg.f(iBand,1) & Coh_temp.f <= cfg.f(iBand,2));
-                mat_out.(phases{iPhase}).sess.(bands{iBand})(x_idx,y_idx) = mean(Coh_temp.c(f_idx));
+                f_idx = find(Coh_sess_temp.f > cfg.f(iBand,1) & Coh_sess_temp.f <= cfg.f(iBand,2));
+                mat_out.(phases{iPhase}).sess.(bands{iBand})(x_idx,y_idx) = mean(Coh_sess_temp.c(f_idx));
+                clear Coh_sess_temp
                 
-                %    Get the coherence on an event by event basis
-                for iEvt = length(pairs_in.(pairs{iPair}).(main{1})):1
-                    % find the correct index for the pair for electrodes in
-                    % the output matrix
-                    idx = strfind(mat_out.labels, pairs{iPair});
-                    [x_idx,y_idx] = find(not(cellfun('isempty', idx)));
+                %% get the amplitude coherence across all frequencies
+                
+                % set up the filter
+                cfg_filter = [];
+                cfg_filter.f = [cfg.f(iBand,1) cfg.f(iBand,2)];
+                
+                % filter the two signals
+                d_f1 = FilterLFP(cfg_filter, mat.(phases{iPhase}).([sites{1} types{iType}]));
+                d_f2 = FilterLFP(cfg_filter, mat.(phases{iPhase}).([sites{2} types{iType}]));
+                
+                % get the amplitude coherence for the entire session (same parameters as phase coherence)
+                [AMP_sess_temp.c, AMP_sess_temp.f] = mscohere(d_f1.data, d_f2.data,hanning(round(cfg.wsize/2)),cfg.wsize/4,cfg.wsize,d_f1.cfg.hdr{1}.SamplingFrequency);
+                
+                % find the values with the frequency range of interestet (cfg.f)
+                f_idx = find(AMP_sess_temp.f > cfg.f(iBand,1) & AMP_sess_temp.f <= cfg.f(iBand,2));
+                mat_out.(phases{iPhase}).sess_amp.(bands{iBand})(x_idx,y_idx) = mean(AMP_sess_temp.c(f_idx));
+                clear d_f1 d_f2 AMP_sess_temp
+                
+                %%    Get the coherence on an event by event basis
+                for iEvt = length(pairs_in.(pairs{iPair}).(main{1})):-1:1                   
+                    % get the coherence across all frequencies
+                    win_size = length(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data);
+                    [Coh_evt_temp.c{iEvt}, Coh_evt_temp.f{iEvt}] = mscohere(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data,pairs_in.(pairs{iPair}).(main{2}){iEvt}.data,...
+                        hanning(round(win_size/2)),round(win_size/4),win_size,...
+                        pairs_in.(pairs{iPair}).(main{1}){iEvt}.cfg.hdr{1}.SamplingFrequency);
                     
-                    % ensure that the data sample for a given event is
-                    % longer than the
-                    if length(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data) < cfg.wsize
-                        mat_out.(bands{iBand})(x_idx,y_idx, iEvt) = NaN;
-                        continue
-                    else
-                        [Coh_temp.c{iEvt}, Coh_temp.f{iEvt}] = mscohere(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data,pairs_in.(pairs{iPair}).(main{2}){iEvt}.data,hanning(cfg.wsize),cfg.wsize/2,2*cfg.wsize,pairs_in.(pairs{iPair}).(main{1}){iEvt}.cfg.hdr{1}.SamplingFrequency);
-                    end
-                    idx = strfind(mat_out.labels, pairs{iPair});
-                    [x_idx,y_idx] = find(not(cellfun('isempty', idx)))
-                    %
-                    evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.coh.(pairs{iPair});
+                    %find the frequencies of interest and then
+                    f_idx = find(Coh_evt_temp.f{iEvt} > cfg.f(iBand,1) & Coh_evt_temp.f{iEvt} <= cfg.f(iBand,2));
+                    mat_out.(phases{iPhase}).evt.(bands{iBand})(x_idx,y_idx,iEvt) = mean(Coh_evt_temp.c{iEvt}(f_idx));
                     
+                    % collect output in a matrix that contains all the poissible pairs.
+                    evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.(pairs{iPair}).coh = mat_out;
                     
-               end
+                end
             end
         end
     end
@@ -139,7 +153,7 @@ end
 % for iSamp = 4:0.5:7
 %     cfg.wsize = round(2^iSamp);
 %     [Coh_temp.c{iEvt}, Coh_temp.f{iEvt}] = mscohere(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data,pairs_in.(pairs{iPair}).(main{2}){iEvt}.data,hanning(cfg.wsize),cfg.wsize/2,2*cfg.wsize,pairs_in.(pairs{iPair}).(main{1}){iEvt}.cfg.hdr{1}.SamplingFrequency);
-%     
+%
 %     plot(Coh_temp.f{iEvt}, Coh_temp.c{iEvt})
 %     samples = [samples, cfg.wsize];
 % end
@@ -149,18 +163,18 @@ end
 %% temp Mat plot
 
 figure
-% mat = mat_out; 
+% mat = mat_out;
 for iPhase = 1:4
-    plot_mat = tril(mat_out.(phases{iPhase}).sess.low,-1) +triu(mat_out.(phases{iPhase}).sess.high,1);
-    s=size(plot_mat,1); 
-    plot_mat(1:s+1:s*s) = NaN; 
-
+    plot_mat = tril(mat_out.(phases{iPhase}).sess_amp.low,-1) +triu(mat_out.(phases{iPhase}).sess_amp.high,1);
+    s=size(plot_mat,1);
+    plot_mat(1:s+1:s*s) = NaN;
+    
     subplot(1,4,iPhase)
-    h = nan_imagesc_ec(plot_mat); 
+    h = nan_imagesc_ec(plot_mat);
     add_num_imagesc(h, plot_mat)
     caxis([0 0.5])
     Square_subplots
-    set(gca, 'xticklabel', (labels),'ytick', 1:length(mat.pre.ExpKeys.Chan_to_use_labels), 'yticklabel',(labels), 'xaxisLocation','top'); 
+    set(gca, 'xticklabel', (labels),'ytick', 1:length(mat.pre.ExpKeys.Chan_to_use_labels), 'yticklabel',(labels), 'xaxisLocation','top');
     title(phases{iPhase})
 end
 
