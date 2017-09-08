@@ -167,4 +167,3 @@ end
 
 %% get the coordinates from the Expkeys
 
-stats_subjects = MS_get_subject_info(data);

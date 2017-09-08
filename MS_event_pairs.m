@@ -66,7 +66,7 @@ end
 
 %% compute the coherence for each gamma event for each pair of electrodes as specified in the ExpKeys.GoodPairs
 % make a matrix for all the pairs
-labels = {'PL', 'OFC', 'NAc', 'CG'};
+labels = mat.pre.ExpKeys.Chan_to_use_labels;
 for ii = 1:length(labels)
     for jj = 1:length(labels)
         mat_out.labels{ii,jj} = [labels{ii} '_' labels{jj}];
@@ -77,6 +77,9 @@ for iPhase = 1:4
     mat_out.(phases{iPhase}).sess.high = NaN*zeros(size(mat_out.labels));
     mat_out.(phases{iPhase}).evt.low = NaN*zeros(size(mat_out.labels));
     mat_out.(phases{iPhase}).evt.high = NaN*zeros(size(mat_out.labels));
+    mat_out.(phases{iPhase}).sess_amp.low = NaN*zeros(size(mat_out.labels));
+    mat_out.(phases{iPhase}).sess_amp.low = NaN*zeros(size(mat_out.labels));
+    
 end
 
 %%
@@ -125,7 +128,7 @@ for iType = 1:length(types)
                 clear d_f1 d_f2 AMP_sess_temp
                 
                 %%    Get the coherence on an event by event basis
-                for iEvt = length(pairs_in.(pairs{iPair}).(main{1})):-1:1                   
+                for iEvt = length(pairs_in.(pairs{iPair}).(main{1})):-1:1
                     % get the coherence across all frequencies
                     win_size = length(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data);
                     [Coh_evt_temp.c{iEvt}, Coh_evt_temp.f{iEvt}] = mscohere(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data,pairs_in.(pairs{iPair}).(main{2}){iEvt}.data,...
@@ -162,19 +165,19 @@ end
 
 %% temp Mat plot
 
-figure
-% mat = mat_out;
-for iPhase = 1:4
-    plot_mat = tril(mat_out.(phases{iPhase}).sess_amp.low,-1) +triu(mat_out.(phases{iPhase}).sess_amp.high,1);
-    s=size(plot_mat,1);
-    plot_mat(1:s+1:s*s) = NaN;
-    
-    subplot(1,4,iPhase)
-    h = nan_imagesc_ec(plot_mat);
-    add_num_imagesc(h, plot_mat)
-    caxis([0 0.5])
-    Square_subplots
-    set(gca, 'xticklabel', (labels),'ytick', 1:length(mat.pre.ExpKeys.Chan_to_use_labels), 'yticklabel',(labels), 'xaxisLocation','top');
-    title(phases{iPhase})
-end
+% figure
+% % mat = mat_out;
+% for iPhase = 1:4
+%     plot_mat = tril(mat_out.(phases{iPhase}).sess_amp.low,-1) +triu(mat_out.(phases{iPhase}).sess_amp.high,1);
+%     s=size(plot_mat,1);
+%     plot_mat(1:s+1:s*s) = NaN;
+%     
+%     subplot(1,4,iPhase)
+%     h = nan_imagesc_ec(plot_mat);
+%     add_num_imagesc(h, plot_mat)
+%     caxis([0 0.5])
+%     Square_subplots
+%     set(gca, 'xticklabel', (labels),'ytick', 1:length(mat.pre.ExpKeys.Chan_to_use_labels), 'yticklabel',(labels), 'xaxisLocation','top');
+%     title(phases{iPhase})
+% end
 
