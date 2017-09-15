@@ -29,6 +29,7 @@ end
 % collect all the data
 subs = fieldnames(Coh_mat);
 for iSub = 1:length(subs)
+    sess_list = fieldnames(Coh_mat.(subs{iSub}));
     for iPhase = 1:length(phases)
         if strcmp(phases{iPhase}, 'labels')
             continue
@@ -56,8 +57,8 @@ end
 
 %% make some plot
 labels = {};
-for ii = 1:length(Coh_mat.R102.R102_2016_09_23.labels)
-    t_label = strsplit(Coh_mat.R102.R102_2016_09_23.labels{ii,1}, '_');
+for ii = 1:length(Coh_mat.(subs{iSub}).(sess_list{1}).labels)
+    t_label = strsplit(Coh_mat.(subs{iSub}).(sess_list{1}).labels{ii,1}, '_');
     labels{ii} = t_label{1};
 end
     
@@ -80,4 +81,4 @@ for iType = 1:length(types)
     
     
 end
-
+stats_out = All_mat;

@@ -29,7 +29,7 @@ cfg = ProcessConfig2(cfg_def, cfg_in);
 global PARAMS
 %% cycle trough the sites
 sites = fieldnames(events);
-for iSite =1:length(sites) 
+for iSite =1:length(sites)
     all_data = [];
     if strcmp(sites{iSite}(end-2:end), 'trk') % only use the "pot" phase
         continue
@@ -37,7 +37,7 @@ for iSite =1:length(sites)
         if length(events.(sites{iSite}).post.low.tstart) < 4 % ensure there are at least some events
             nEvt = length(events.(sites{iSite}).post.low.tstart);
         else
-            nEvt = 4; 
+            nEvt = 4;
         end
         for iEvt = randperm(length(events.(sites{iSite}).post.low.tstart),nEvt) % loop through 4 random examples in the post session.
             
@@ -74,9 +74,14 @@ for iSite =1:length(sites)
             rectangle('position',[events.(sites{iSite}).post.low.tstart(iEvt), y_lim(1)+0.1*10^-4, events.(sites{iSite}).post.low.tend(iEvt) - events.(sites{iSite}).post.low.tstart(iEvt), 0.5*10^-4], 'facecolor', [.6 .6 .6], 'edgecolor', [.6 .6 .6])
             %% save the figure
             set(gca,'FontSize',20);
-            sess = [data.contra.ExpKeys.Subject '_' strrep(data.contra.ExpKeys.date, '-', '-')];
+            if isfield(data.pre.ExpKeys, 'Subject')
+                sess = [data.contra.ExpKeys.Subject '_' strrep(data.contra.ExpKeys.date, '-', '-')];
+                subject = data.contra.ExpKeys.Subject;
+            else
+                sess = [data.contra.ExpKeys.ratID '_' strrep(data.contra.ExpKeys.date, '-', '-')];
+                subject = data.contra.ExpKeys.ratID;
+            end
             title([sess '-' num2str(iEvt) '-' sites{iSite}]);
-            subject = data.contra.ExpKeys.Subject;
             sess = strrep(sess, '-', '-');
             mkdir(PARAMS.inter_dir, 'Events');
             if isunix

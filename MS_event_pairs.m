@@ -69,7 +69,7 @@ end
 labels = mat.pre.ExpKeys.Chan_to_use_labels;
 for ii = 1:length(labels)
     for jj = 1:length(labels)
-        mat_out.labels{ii,jj} = [labels{ii} '_' labels{jj}];
+        mat_out.labels{ii,jj} = [labels{ii}(1:end-1) '_' labels{jj}(1:end-1)];
     end
 end
 for iPhase = 1:4
@@ -84,7 +84,7 @@ end
 
 %%
 for iType = 1:length(types)
-    for iPair = 5:length(pairs)
+    for iPair = 1:length(pairs)
         sites = strsplit(pairs{iPair}, '_');
         if length(sites) >2
             newsites{1} = [sites{1} sites{2}];
@@ -93,7 +93,6 @@ for iType = 1:length(types)
         end
         for iPhase = 1:length(PARAMS.Phases)
             for iBand = 1:length(bands)
-                pairs_in = evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.pairs;  % keeps things a bit more clean
                 main = strsplit(pairs{iPair}, '_'); % identifies the "main" site for for coherence comparisons.
                 
                 %find the corresponding index in the mat_out matrix
@@ -128,17 +127,21 @@ for iType = 1:length(types)
                 clear d_f1 d_f2 AMP_sess_temp
                 
                 %%    Get the coherence on an event by event basis
+                pairs_in = evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.pairs;  % keeps things a bit more clean
+                if isempty(pairs_in.(pairs{iPair}).(main{1})) ~=1
                 for iEvt = length(pairs_in.(pairs{iPair}).(main{1})):-1:1
                     % get the coherence across all frequencies
                     win_size = length(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data);
                     [Coh_evt_temp.c{iEvt}, Coh_evt_temp.f{iEvt}] = mscohere(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data,pairs_in.(pairs{iPair}).(main{2}){iEvt}.data,...
                         hanning(round(win_size/2)),round(win_size/4),win_size,...
                         pairs_in.(pairs{iPair}).(main{1}){iEvt}.cfg.hdr{1}.SamplingFrequency);
-                    
                     %find the frequencies of interest and then
                     f_idx = find(Coh_evt_temp.f{iEvt} > cfg.f(iBand,1) & Coh_evt_temp.f{iEvt} <= cfg.f(iBand,2));
                     mat_out.(phases{iPhase}).evt.(bands{iBand})(x_idx,y_idx,iEvt) = mean(Coh_evt_temp.c{iEvt}(f_idx));
-                    
+                end
+                else
+                    mat_out.(phases{iPhase}).evt.(bands{iBand})(x_idx,y_idx,1) = NaN;
+                end
                     % collect output in a matrix that contains all the poissible pairs.
                     evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.(pairs{iPair}).coh = mat_out;
                     
@@ -171,7 +174,7 @@ end
 %     plot_mat = tril(mat_out.(phases{iPhase}).sess_amp.low,-1) +triu(mat_out.(phases{iPhase}).sess_amp.high,1);
 %     s=size(plot_mat,1);
 %     plot_mat(1:s+1:s*s) = NaN;
-%     
+%
 %     subplot(1,4,iPhase)
 %     h = nan_imagesc_ec(plot_mat);
 %     add_num_imagesc(h, plot_mat)
