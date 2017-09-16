@@ -52,15 +52,15 @@ for iPhase = 1:length(PARAMS.Phases)
     % happened for R104-2016-09-26_ipsi. It has 19 start times for some
     % reason)
     if length(evt.t{start_idx}) >= 3 % should only have 2
-        [~, trk_idx]  = max(evt.t{2}(2:end)-evt.t{1}(2:end)); % find the largest gap
+        [~, trk_idx]  = max(evt.t{stop_idx}(2:end)-evt.t{start_idx}(2:end)); % find the largest gap
         trk_idx = trk_idx+1; % offset by one to compensate for the 'trk' being the second phase
     else
         trk_idx = [];
     end
     
-    if evt.t{2}(1)-evt.t{1}(1) < 60*9; % check to ensure the recording is roughly 10mins long. 
+    if evt.t{stop_idx}(1)-evt.t{start_idx}(1) < 60*9; % check to ensure the recording is roughly 10mins long. 
         error('pot session is too short');
-    elseif evt.t{2}(trk_idx)-evt.t{1}(trk_idx) < 60*9;
+    elseif evt.t{stop_idx}(trk_idx)-evt.t{start_idx}(trk_idx) < 60*9;
         error('trk session is too short');
     end
     
