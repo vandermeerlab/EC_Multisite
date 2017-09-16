@@ -1,5 +1,5 @@
 %% MS_initialize: initialize the default parameters and 
-
+tic
 clear all; close all
 restoredefaultpath
 global PARAMS
@@ -30,4 +30,5 @@ cd(PARAMS.data_dir) % move to the data folder
 
 %% run the analysis
 Master_Multisite
+toc
 disp('this worked')
