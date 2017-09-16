@@ -1,4 +1,4 @@
-% Multi_Master():
+% Multi_Master:
 %   Master control script for multi-site loading, analysis, and statistics.
 %   Requirements:
 %        - van der Meer lab codebase
@@ -14,12 +14,11 @@
 %                  "contra", "post"
 %
 
-%% initialize default PARAMeters
-MS_initialize
+
 
 %% Extract the data from each recroding phase within each session and separate pot vs track sections
 
-for iSub = 3:5%:length(PARAMS.Subjects)
+for iSub = 1:length(PARAMS.Subjects)
     if isunix
         cd([PARAMS.data_dir '/' PARAMS.Subjects{iSub}])
     else
@@ -48,7 +47,7 @@ for iSub = 3:5%:length(PARAMS.Subjects)
 end
 
 %% get the gamma event counts per recording phase
-for iSub = 4:5%1:length(PARAMS.Subjects)
+for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess  = 1:length(sess_list)
         [Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))] = MS_extract_gamma([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
@@ -58,7 +57,7 @@ end
     
 %     stats = MS_gamma_stats([], Events);
 %% generate PSDs & get the relative power ratios
-for iSub = 3:5%1:length(PARAMS.Subjects)
+for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess  = 1:length(sess_list)
         fprintf(['Session ' sess_list{iSess} '\n'])
@@ -78,7 +77,7 @@ MS_plot_power([], Naris);
 
 % create pairs of channels for detected events.  
 
-for iSub = 3%:length(PARAMS.Subjects)
+for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
         [Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), Coh_mat.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))]  = MS_event_pairs([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
@@ -96,7 +95,7 @@ MS_plot_psd([], Naris);
 
 %% get an example event from each session and plot all sites together for the same event. 
 
-for iSub = 3:5%1:length(PARAMS.Subjects)
+for iSub = 1:length(PARAMS.Subjects)
 % iSess = 1; iSub = 1;     
 sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
@@ -106,7 +105,7 @@ end
 
 %% generate a spectrogram across each session for each site. 
 
-for iSub = 3:5%1:length(PARAMS.Subjects)
+for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
         MS_spec_fig([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
@@ -116,4 +115,4 @@ end
 
 %% get the coordinates from the Expkeys
 
-stats_subjects = MS_get_subject_info(data);
+% stats_subjects = MS_get_subject_info(data);
