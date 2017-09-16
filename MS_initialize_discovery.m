@@ -20,7 +20,7 @@ else
 end
 
 PARAMS.Phases = {'pre', 'ipsi', 'contra', 'post'}; % recording phases within each session
-PARAMS.Subjects = {'R102', 'R104','R107', 'R108', 'R112', 'R122', 'R123'}; %list of subjects
+PARAMS.Subjects = {'R102', 'R104', 'R108', 'R112', 'R122', 'R123'}; %list of subjects
 PARAMS.Sub_xpiri = {'R108', 'R112', 'R122', 'R123'};  % subjects with electrodes spanning the piriform cortex
 
 % add the required code
