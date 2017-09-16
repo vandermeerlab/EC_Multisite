@@ -17,8 +17,8 @@
 
 
 %% Extract the data from each recroding phase within each session and separate pot vs track sections
-
-for iSub = 1:length(PARAMS.Subjects)
+tic 
+parfor iSub = 1:length(PARAMS.Subjects)
     if isunix
         cd([PARAMS.data_dir '/' PARAMS.Subjects{iSub}])
     else
@@ -38,11 +38,10 @@ for iSub = 1:length(PARAMS.Subjects)
     for iSess = 1:length(sess_list)
         cfg_loading = [];
         cfg_loading.fname = sess_list{iSess};
-        fprintf(['\n' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]); 
-        [data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_loading] = MS_load_data_fast(cfg_loading);
+        [temp{iSub}.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_loading] = MS_load_data_fast(cfg_loading);
     end
     % ensure the correct number of sessions exist per rat
-    if length(fieldnames(data.(PARAMS.Subjects{iSub}))) ~=4
+    if length(fieldnames(temp{iSub}.(PARAMS.Subjects{iSub}))) ~=4
         error('too many or too few sessions for multisite experiment.  Should only contain 4 per rat')
     end
 end
