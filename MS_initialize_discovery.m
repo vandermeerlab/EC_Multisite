@@ -29,5 +29,5 @@ addpath(genpath(PARAMS.code_MS_dir));
 cd(PARAMS.data_dir) % move to the data folder
 
 %% run the analysis
-% Master_Multisite
+Master_Multisite
 disp('this worked')

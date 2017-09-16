@@ -67,14 +67,35 @@ for iSub = 1:length(PARAMS.Subjects)
     end
 end
 
+%% get an example event from each session and plot all sites together for the same event. 
+
+for iSub = 1:length(PARAMS.Subjects)
+% iSess = 1; iSub = 1;     
+sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
+    for iSess = 1:length(sess_list)
+        MS_event_fig([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+    end    
+end
+
 %% plot the gamma band power ratios
 MS_plot_power([], Naris);
 
 
+%% plot the PSDs
+MS_plot_psd([], Naris);
+
+
+%% generate a spectrogram across each session for each site. 
+
+for iSub = 1:length(PARAMS.Subjects)
+    sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
+    for iSess = 1:length(sess_list)
+        MS_spec_fig([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+    end    
+end
+
+
 %% Get the phase coherence metrics
-%%%%%%%%%%%%%%%% you are here %%%%%%%%%%%%%%%%%%%%
-
-
 % create pairs of channels for detected events.  
 
 for iSub = 1:length(PARAMS.Subjects)
@@ -88,29 +109,6 @@ end
 
 stats_coh =  MS_Coh_plot_stats(Coh_mat);
 
-%% plot the PSDs
-MS_plot_psd([], Naris);
-
-
-
-%% get an example event from each session and plot all sites together for the same event. 
-
-for iSub = 1:length(PARAMS.Subjects)
-% iSess = 1; iSub = 1;     
-sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
-    for iSess = 1:length(sess_list)
-        MS_event_fig([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-    end    
-end
-
-%% generate a spectrogram across each session for each site. 
-
-for iSub = 1:length(PARAMS.Subjects)
-    sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
-    for iSess = 1:length(sess_list)
-        MS_spec_fig([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-    end    
-end
 
 
 %% get the coordinates from the Expkeys
