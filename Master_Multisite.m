@@ -67,6 +67,12 @@ for iSub = 1:length(PARAMS.Subjects)
     end
 end
 
+%% save the intermediate files
+
+save('MS_data.mat', 'data', '-v7.3')
+save('MS_naris.mat', 'Naris', '-v7.3')
+save('MS_events.mat', 'Events', '-v7.3')
+
 %% get an example event from each session and plot all sites together for the same event. 
 
 for iSub = 1:length(PARAMS.Subjects)
