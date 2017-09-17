@@ -15,7 +15,7 @@
 %
 
 %% make a log
-MS_log = fopen('MS_log.txt', 'w');
+MS_log = fopen([PARAMS.data_dir '/MS_log.txt'], 'w');
 fprintf(MS_log, date);
 %% Extract the data from each recroding phase within each session and separate pot vs track sections
 
