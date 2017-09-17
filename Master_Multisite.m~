@@ -17,8 +17,8 @@
 
 
 %% Extract the data from each recroding phase within each session and separate pot vs track sections
-tic 
-parfor iSub = 1:length(PARAMS.Subjects)
+
+for iSub = 1:length(PARAMS.Subjects)
     if isunix
         cd([PARAMS.data_dir '/' PARAMS.Subjects{iSub}])
     else
@@ -38,10 +38,11 @@ parfor iSub = 1:length(PARAMS.Subjects)
     for iSess = 1:length(sess_list)
         cfg_loading = [];
         cfg_loading.fname = sess_list{iSess};
-        [temp{iSub}.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_loading] = MS_load_data_fast(cfg_loading);
+        fprintf(['\n' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]); 
+        [data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_loading] = MS_load_data_fast(cfg_loading);
     end
     % ensure the correct number of sessions exist per rat
-    if length(fieldnames(temp{iSub}.(PARAMS.Subjects{iSub}))) ~=4
+    if length(fieldnames(data.(PARAMS.Subjects{iSub}))) ~=4
         error('too many or too few sessions for multisite experiment.  Should only contain 4 per rat')
     end
 end
@@ -57,16 +58,17 @@ end
     
 %     stats = MS_gamma_stats([], Events);
 %% generate PSDs & get the relative power ratios
-for iSub = 1:length(PARAMS.Subjects)
+tic
+for iSub = 1:2%length(PARAMS.Subjects)
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess  = 1:length(sess_list)
         fprintf(['Session ' sess_list{iSess} '\n'])
-        Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_collect_psd([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-    
-%         Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio([],Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+        Naris{iSub}.(strrep(sess_list{iSess}, '-', '_')) = MS_collect_psd([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+%         Naris{iSub}.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio([],Naris{iSub}.(strrep(sess_list{iSess}, '-', '_')));
     end
 end
-
+toc
+disp('par was 444')
 %% save the intermediate files
 
 save('MS_data.mat', 'data', '-v7.3')
