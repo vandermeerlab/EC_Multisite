@@ -1,8 +1,8 @@
 clear all; close all;
-in_fd{1} = 'G:\JK_recordings\Naris\R123\R123-2017-03-02\R123-2017-03-02_pre_pot';
-in_fd{2} = 'G:\JK_recordings\Naris\R123\R123-2017-03-02\R123-2017-03-02_pre_trk';
+in_fd{1} = '/Users/jericcarmichael/Documents/Multisite/R122/R122-2017-02-26/R122-2017-02-26_post_pot';
+in_fd{2} = '/Users/jericcarmichael/Documents/Multisite/R122/R122-2017-02-26/R122-2017-02-26_post_trk';
 
-out_fd = 'G:\JK_recordings\Naris\R123\R123-2017-03-02\R123-2017-03-02_pre';
+out_fd = '/Users/jericcarmichael/Documents/Multisite/R122/R122-2017-02-26/R122-2017-02_26_post';
 out_fd_postfix = '';
 
 %% get filenames
