@@ -49,7 +49,7 @@ c_ord = linspecer(4);
 c_ord(5,:) = [.8,.8,.8];
 for iSite = 1:length(sites);
     loop = 0;
-    subplot(1,4,iSite)
+    subplot(1,length(sites),iSite)
     title(sites{iSite})
     for iPhase = 1:length(phases)
         hold on
@@ -124,9 +124,9 @@ else
     saveas(gcf, [PARAMS.inter_dir '\AOC_fit\AOC_val'  type{iType,1} '_' cfg.id])
 end
 
-Naris_out.ratio.(type{iType,1}) = AOC_val;
+Naris_out.ratio.(type{iType,1}) = AOC_val.(type{iType,1});
 
-Naris_out.ratio_con.(type{iType,1}) = AOC_val_con;
+Naris_out.ratio_con.(type{iType,1}) = AOC_val_con.(type{iType,1});
 
 Naris_out.ratio_labels = sites; 
 close all

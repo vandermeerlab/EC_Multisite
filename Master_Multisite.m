@@ -95,12 +95,14 @@ fclose(MS_log);
 %% get the ratio of the power in multiple bands relative to the exponential f curve
 % fprintf(MS_log,'\n\nExtracting Power Ratio');
 for iSub = 1:length(PARAMS.Subjects)
-    sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
-    for iSess  = 1:length(sess_list)
-%         fprintf(MS_log,['\nGetting ratio ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-        cfg_pow_ratio.id = sess_list{iSess};
-        Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio([],Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-%         fprintf(MS_log, '...complete');
+    if strcmp(PARAMS.Subjects{iSub}, 'R107') ~=1
+        sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
+        for iSess  = 1:length(sess_list)
+            %         fprintf(MS_log,['\nGetting ratio ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+            cfg_pow_ratio.id = sess_list{iSess};
+            Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio([],Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+            %         fprintf(MS_log, '...complete');
+        end
     end
 end
 
