@@ -33,12 +33,3 @@ cd(PARAMS.data_dir) % move to the data folder
 Master_Multisite
 toc
 disp('this worked')
-
-tic
-n = 200;
-A = 500;
-a = zeros(n);
-parfor i = 1:n
-    a(i) = max(abs(eig(rand(A))));
-end
-toc
