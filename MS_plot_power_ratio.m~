@@ -63,63 +63,49 @@ for iType = 1:length(types)
     % try it relative ot the control condition
     
     for iPhase = 1:size(AOC_low.(types{iType}),2)
-        norm_low.(types{iType})(:,iPhase) = AOC_low.(types{iType})(:,iPhase) ./ AOC_low.(types{iType})(:,5);
-        norm_high.(types{iType})(:,iPhase) = AOC_high.(types{iType})(:,iPhase) ./ AOC_high.(types{iType})(:,5);
-        norm_con_low.(types{iType})(:,iPhase) = AOC_con_low.(types{iType})(:,iPhase) ./ AOC_con_low.(types{iType})(:,5);
-        norm_con_high.(types{iType})(:,iPhase) = AOC_con_high.(types{iType})(:,iPhase) ./ AOC_con_high.(types{iType})(:,5);
+    norm_low.(types{iType})(:,iPhase) = AOC_low.(types{iType})(:,iPhase) ./ AOC_low.(types{iType})(:,5);
+    norm_high.(types{iType})(:,iPhase) = AOC_high.(types{iType})(:,iPhase) ./ AOC_high.(types{iType})(:,5);
+    norm_con_low.(types{iType})(:,iPhase) = AOC_con_low.(types{iType})(:,iPhase) ./ AOC_con_low.(types{iType})(:,5);
+    norm_con_high.(types{iType})(:,iPhase) = AOC_con_high.(types{iType})(:,iPhase) ./ AOC_con_high.(types{iType})(:,5);
     end
     % plot
     figure(iType)
     subplot(4,1,1)
-    b= bar(AOC_low.(types{iType}));
+    b= bar(AOC_low.(types{iType}))
     for iPhase = 1:5
-        set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
+        set(b(iPhase), 'FaceColor', c_ord(iPhase,:)) 
     end
     title(types{iType})
     set(gca, 'xticklabel', sites)
     leg_val = PARAMS.Phases; leg_val{5} = 'Control';
     legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
-    
-    
     subplot(4,1,2)
-    b = bar(AOC_high.(types{iType}));
-    for iPhase = 1:5
-        set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
-    end
+    bar(AOC_high.(types{iType}), 'color', c_ord)
     set(gca, 'xticklabel', sites)
-    legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
     
     subplot(4,1,3)
-    b = bar(AOC_con_low.(types{iType}));
-    for iPhase = 1:5
-        set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
-    end
+    bar(AOC_con_low.(types{iType}), 'color', c_ord)
     set(gca, 'xticklabel', sites)
-    legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
     
     subplot(4,1,4)
-    b = bar(AOC_con_high.(types{iType}));
-    for iPhase = 1:5
-        set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
-    end
+    bar(AOC_con_high.(types{iType}), 'color', c_ord)
     set(gca, 'xticklabel', sites)
-    legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
     
-    %         figure(iType+2)
-    %     subplot(4,1,1)
-    %     bar(norm_low.(types{iType}))
-    %     title(types{iType})
-    %     set(gca, 'xticklabel', sites)
-    %     subplot(4,1,2)
-    %     bar(norm_high.(types{iType}))
-    %     set(gca, 'xticklabel', sites)
-    %
-    %     subplot(4,1,3)
-    %     bar(norm_con_low.(types{iType}))
-    %     set(gca, 'xticklabel', sites)
-    %
-    %     subplot(4,1,4)
-    %     bar(norm_con_high.(types{iType}))
-    %     set(gca, 'xticklabel', sites)
+        figure(iType+2)
+    subplot(4,1,1)
+    bar(norm_low.(types{iType}))
+    title(types{iType})
+    set(gca, 'xticklabel', sites)
+    subplot(4,1,2)
+    bar(norm_high.(types{iType}))
+    set(gca, 'xticklabel', sites)
+    
+    subplot(4,1,3)
+    bar(norm_con_low.(types{iType}))
+    set(gca, 'xticklabel', sites)
+    
+    subplot(4,1,4)
+    bar(norm_con_high.(types{iType}))
+    set(gca, 'xticklabel', sites)
     
 end
