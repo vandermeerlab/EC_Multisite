@@ -49,7 +49,7 @@ c_ord = linspecer(4);
 c_ord(5,:) = [.8,.8,.8];
 for iSite = 1:length(sites);
     loop = 0;
-    subplot(1,4,iSite)
+    subplot(1,length(sites),iSite)
     title(sites{iSite})
     for iPhase = 1:length(phases)
         hold on
@@ -119,14 +119,17 @@ set(gca, 'xticklabel', phases)
 title(strrep([bands{2} '_con_' num2str(cfg.contrast (2,1)) '_' num2str(cfg.contrast (2,2))], '_', '-'))
 SetFigure([], gcf)
 if isunix
-    saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_val' type{iType,1}  '_' cfg.id])
+    saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_val_all' type{iType,1}  '_' cfg.id])
+    saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_val_all' type{iType,1}  '_' cfg.id], 'png')
+
 else
-    saveas(gcf, [PARAMS.inter_dir '\AOC_fit\AOC_val'  type{iType,1} '_' cfg.id])
+    saveas(gcf, [PARAMS.inter_dir '\AOC_fit\AOC_val_all'  type{iType,1} '_' cfg.id])
+    saveas(gcf, [PARAMS.inter_dir '\AOC_fit\AOC_val_all'  type{iType,1} '_' cfg.id], 'png')
 end
 
-Naris_out.ratio.(type{iType,1}) = AOC_val;
+Naris_out.ratio.(type{iType,1}) = AOC_val.(type{iType,1});
 
-Naris_out.ratio_con.(type{iType,1}) = AOC_val_con;
+Naris_out.ratio_con.(type{iType,1}) = AOC_val_con.(type{iType,1});
 
 Naris_out.ratio_labels = sites; 
 close all
