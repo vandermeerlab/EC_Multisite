@@ -99,7 +99,7 @@ for iSub = 1:length(PARAMS.Subjects)
     for iSess  = 1:length(sess_list)
         %         fprintf(MS_log,['\nGetting ratio ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
         cfg_pow_ratio.id = sess_list{iSess};
-        Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio([],Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+        Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio(cfg_pow_ratio,Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
         %         fprintf(MS_log, '...complete');
     end
 end
@@ -113,7 +113,11 @@ for iSub = 1:length(PARAMS.Subjects)
 end
 
 %% plot the gamma band power ratios
-MS_plot_power_ratio([], Naris_pot)
+cfg_pow_ratio_plot.ylims = [-75 75];
+cfg_pow_ratio_plot.plot_type = 'raw';
+cfg_pow_ratio_plot.ylims_norm = [0 2];
+
+MS_plot_power_ratio(cfg_pow_ratio_plot, Naris_pot)
 % MS_plot_power([], Naris);
 
 

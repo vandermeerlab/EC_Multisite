@@ -15,6 +15,9 @@ function MS_plot_power_ratio(cfg_in, Naris_in)
 cfg_def = [];
 cfg_def.type = 'both'; % whether to output the 'standard' or "white" filtered PSD
 cfg_def.linewidth = 2;
+cfg_def.plot_type = 'raw';
+cfg_def.ylims = [-75 75];
+cfg_def.ylims_norm = [0 2];
 cfg = ProcessConfig2(cfg_def, cfg_in);
 global PARAMS
 c_ord = [linspecer(length(PARAMS.Phases)); [.6 .6 .6]];
@@ -68,58 +71,99 @@ for iType = 1:length(types)
         norm_con_low.(types{iType})(:,iPhase) = AOC_con_low.(types{iType})(:,iPhase) ./ AOC_con_low.(types{iType})(:,5);
         norm_con_high.(types{iType})(:,iPhase) = AOC_con_high.(types{iType})(:,iPhase) ./ AOC_con_high.(types{iType})(:,5);
     end
-    % plot
-    figure(iType)
-    subplot(4,1,1)
-    b= bar(AOC_low.(types{iType}));
-    for iPhase = 1:5
-        set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
+    
+    %% switch between normalized to control and raw
+    switch cfg.plot_type
+        
+        case 'raw' 
+            % plot
+            figure(iType)
+            subplot(4,1,1)
+            b= bar(AOC_low.(types{iType}));
+            for iPhase = 1:5
+                set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
+            end
+            title(types{iType})
+            set(gca, 'xticklabel', sites, 'ytick', [cfg.ylims(1):25:cfg.ylims(2)])
+            leg_val = PARAMS.Phases; leg_val{5} = 'Control';
+            legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
+            ylim([cfg.ylims])
+            
+            subplot(4,1,2)
+            b = bar(AOC_high.(types{iType}));
+            for iPhase = 1:5
+                set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
+            end
+            set(gca, 'xticklabel', sites, 'ytick', [cfg.ylims(1):25:cfg.ylims(2)])
+            legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
+            ylim([cfg.ylims])
+            
+            subplot(4,1,3)
+            b = bar(AOC_con_low.(types{iType}));
+            for iPhase = 1:5
+                set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
+            end
+            set(gca, 'xticklabel', sites, 'ytick', [cfg.ylims(1):25:cfg.ylims(2)])
+            legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
+            ylim([cfg.ylims])
+            
+            subplot(4,1,4)
+            b = bar(AOC_con_high.(types{iType}));
+            for iPhase = 1:5
+                set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
+            end
+            set(gca, 'xticklabel', sites, 'ytick', [cfg.ylims(1):25:cfg.ylims(2)])
+            legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
+            ylim([cfg.ylims])
+            
+        case 'norm'
+            % plot
+            figure(iType)
+            subplot(4,1,1)
+            b= bar(norm_low.(types{iType})(:,1:4));
+            for iPhase = 1:4
+                set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
+            end
+            title(types{iType})
+            set(gca, 'xticklabel', sites)
+            leg_val = PARAMS.Phases; leg_val{5} = 'Control';
+            legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
+            ylim([cfg.ylims_norm])
+            
+            subplot(4,1,2)
+            b = bar(norm_high.(types{iType})(:,1:4));
+            for iPhase = 1:4
+                set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
+            end
+            set(gca, 'xticklabel', sites)
+            legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
+            ylim([cfg.ylims_norm])
+            
+            subplot(4,1,3)
+            b = bar(norm_con_low.(types{iType})(:,1:4));
+            for iPhase = 1:4
+                set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
+            end
+            set(gca, 'xticklabel', sites)
+            legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
+            ylim([cfg.ylims_norm])
+            
+            subplot(4,1,4)
+            b = bar(norm_con_high.(types{iType})(:,1:4));
+            for iPhase = 1:4
+                set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
+            end
+            set(gca, 'xticklabel', sites)
+            legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
+            ylim([cfg.ylims_norm])
     end
-    title(types{iType})
-    set(gca, 'xticklabel', sites)
-    leg_val = PARAMS.Phases; leg_val{5} = 'Control';
-    legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
     
-    
-    subplot(4,1,2)
-    b = bar(AOC_high.(types{iType}));
-    for iPhase = 1:5
-        set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
+    %% save the figure
+    if isunix
+      saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_Summary' types{iType}  '_' cfg.plot_type])
+      saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_Summary' types{iType}  '_' cfg.plot_type], 'png')
+    else
+      saveas(gcf, [PARAMS.inter_dir '\AOC_fit\AOC_Summary' types{iType} '_' cfg.plot_type])
+      saveas(gcf, [PARAMS.inter_dir '\AOC_fit\AOC_Summary' types{iType} '_' cfg.plot_type], 'png')
     end
-    set(gca, 'xticklabel', sites)
-    legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
-    
-    subplot(4,1,3)
-    b = bar(AOC_con_low.(types{iType}));
-    for iPhase = 1:5
-        set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
-    end
-    set(gca, 'xticklabel', sites)
-    legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
-    
-    subplot(4,1,4)
-    b = bar(AOC_con_high.(types{iType}));
-    for iPhase = 1:5
-        set(b(iPhase), 'FaceColor', c_ord(iPhase,:))
-    end
-    set(gca, 'xticklabel', sites)
-    legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
-    
-    %         figure(iType+2)
-    %     subplot(4,1,1)
-    %     bar(norm_low.(types{iType}))
-    %     title(types{iType})
-    %     set(gca, 'xticklabel', sites)
-    %     subplot(4,1,2)
-    %     bar(norm_high.(types{iType}))
-    %     set(gca, 'xticklabel', sites)
-    %
-    %     subplot(4,1,3)
-    %     bar(norm_con_low.(types{iType}))
-    %     set(gca, 'xticklabel', sites)
-    %
-    %     subplot(4,1,4)
-    %     bar(norm_con_high.(types{iType}))
-    %     set(gca, 'xticklabel', sites)
-    
 end
