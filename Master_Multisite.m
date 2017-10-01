@@ -18,17 +18,17 @@
 MS_log = fopen([PARAMS.data_dir '/MS_log.txt'], 'w');
 fprintf(MS_log, date);
 %% Extract the data from each recroding phase within each session and separate pot vs track sections
-% 
+%
 % for iSub = 1:length(PARAMS.Subjects)
 %     if isunix
 %         cd([PARAMS.data_dir '/' PARAMS.Subjects{iSub}])
 %     else
 %         cd([PARAMS.data_dir '\' PARAMS.Subjects{iSub}])
 %     end
-%     
+%
 %     dir_files = dir(); % get all the sessions for the current subject
 %     dir_files(1:2) = [];
-%     sess_list = [];  
+%     sess_list = [];
 %     for iDir = 1:length(dir_files)
 %         if dir_files(iDir).isdir == 1 && strcmp(dir_files(iDir).name(1:4), PARAMS.Subjects{iSub}) % ensure that the session folders have the correct names
 %             sess_list = [sess_list;dir_files(iDir).name];  % extract only the folders for the seesions
@@ -41,7 +41,7 @@ fprintf(MS_log, date);
 %         cfg_loading.fname = sess_list{iSess};
 %         fprintf(['\n' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
 %         fprintf(MS_log,['\nLoading ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-%         
+%
 %         [data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_loading] = MS_load_data_fast(cfg_loading);
 %         fprintf(MS_log, '...complete');
 %     end
@@ -50,10 +50,10 @@ fprintf(MS_log, date);
 %         error('too many or too few sessions for multisite experiment.  Should only contain 4 per rat')
 %     end
 % end
-% 
+%
 % %% get the gamma event counts per recording phase
 % fprintf(MS_log,'\n\nCollecting Events');
-% 
+%
 % for iSub = 1:length(PARAMS.Subjects)
 %     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
 %     for iSess  = 1:length(sess_list)
@@ -63,7 +63,7 @@ fprintf(MS_log, date);
 %     end
 % end
 % % summary of naris events
-% 
+%
 % %     stats = MS_gamma_stats([], Events);
 % %% generate PSDs & get the relative power ratios
 % fprintf(MS_log,'\n\nExtracting Power Metrics');
@@ -76,7 +76,7 @@ fprintf(MS_log, date);
 %         fprintf(MS_log, '...complete');
 %     end
 % end
-% 
+%
 % %% save the intermediate files
 % fprintf(MS_log,'\n\nSaving intermediates');
 % mkdir(PARAMS.data_dir, 'temp');
@@ -95,7 +95,6 @@ load([PARAMS.data_dir '/MS_data.mat'])
 load([PARAMS.data_dir '/MS_naris.mat'])
 load([PARAMS.data_dir '/MS_events.mat'])
 
-fclose(MS_log);
 %% split pot vs trk
 
 [Naris_pot, Naris_trk]  = MS_pot_trk_split(Naris);
@@ -120,7 +119,9 @@ fclose(MS_log);
 for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
+        fprintf(MS_log,['\nPlotting Events ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
         MS_event_fig([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+        fprintf(MS_log, '...complete');
     end
 end
 
@@ -129,14 +130,16 @@ end
 for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
+        fprintf(MS_log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
         MS_spec_fig([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+        fprintf(MS_log, '...complete');
     end
 end
 % %% plot the gamma band power ratios
 % cfg_pow_ratio_plot.ylims = [-75 75];
 % cfg_pow_ratio_plot.plot_type = 'raw';
 % cfg_pow_ratio_plot.ylims_norm = [0 2];
-% 
+%
 % MS_plot_power_ratio(cfg_pow_ratio_plot, Naris_pot)
 % MS_plot_power_ratio(cfg_pow_ratio_plot, Naris_trk)
 
@@ -166,3 +169,4 @@ stats_coh =  MS_Coh_plot_stats(Coh_mat);
 % %% get the coordinates from the Expkeys
 %
 % % stats_subjects = MS_get_subject_info(data);
+fclose(MS_log);

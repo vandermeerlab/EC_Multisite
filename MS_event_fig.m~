@@ -28,7 +28,7 @@ cfg = ProcessConfig2(cfg_def, cfg_in);
 
 global PARAMS
 
-cfg.raw_plot_boost = (round(length(fieldnames(data.post))/1.5) *.1) * 10^-3;
+if length(fieldnames, data)
 %% cycle trough the sites
 sites = fieldnames(events);
 for iSite =1:length(sites)
