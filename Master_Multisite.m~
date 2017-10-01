@@ -132,13 +132,13 @@ for iSub = 1:length(PARAMS.Subjects)
         MS_spec_fig([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
     end
 end
-% %% plot the gamma band power ratios
-% cfg_pow_ratio_plot.ylims = [-75 75];
-% cfg_pow_ratio_plot.plot_type = 'raw';
-% cfg_pow_ratio_plot.ylims_norm = [0 2];
-% 
-% MS_plot_power_ratio(cfg_pow_ratio_plot, Naris_pot)
-% MS_plot_power_ratio(cfg_pow_ratio_plot, Naris_trk)
+%% plot the gamma band power ratios
+cfg_pow_ratio_plot.ylims = [-75 75];
+cfg_pow_ratio_plot.plot_type = 'raw';
+cfg_pow_ratio_plot.ylims_norm = [0 2];
+
+MS_plot_power_ratio(cfg_pow_ratio_plot, Naris_pot)
+MS_plot_power_ratio(cfg_pow_ratio_plot, Naris_trk)
 
 % MS_plot_power([], Naris);
 
