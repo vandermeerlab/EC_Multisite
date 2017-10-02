@@ -6,7 +6,7 @@ global PARAMS
 
 if isunix
     PARAMS.data_dir = '/global/scratch/ecarmichael/Multisite'; % where to find the raw data
-    PARAMS.inter_dir = '/global/scratch/ecarmichael/Multisite/temp'; % where to put intermediate files
+    PARAMS.inter_dir = '/global/scratch/ecarmichael/Multisite/temp/'; % where to put intermediate files
     PARAMS.stats_out = '/ihome/jcarmich/MS/Stats/'; % where to put the statistical output .txt
     PARAMS.code_base_dir = '/ihome/jcarmich/Code/vandermeerlab/code-matlab/shared'; % where the codebase repo can be found
     PARAMS.code_MS_dir = '/ihome/jcarmich/Code/EC_Multisite'; % where the multisite repo can be found

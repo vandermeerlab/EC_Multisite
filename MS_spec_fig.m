@@ -57,7 +57,13 @@ for iSite =1:length(sites)
         SetFigure([],gcf)
         set(gcf, 'position', [600 50 1600 780]);
         sess = strrep(data.pre.ExpKeys.date, '-', '_');
-        subject  = data.pre.ExpKeys.ratID;
+        if isfield(data.pre.ExpKeys, 'Subject')
+            sess = [data.contra.ExpKeys.Subject '_' strrep(data.contra.ExpKeys.date, '-', '-')];
+            subject = data.contra.ExpKeys.Subject;
+        else
+            sess = [data.contra.ExpKeys.ratID '_' strrep(data.contra.ExpKeys.date, '-', '-')];
+            subject = data.contra.ExpKeys.ratID;
+        end
         saveas(gcf, [PARAMS.inter_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'png')
         saveas(gcf, [PARAMS.inter_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'fig')
         saveas(gcf, [PARAMS.inter_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'epsc')
