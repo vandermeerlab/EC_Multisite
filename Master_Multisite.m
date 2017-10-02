@@ -114,7 +114,8 @@ load([PARAMS.data_dir '/MS_events.mat'])
 %         %         fprintf(MS_log, '...complete');
 %     end
 % end
-
+%% plot the PSDs
+MS_plot_psd([], Naris);
 %% get an example event from each session and plot all sites together for the same event.
 for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
@@ -144,11 +145,6 @@ end
 % MS_plot_power_ratio(cfg_pow_ratio_plot, Naris_trk)
 
 % MS_plot_power([], Naris);
-
-
-%% plot the PSDs
-MS_plot_psd([], Naris);
-
 
 %% Get the phase coherence metrics
 % create pairs of channels for detected events.
