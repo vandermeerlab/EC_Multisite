@@ -42,6 +42,19 @@ for iSite = 1:length(sites)
     Control.(sites{iSite}) = C(Naris_in.control.(sites{iSite}).psd.(type{iType,2}));
 end
 
+%%
+wsize = 1024*2;
+p_noise = MS_pink_noise(10000000);
+% Fs_pink = (10000000 - 1)/
+[Pink.Pxx,Pink.F] =  pwelch((p_noise), hanning(wsize), wsize/2, 2*wsize, 2000);
+[Pink.White_Pxx,Pink.White_F] =  pwelch(diff(p_noise), hanning(wsize), wsize/2, 2*wsize, 2000);
+% 
+% 
+% hold on
+plot(Pink.F, 10*log10(Pink.Pxx), 'm')
+% plot(F_white, 10*log10(PX_white), 'b')
+% xlim([1 120])
+
 %% temp plot
 figure(222); 
 phases = fieldnames(Naris_in);
@@ -58,21 +71,37 @@ for iSite = 1:length(sites);
     end
     
     % for ii = [80:20:200];
-    plot(Naris_in.(phases{iPhase}).(sites{iSite}).psd.(type{iType,2}), Control.(sites{iSite}),'-k')
+    % get the intercept 
+    l_idx = nearest_idx3(20, Naris_in.control.(sites{iSite}).psd.(type{iType,2})); 
+    h_idx = nearest_idx3(40, Naris_in.control.(sites{iSite}).psd.(type{iType,2})); 
+    
+    y_inter_mean = mean([mean(10*log10(Naris_in.(phases{1}).(sites{iSite}).psd.(type{iType,1})(l_idx:h_idx))), mean(10*log10(Naris_in.(phases{2}).(sites{iSite}).psd.(type{iType,1})(l_idx:h_idx))), ...
+        mean(10*log10(Naris_in.(phases{3}).(sites{iSite}).psd.(type{iType,1})(l_idx:h_idx))), mean(10*log10(Naris_in.(phases{4}).(sites{iSite}).psd.(type{iType,1})(l_idx:h_idx)))]);
+    
+    l_idx = nearest_idx3(20, Pink.(type{iType,2})); 
+    h_idx = nearest_idx3(40, Pink.(type{iType,2}));
+    
+    offset = mean(10*log10(Pink.(type{iType,1})(l_idx:h_idx))) - y_inter_mean;
+    
+    plot(Pink.(type{iType,2}), 10*log10(Pink.(type{iType,1}))-offset,'-k')
+%     plot(Naris_in.(phases{iPhase}).(sites{iSite}).psd.(type{iType,2}), Control.(sites{iSite}), '--k')
+    
     %     phases{leg_id} = num2str(ii);
     % end
     legend(phases, 'location', 'SouthEast')
     xlim([0 100])
+    pause
+    close all
 end
-cfg_fig = []; cfg_fig.pos = [90 386 1256 401];
-SetFigure(cfg_fig, gcf)
-mkdir(PARAMS.inter_dir, 'AOC_fit')
-if isunix
-saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_'  type{iType,1} '_' cfg.id])
-else
-    saveas(gcf, [PARAMS.inter_dir '\AOC_fit\AOC_'  type{iType,1}  '_' cfg.id])
-end
-close all
+% cfg_fig = []; cfg_fig.pos = [90 386 1256 401];
+% SetFigure(cfg_fig, gcf)
+% mkdir(PARAMS.inter_dir, 'AOC_fit')
+% if isunix
+% saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_'  type{iType,1} '_' cfg.id])
+% else
+%     saveas(gcf, [PARAMS.inter_dir '\AOC_fit\AOC_'  type{iType,1}  '_' cfg.id])
+% end
+% close all
 %% try to get the AOC for the phases relative to the exp_curve fit
 % close all
 bands = {'low', 'high'};

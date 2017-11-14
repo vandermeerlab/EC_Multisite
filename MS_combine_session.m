@@ -1,8 +1,8 @@
 clear all; close all;
-in_fd{1} = '/Users/jericcarmichael/Documents/Multisite/R122/R122-2017-02-26/R122-2017-02-26_post_pot';
-in_fd{2} = '/Users/jericcarmichael/Documents/Multisite/R122/R122-2017-02-26/R122-2017-02-26_post_trk';
+in_fd{1} = '/Users/jericcarmichael/Documents/Multisite/R107/R107-2017-07-31/R107-2017-07-31_pre';
+in_fd{2} = '/Users/jericcarmichael/Documents/Multisite/R107/R107-2017-07-31/R107-2017-07-31_post';
 
-out_fd = '/Users/jericcarmichael/Documents/Multisite/R122/R122-2017-02-26/R122-2017-02_26_post';
+out_fd = '/Users/jericcarmichael/Documents/Multisite/R107/R107-2017-07-31/R107-2017-07-31_new';
 out_fd_postfix = '';
 
 %% get filenames

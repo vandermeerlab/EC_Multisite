@@ -65,13 +65,19 @@ for iType = 1:length(types)
     AOC_con_high.(types{iType}) =  mean(all_AOC_con_high.(types{iType}),3)';
     % try it relative ot the control condition
     
+%     rm_idx = strfind(sites, 'Piri'); Index = find(not(cellfun('isempty', rm_idx)));
+%     AOC_low.(types{iType})([4, 6],:) = [];
+%     AOC_high.(types{iType})([4, 6],:) = [];
+%     AOC_con_low.(types{iType})([4, 6],:) = [];
+%     AOC_con_high.(types{iType})([4, 6],:) = [];
+%     sites{1,6} = [];sites{1,4} = [];
+%     sites = sites(~cellfun('isempty',sites));
     for iPhase = 1:size(AOC_low.(types{iType}),2)
         norm_low.(types{iType})(:,iPhase) = AOC_low.(types{iType})(:,iPhase) ./ AOC_low.(types{iType})(:,5);
         norm_high.(types{iType})(:,iPhase) = AOC_high.(types{iType})(:,iPhase) ./ AOC_high.(types{iType})(:,5);
         norm_con_low.(types{iType})(:,iPhase) = AOC_con_low.(types{iType})(:,iPhase) ./ AOC_con_low.(types{iType})(:,5);
         norm_con_high.(types{iType})(:,iPhase) = AOC_con_high.(types{iType})(:,iPhase) ./ AOC_con_high.(types{iType})(:,5);
     end
-    
     %% switch between normalized to control and raw
     switch cfg.plot_type
         
