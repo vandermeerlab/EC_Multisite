@@ -73,13 +73,14 @@ for ii = 1:length(labels)
     end
 end
 for iPhase = 1:4
-    mat_out.(phases{iPhase}).sess.low = NaN*zeros(size(mat_out.labels));
-    mat_out.(phases{iPhase}).sess.high = NaN*zeros(size(mat_out.labels));
-    mat_out.(phases{iPhase}).evt.low = NaN*zeros(size(mat_out.labels));
-    mat_out.(phases{iPhase}).evt.high = NaN*zeros(size(mat_out.labels));
+    mat_out.(phases{iPhase}).sess_coh.low = NaN*zeros(size(mat_out.labels));
+    mat_out.(phases{iPhase}).sess_coh.high = NaN*zeros(size(mat_out.labels));
+    mat_out.(phases{iPhase}).evt_coh.low = NaN*zeros(size(mat_out.labels));
+    mat_out.(phases{iPhase}).evt_coh.high = NaN*zeros(size(mat_out.labels));
     mat_out.(phases{iPhase}).sess_amp.low = NaN*zeros(size(mat_out.labels));
-    mat_out.(phases{iPhase}).sess_amp.low = NaN*zeros(size(mat_out.labels));
-    
+    mat_out.(phases{iPhase}).sess_amp.high = NaN*zeros(size(mat_out.labels));
+    mat_out.(phases{iPhase}).evt_amp.low = NaN*zeros(size(mat_out.labels));
+    mat_out.(phases{iPhase}).evt_amp.high = NaN*zeros(size(mat_out.labels));
 end
 
 %%
@@ -99,56 +100,81 @@ for iType = 1:length(types)
                 idx = strfind(mat_out.labels, pairs{iPair});
                 [x_idx,y_idx] = find(not(cellfun('isempty', idx)));
                 
-                %get the coherence across the entire session for each channel
-                [Coh_sess_temp.c, Coh_sess_temp.f] = mscohere(mat.(phases{iPhase}).([sites{1} types{iType}]).data,mat.(phases{iPhase}).([sites{2} types{iType}]).data,...
-                    hanning(round(cfg.wsize/2)),cfg.wsize/4,cfg.wsize,...
-                    mat.(phases{iPhase}).([sites{1} types{iType}]).cfg.hdr{1}.SamplingFrequency);
-                
-                f_idx = find(Coh_sess_temp.f > cfg.f(iBand,1) & Coh_sess_temp.f <= cfg.f(iBand,2));
-                mat_out.(phases{iPhase}).sess.(bands{iBand})(x_idx,y_idx) = mean(Coh_sess_temp.c(f_idx));
-                clear Coh_sess_temp
-                
-                %% get the amplitude coherence across all frequencies
-                
-                % set up the filter
+                % set up the filter for the band of interest 
+                                % set up the filter
                 cfg_filter = [];
                 cfg_filter.f = [cfg.f(iBand,1) cfg.f(iBand,2)];
                 
                 % filter the two signals
                 d_f1 = FilterLFP(cfg_filter, mat.(phases{iPhase}).([sites{1} types{iType}]));
                 d_f2 = FilterLFP(cfg_filter, mat.(phases{iPhase}).([sites{2} types{iType}]));
+                %% get the coherence across the entire session for each channel
+                [Coh_sess_temp.c, Coh_sess_temp.f] = mscohere(d_f1 .data,d_f2.data,hanning(round(cfg.wsize/2)),cfg.wsize/4,cfg.wsize,d_f1.cfg.hdr{1}.SamplingFrequency);
+                
+                f_idx = find(Coh_sess_temp.f > cfg.f(iBand,1) & Coh_sess_temp.f <= cfg.f(iBand,2));
+                mat_out.(phases{iPhase}).sess_coh.(bands{iBand})(x_idx,y_idx) = mean(Coh_sess_temp.c(f_idx));
+                clear Coh_sess_temp
+                
+                %% get the amplitude corr across all frequencies
+               
+                % get the envelope
+                d_f1.data_env =  abs(hilbert(d_f1.data));
+                d_f2.data_env =  abs(hilbert(d_f2.data));
                 
                 % get the amplitude coherence for the entire session (same parameters as phase coherence)
-                [AMP_sess_temp.c, AMP_sess_temp.f] = mscohere(d_f1.data, d_f2.data,hanning(round(cfg.wsize/2)),cfg.wsize/4,cfg.wsize,d_f1.cfg.hdr{1}.SamplingFrequency);
+                [AMP_sess_temp.c, AMP_sess_temp.f] = mscohere(d_f1.data_env, d_f2.data_env,hanning(round(cfg.wsize/2)),cfg.wsize/4,cfg.wsize,d_f1.cfg.hdr{1}.SamplingFrequency);
                 
                 % find the values with the frequency range of interestet (cfg.f)
                 f_idx = find(AMP_sess_temp.f > cfg.f(iBand,1) & AMP_sess_temp.f <= cfg.f(iBand,2));
                 mat_out.(phases{iPhase}).sess_amp.(bands{iBand})(x_idx,y_idx) = mean(AMP_sess_temp.c(f_idx));
                 clear d_f1 d_f2 AMP_sess_temp
-                
-                %%    Get the coherence on an event by event basis
+                disp('Amp Cor')
+                disp(mat_out.(phases{iPhase}).sess_amp.(bands{iBand}))
+                %%    Get the coherence and amp corr on an event by event basis
                 pairs_in = evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.pairs;  % keeps things a bit more clean
                 if isempty(pairs_in.(pairs{iPair}).(main{1})) ~=1
-                for iEvt = length(pairs_in.(pairs{iPair}).(main{1})):-1:1
-                    % get the coherence across all frequencies
-                    win_size = length(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data);
-                    [Coh_evt_temp.c{iEvt}, Coh_evt_temp.f{iEvt}] = mscohere(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data,pairs_in.(pairs{iPair}).(main{2}){iEvt}.data,...
-                        hanning(round(win_size/2)),round(win_size/4),win_size,...
-                        pairs_in.(pairs{iPair}).(main{1}){iEvt}.cfg.hdr{1}.SamplingFrequency);
-                    %find the frequencies of interest and then
-                    f_idx = find(Coh_evt_temp.f{iEvt} > cfg.f(iBand,1) & Coh_evt_temp.f{iEvt} <= cfg.f(iBand,2));
-                    mat_out.(phases{iPhase}).evt.(bands{iBand})(x_idx,y_idx,iEvt) = mean(Coh_evt_temp.c{iEvt}(f_idx));
-                end
+                    for iEvt = length(pairs_in.(pairs{iPair}).(main{1})):-1:1
+                        % get the coherence across all frequencies
+                        win_size = length(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data);
+                        [Coh_evt_temp.c{iEvt}, Coh_evt_temp.f{iEvt}] = mscohere(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data,pairs_in.(pairs{iPair}).(main{2}){iEvt}.data,...
+                            hanning(round(win_size/2)),round(win_size/4),win_size,...
+                            pairs_in.(pairs{iPair}).(main{1}){iEvt}.cfg.hdr{1}.SamplingFrequency);
+                        %find the frequencies of interest and then
+                        f_idx = find(Coh_evt_temp.f{iEvt} > cfg.f(iBand,1) & Coh_evt_temp.f{iEvt} <= cfg.f(iBand,2));
+                        mat_out.(phases{iPhase}).evt_coh.(bands{iBand})(x_idx,y_idx,iEvt) = mean(Coh_evt_temp.c{iEvt}(f_idx));
+                    end
                 else
-                    mat_out.(phases{iPhase}).evt.(bands{iBand})(x_idx,y_idx,1) = NaN;
+                    mat_out.(phases{iPhase}).evt_coh.(bands{iBand})(x_idx,y_idx,1) = NaN;
                 end
-                    % collect output in a matrix that contains all the poissible pairs.
-                    evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.(pairs{iPair}).coh = mat_out;
-                    
+                
+                %% get the amplitude corr on an event by event basis
+                if isempty(pairs_in.(pairs{iPair}).(main{1})) ~=1
+                    %                     env_IV = TSDtoIV(
+                    for iEvt = length(pairs_in.(pairs{iPair}).(main{1})):-1:1
+                        % get the coherence across all frequencies
+                        win_size = length(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data);
+                        [Coh_evt_temp.c{iEvt}, Coh_evt_temp.f{iEvt}] = mscohere(pairs_in.(pairs{iPair}).(main{1}){iEvt}.data,pairs_in.(pairs{iPair}).(main{2}){iEvt}.data,...
+                            hanning(round(win_size/2)),round(win_size/4),win_size,...
+                            pairs_in.(pairs{iPair}).(main{1}){iEvt}.cfg.hdr{1}.SamplingFrequency);
+                        %find the frequencies of interest and then
+                        f_idx = find(Coh_evt_temp.f{iEvt} > cfg.f(iBand,1) & Coh_evt_temp.f{iEvt} <= cfg.f(iBand,2));
+                        mat_out.(phases{iPhase}).evt_amp.(bands{iBand})(x_idx,y_idx,iEvt) = mean(Coh_evt_temp.c{iEvt}(f_idx));
+                    end
+                else
+                    mat_out.(phases{iPhase}).evt_amp.(bands{iBand})(x_idx,y_idx,1) = NaN;
                 end
+                mat_out.(phases{iPhase}).evt_amp.(bands{iBand})
+                
+                
+                %%
+                % collect output in a matrix that contains all the poissible pairs.
+                disp([sites{1} ' ' types{iType} ' ' phases{iPhase} ' ' bands{iBand} ' ' pairs{iPair}])
+                evts_out.([sites{1} types{iType}]).(phases{iPhase}).(bands{iBand}).evts.(pairs{iPair}).coh = mat_out;
+                
             end
         end
     end
+end
 end
 
 

@@ -18,6 +18,7 @@ cfg_def = [];
 cfg_def.win = 512;
 cfg_def.noverlap = cfg_def.win/4;
 cfg_def.linewidth = 3;
+cfg_def.c_ord = linspecer(4);
 cfg = ProcessConfig2(cfg_def, cfg_in);
 
 global PARAMS
@@ -79,11 +80,20 @@ for iSite =1:length(sites)
         axis xy; xlabel('time (s)'); ylabel('Frequency (Hz)');
         caxis([-150 -80])
         h = vline([Tp(end),(Tp(end)+Ti(end)),(Tp(end)+Ti(end)+Tc(end))], {'k', 'k', 'k'} );
-        set(h(:), 'linewidth', cfg.linewidth)
-        colormap('PARULA')
+        % add lines to distinguish phases
+        ylim([0 120]);
+        hold on
+        plot(0:Tp(end), zeros(length(0:Tp(end)),1),'color', cfg.c_ord(1,:), 'linewidth', 5); % pre
+        plot(Tp(end):(Tp(end)+Ti(end)), zeros(length(Tp(end):(Tp(end)+Ti(end))),1),'color', cfg.c_ord(2,:), 'linewidth', 5); % ipsi
+        plot((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end)), zeros(length((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end))),1),'color', cfg.c_ord(3,:), 'linewidth', 5); % contra
+        plot((Tp(end)+Ti(end)+Tc(end)):(Tp(end)+Ti(end)+Tc(end)+Tpo(end)), zeros(length((Tp(end)+Ti(end)+Tc(end)):(Tp(end)+Ti(end)+Tc(end)+Tpo(end))),1),'color', cfg.c_ord(4,:), 'linewidth', 5); % post
+
+        set(h(:), 'linewidth', cfg.linewidth);
+        colormap('PARULA');
         
-        SetFigure([],gcf)
-        set(gcf, 'position', [100 50 1600*.9 780*.9]);
+        SetFigure([],gcf);
+        set(gcf, 'position', [0 50 1600*.9 420*.9]);
+        tightfig;
         sess = strrep(data.pre.ExpKeys.date, '-', '_');
         if isfield(data.pre.ExpKeys, 'Subject')
             sess = [data.contra.ExpKeys.Subject '_' strrep(data.contra.ExpKeys.date, '-', '-')];
@@ -101,7 +111,7 @@ for iSite =1:length(sites)
         %         saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'epsc')
         fname = [subject '_' sess '_' sites{iSite} '_Spectrogram'];
         pushdir(save_dir)
-             eval(sprintf('print -depsc2 -tiff -r300 -painters %s',fname))
+             eval(sprintf('print -depsc2 -tiff -r300 -painters %s',fname));
         popdir
         %         print -depsc2 -tiff -r300 -painters test.eps
         
@@ -123,6 +133,7 @@ for iSite =1:length(sites)
             SetFigure([], gcf);
             pbaspect([1 1 1])
             set(gcf, 'position', [358   167   642   631]);
+            tightfig
             saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_xcorr' label], 'fig')
             fname = [subject '_' sess '_' sites{iSite} '_xcorr' label];
             pushdir(save_dir)

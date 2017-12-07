@@ -86,36 +86,46 @@ save([PARAMS.data_dir 'MS_events.mat'], 'Events', '-v7.3')
 
 fclose(MS_log);
 
-%% load the intermediate files
-MS_log = fopen([PARAMS.data_dir '/MS_log_2.txt'], 'w');
-fprintf(MS_log, date);
-fprintf(MS_log,'\n\nLoading intermediates');
-load([PARAMS.data_dir '/MS_data.mat'])
-load([PARAMS.data_dir '/MS_naris.mat'])
-load([PARAMS.data_dir '/MS_events.mat'])
-
-%% split pot vs trk
-
-[Naris_pot, Naris_trk]  = MS_pot_trk_split(Naris);
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Analyses %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% get the ratio of the power in multiple bands relative to the exponential f curve
-% fprintf(MS_log,'\n\nExtracting Power Ratio');
-for iSub = 1:length(PARAMS.Subjects)
-    sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
-    for iSess  = 1:length(sess_list)
-        %         fprintf(MS_log,['\nGetting ratio ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-        cfg_pow_ratio.id = sess_list{iSess};
-        Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio(cfg_pow_ratio,Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-        Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio(cfg_pow_ratio,Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-        %         fprintf(MS_log, '...complete');
-    end
-end
-%% plot the PSDs
-cfg_psd.type = 'white'; 
-MS_plot_psd(cfg_psd, Naris);
+% %% load the intermediate files
+% MS_log = fopen([PARAMS.data_dir '/MS_log_2.txt'], 'w');
+% fprintf(MS_log, date);
+% fprintf(MS_log,'\n\nLoading intermediates');
+% load([PARAMS.data_dir '/MS_data.mat'])
+% load([PARAMS.data_dir '/MS_naris.mat'])
+% load([PARAMS.data_dir '/MS_events.mat'])
+% 
+% %% split pot vs trk
+% 
+% [Naris_pot, ~]  = MS_pot_trk_split(Naris);
+% [data_pot, ~]  = MS_pot_trk_split(data);
+% [Events_pot, ~]  = MS_pot_trk_split(Events);
+% 
+% %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Analyses %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% %% get the ratio of the power in multiple bands relative to the exponential f curve
+% % fprintf(MS_log,'\n\nExtracting Power Ratio');
+% for iSub = 1:length(PARAMS.Subjects)
+%     sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
+%     for iSess  = 1:length(sess_list)
+%         %         fprintf(MS_log,['\nGetting ratio ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+%         cfg_pow_ratio.id = sess_list{iSess};
+%         Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio(cfg_pow_ratio,Naris_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+%         Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio(cfg_pow_ratio,Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+%         %         fprintf(MS_log, '...complete');
+%     end
+% end
+% %% plot the PSDs
+% cfg_psd.type = 'white'; 
+% MS_plot_psd(cfg_psd, Naris);
+% 
+% %% count the events
+% cfg_evt_plot =[];
+% cfg_evt_plot.sites = {'PL_pot', 'IL_pot', 'OFC_pot', 'NAc_pot', 'CG_pot'};
+% 
+% MS_plot_event_stats(cfg_evt_plot, Events)
+% 
 %% get an example event from each session and plot all sites together for the same event.
 for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
@@ -125,44 +135,44 @@ for iSub = 1:length(PARAMS.Subjects)
         fprintf(MS_log, '...complete');
     end
 end
-
-
+% 
+% 
 %% generate a spectrogram across each session for each site.
-for iSub = 1%:length(PARAMS.Subjects)
-    sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
+for iSub = 1:length(PARAMS.Subjects)
+    sess_list = fieldnames(data_pot.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
         fprintf(MS_log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-        MS_spec_fig([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+        MS_spec_fig([], data_pot.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
         fprintf(MS_log, '...complete');
     end
 end
-%% plot the gamma band power ratios
-cfg_pow_ratio_plot.ylims = [-75 75];
-cfg_pow_ratio_plot.plot_type = 'raw';
-cfg_pow_ratio_plot.ylims_norm = [0 2];
-
-MS_plot_power_ratio(cfg_pow_ratio_plot, Naris_pot)
-MS_plot_power_ratio(cfg_pow_ratio_plot, Naris_trk)
-
-% MS_plot_power([], Naris);
-
-%% Get the phase coherence metrics
-% create pairs of channels for detected events.
-
-for iSub = 1:length(PARAMS.Subjects)
-    sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
-    for iSess = 1:length(sess_list)
-        [Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), Coh_mat.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))]  = MS_event_pairs([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-    end
-end
-
-%% plot the COH metrics
-
-stats_coh =  MS_Coh_plot_stats(Coh_mat);
-%
-%
-%
-% %% get the coordinates from the Expkeys
-%
-% % stats_subjects = MS_get_subject_info(data);
-fclose(MS_log);
+% %% plot the gamma band power ratios
+% cfg_pow_ratio_plot.ylims = [-75 75];
+% cfg_pow_ratio_plot.plot_type = 'raw';
+% cfg_pow_ratio_plot.ylims_norm = [0 2];
+% 
+% MS_plot_power_ratio(cfg_pow_ratio_plot, Naris_pot)
+% MS_plot_power_ratio(cfg_pow_ratio_plot, Naris_trk)
+% 
+% % MS_plot_power([], Naris);
+% 
+% %% Get the phase coherence metrics
+% % create pairs of channels for detected events.
+% 
+% for iSub = 2:length(PARAMS.Subjects)
+%     sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
+%     for iSess = 1:length(sess_list)
+%         [Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), Coh_mat.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))]  = MS_event_pairs([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+%     end
+% end
+% 
+% %% plot the COH metrics
+% 
+% stats_coh =  MS_Coh_plot_stats(Coh_mat);
+% %
+% %
+% %
+% % %% get the coordinates from the Expkeys
+% %
+% % % stats_subjects = MS_get_subject_info(data);
+% fclose(MS_log);
