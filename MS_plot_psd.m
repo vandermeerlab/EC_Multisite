@@ -18,6 +18,8 @@ cfg_def.linewidth = 2;
 cfg = ProcessConfig2(cfg_def, cfg_in);
 global PARAMS
 c_ord = linspecer(length(PARAMS.Phases));
+mkdir(PARAMS.inter_dir, 'PSD')
+
 %% cycle through data from each subject, session, and channel to give an
 %  overview figure (raster) and individual PSDs (vector)
 switch cfg.type
@@ -27,7 +29,7 @@ switch cfg.type
             sess_list = fieldnames(Naris.(sub_list{iSub}));
             for iSess = 1:length(sess_list);
                 site_list = fieldnames(Naris.(sub_list{iSub}).(sess_list{iSess}).(PARAMS.Phases{1}));
-                S1 = ceil(length(site_list)/3);
+                S1 = ceil(length(site_list)/2.5);
                 h.(['n' num2str(iSess)]) = figure((iSub)*10 + (iSess));
                 for iSite = 1:length(site_list)
                     h_site.(['n' num2str(iSite)]) = figure((iSub)*100 + (iSess)*10 +(iSite));
@@ -43,8 +45,13 @@ switch cfg.type
                     title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
                     legend(PARAMS.Phases)
                     SetFigure([], h_site.(['n' num2str(iSite)]))
-                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite}], 'png')
-                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite}], 'eps')
+                    if isunix
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_' site_list{iSite}], 'png')
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_' site_list{iSite}], 'epsc')
+                    else
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_' site_list{iSite}], 'png')
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_' site_list{iSite}], 'epsc')
+                    end
                     close(h_site.(['n' num2str(iSite)]));
                     h_all = figure((iSub)*100 + (iSess));
                     subplot(S1,S1,iSite)
@@ -62,8 +69,13 @@ switch cfg.type
                 end
                 Square_subplots();
                 SetFigure([], h_all)
-                saveas(h_all, [PARAMS.inter_dir sess_list{iSess} '_all'], 'png')
-                saveas(h_all, [PARAMS.inter_dir sess_list{iSess} '_all'], 'eps')
+                if isunix
+                    saveas(h_all, [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_all'], 'png')
+                    saveas(h_all, [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_all'], 'epsc')
+                else
+                    saveas(h_all, [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_all'], 'png')
+                    saveas(h_all, [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_all'], 'epsc')
+                end
                 close all
                 
             end
@@ -74,7 +86,7 @@ switch cfg.type
             sess_list = fieldnames(Naris.(sub_list{iSub}));
             for iSess = 1:length(sess_list);
                 site_list = fieldnames(Naris.(sub_list{iSub}).(sess_list{iSess}).(PARAMS.Phases{1}));
-                S1 = ceil(length(site_list)/3);
+                S1 = ceil(length(site_list)/2.5);
                 h.(['n' num2str(iSess)]) = figure((iSub)*10 + (iSess));
                 for iSite = 1:length(site_list)
                     h_site.(['n' num2str(iSite)]) = figure((iSub)*100 + (iSess)*10 +(iSite));
@@ -90,8 +102,13 @@ switch cfg.type
                     title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
                     legend(PARAMS.Phases)
                     SetFigure([], h_site.(['n' num2str(iSite)]))
-                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite} '_white'], 'png')
-                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite} '_white'], 'eps')
+                    if isunix
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_' site_list{iSite} '_white'], 'png')
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_' site_list{iSite} '_white'], 'epsc')
+                    else
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_' site_list{iSite} '_white'], 'png')
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_' site_list{iSite} '_white'], 'epsc')
+                    end
                     close(h_site.(['n' num2str(iSite)]));
                     h_all = figure((iSub)*100 + (iSess));
                     subplot(S1,S1,iSite)
@@ -109,8 +126,13 @@ switch cfg.type
                 end
                 Square_subplots();
                 SetFigure([], h_all)
-                saveas(h_all, [PARAMS.inter_dir sess_list{iSess} '_all_white'], 'png')
-                saveas(h_all, [PARAMS.inter_dir sess_list{iSess} '_all_white'], 'eps')
+                if isunix
+                    saveas(h_all, [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_all_white'], 'png')
+                    saveas(h_all, [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_all_white'], 'eps')
+                else
+                    saveas(h_all, [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_all_white'], 'png')
+                    saveas(h_all, [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_all_white'], 'eps')
+                end
                 close all
             end
         end
@@ -121,7 +143,7 @@ switch cfg.type
             sess_list = fieldnames(Naris.(sub_list{iSub}));
             for iSess = 1:length(sess_list);
                 site_list = fieldnames(Naris.(sub_list{iSub}).(sess_list{iSess}).(PARAMS.Phases{1}));            
-                S1 = ceil(length(site_list)/3);
+                S1 = ceil(length(site_list)/2.5);
                 h.(['n' num2str(iSess)]) = figure((iSub)*10 + (iSess));
                 for iSite = 1:length(site_list)
                     h_site.(['n' num2str(iSite)]) = figure((iSub)*100 + (iSess)*10 +(iSite));
@@ -137,8 +159,13 @@ switch cfg.type
                     title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
                     legend(PARAMS.Phases)
                     SetFigure([], h_site.(['n' num2str(iSite)]))
-                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite}], 'png')
-                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite}], 'eps')
+                    if isunix
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_' site_list{iSite} ], 'png')
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_' site_list{iSite} ], 'epsc')
+                    else
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_' site_list{iSite} ], 'png')
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_' site_list{iSite} ], 'epsc')
+                    end
                     close(h_site.(['n' num2str(iSite)]));
                     h_all = figure((iSub)*100 + (iSess));
                     subplot(S1,S1,iSite)
@@ -156,8 +183,13 @@ switch cfg.type
                 end
                 Square_subplots();
                 SetFigure([], h_all)
-                saveas(h_all, [PARAMS.inter_dir sess_list{iSess} '_all'], 'png')
-                saveas(h_all, [PARAMS.inter_dir sess_list{iSess} '_all'], 'eps')
+                if isunix
+                    saveas(h_all, [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_all'], 'png')
+                    saveas(h_all, [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_all'], 'eps')
+                else
+                    saveas(h_all, [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_all'], 'png')
+                    saveas(h_all, [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_all'], 'eps')
+                end
                 close all
                 
             end
@@ -167,7 +199,7 @@ switch cfg.type
             sess_list = fieldnames(Naris.(sub_list{iSub}));
             for iSess = 1:length(sess_list);
                 site_list = fieldnames(Naris.(sub_list{iSub}).(sess_list{iSess}).(PARAMS.Phases{1}));
-                S1 = ceil(length(site_list)/3);
+                S1 = ceil(length(site_list)/2.5);
                 h.(['n' num2str(iSess)]) = figure((iSub)*10 + (iSess));
                 for iSite = 1:length(site_list)
                     h_site.(['n' num2str(iSite)]) = figure((iSub)*100 + (iSess)*10 +(iSite));
@@ -183,8 +215,13 @@ switch cfg.type
                     title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
                     legend(PARAMS.Phases)
                     SetFigure([], h_site.(['n' num2str(iSite)]))
-                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite} '_white'], 'png')
-                    saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir sess_list{iSess} '_' site_list{iSite} '_white'], 'eps')
+                    if isunix
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_' site_list{iSite} '_white'], 'png')
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_' site_list{iSite} '_white'], 'epsc')
+                    else
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_' site_list{iSite} '_white'], 'png')
+                        saveas(h_site.(['n' num2str(iSite)]), [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_' site_list{iSite} '_white'], 'epsc')
+                    end
                     close(h_site.(['n' num2str(iSite)]));
                     h_all = figure((iSub)*100 + (iSess));
                     subplot(S1,S1,iSite)
@@ -202,8 +239,13 @@ switch cfg.type
                 end
                 Square_subplots();
                 SetFigure([], h_all)
-                saveas(h_all, [PARAMS.inter_dir sess_list{iSess} '_all_white'], 'png')
-                saveas(h_all, [PARAMS.inter_dir sess_list{iSess} '_all_white'], 'eps')
+                if isunix
+                    saveas(h_all, [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_all_white'], 'png')
+                    saveas(h_all, [PARAMS.inter_dir '\PSD\' sess_list{iSess} '_all_white'], 'eps')
+                else
+                    saveas(h_all, [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_all_white'], 'png')
+                    saveas(h_all, [PARAMS.inter_dir '/PSD/' sess_list{iSess} '_all_white'], 'eps')
+                end
                 close all
             end
         end
