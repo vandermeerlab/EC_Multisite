@@ -21,6 +21,7 @@ figure(h)
 set(gcf,'windowstyle','normal');
 set(h,'PaperPositionMode','auto')
 set(gca,'DefaultTextFontSize',cfg.ft_size)
+set(0, 'DefaulttextInterpreter', 'none')
 if cfg.resize == 1
     set(gcf, 'position', [600 50 560*1.4 420*1.4]);
 end
