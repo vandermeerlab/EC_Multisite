@@ -97,7 +97,7 @@ load([PARAMS.data_dir 'MS_events.mat'])
 fprintf(PARAMS.log,'\n\nSplitting the data into pot and trk');
 [Naris_pot, Naris_trk]  = MS_pot_trk_split(Naris);
 [data_pot, data_trk]  = MS_pot_trk_split(data);
-% [Events_pot, Events_trk]  = MS_pot_trk_split(Events);
+[Events_pot, Events_trk]  = MS_pot_trk_split(Events);
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Analyses %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -123,7 +123,7 @@ MS_plot_psd(cfg_psd, Naris);
 cfg_evt_plot =[];
 cfg_evt_plot.sites = {'PL_pot', 'IL_pot', 'OFC_pot', 'NAc_pot', 'CG_pot'};
 
-% MS_plot_event_stats(cfg_evt_plot, Events)
+MS_plot_event_stats(cfg_evt_plot, Events)
 
 %% get an example event from each session and plot all sites together for the same event.
 for iSub = 1:length(PARAMS.Subjects)
