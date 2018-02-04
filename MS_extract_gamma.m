@@ -52,6 +52,9 @@ for iExp = 1:length(exp)
     for iSite = 1:length(sites)
         if strcmp(exp{iExp}, 'control') ==1
             [evts.(sites{iSite}).(exp{iExp}), ~, evt_thr.(sites{iSite}).control] = MS_DetectEvents_thresholds([], Naris.(sites{iSite}).(exp{iExp}), data.pre.ExpKeys);
+            cfg= []; cfg.detect_method = 'raw'; cfg.detect_thr = evt_thr.(sites{iSite}).control;
+            cfg.f_bandpass = {[45 65],[70 90],[45 65], [70 90]};
+            [evts.(sites{iSite}).(exp{iExp}), ~, ~] = MS_DetectEvents(cfg, Naris.(sites{iSite}).(exp{iExp}), data.pre.ExpKeys);
         else
             cfg= []; cfg.detect_method = 'raw'; cfg.detect_thr = evt_thr.(sites{iSite}).control;
             cfg.f_bandpass = {[45 65],[70 90],[45 65], [70 90]};

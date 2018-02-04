@@ -1,4 +1,4 @@
-function Naris_out = MS_get_power_ratio(cfg_in, Naris_in)
+function [Naris_out, cfg] = MS_get_power_ratio(cfg_in, Naris_in)
 %%        :
 %
 %
@@ -90,7 +90,6 @@ for iSite = 1:length(sites);
     % end
     legend(phases, 'location', 'SouthEast')
     xlim([0 100])
-    pause
     close all
 end
 % cfg_fig = []; cfg_fig.pos = [90 386 1256 401];
