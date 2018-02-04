@@ -89,21 +89,21 @@ for iSub = 1:length(PARAMS.Subjects)
     end
 end
 % %% save the intermediate files
-% fprintf(PARAMS.log,'\n\nSaving intermediates');
+fprintf(PARAMS.log,'\n\nSaving intermediates');
 % mkdir(PARAMS.data_dir, 'temp');
-% save([PARAMS.data_dir 'MS_data.mat'], 'data', '-v7.3')
+save([PARAMS.data_dir 'MS_data.mat'], 'data', '-v7.3')
 save([PARAMS.data_dir 'MS_naris.mat'], 'Naris', '-v7.3')
-% save([PARAMS.data_dir 'MS_events.mat'], 'Events', '-v7.3')
+save([PARAMS.data_dir 'MS_events.mat'], 'Events', '-v7.3')
 % 
 % % fclose(PARAMS.log);
 
 %% load the intermediate files
 % PARAMS.log = fopen([PARAMS.data_dir '/PARAMS.log_2.txt'], 'w');
 fprintf(PARAMS.log, date);
-fprintf(PARAMS.log,'\n\nLoading intermediates');
-load([PARAMS.data_dir 'MS_data.mat'])
-load([PARAMS.data_dir 'MS_naris.mat'])
-load([PARAMS.data_dir 'MS_events.mat'])
+% fprintf(PARAMS.log,'\n\nLoading intermediates');
+% load([PARAMS.data_dir 'MS_data.mat'])
+% load([PARAMS.data_dir 'MS_naris.mat'])
+% load([PARAMS.data_dir 'MS_events.mat'])
 
 %% split pot vs trk
 fprintf(PARAMS.log,'\n\nSplitting the data into pot and trk');
@@ -167,11 +167,11 @@ for iSub = 1:length(PARAMS.Subjects)
 end
 
 
-
+save([PARAMS.data_dir 'MS_mat.mat'], 'mat_out', '-v7.3')
 
 
 %%
-% MS_plot_power([], Naris);
+MS_plot_power([], Naris);
 
 % %% Get the phase coherence metrics
 % % create pairs of channels for detected events.
