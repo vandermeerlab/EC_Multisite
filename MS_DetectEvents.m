@@ -158,6 +158,7 @@ for iFreq = 1:length(cfg.f_label)
     evt = SelectIV(cfg_cc,evt,'nCycles');
     
     fprintf('\n MASTER_CollectGammaEvents: %d %s events remain after cycle count removal.\n',length(evt.tstart),cfg.f_label{iFreq});
+
     
     %% exclude events with excessive variance in amplitude (only those in within evt detect boundaries)
     %         iv_temp = IVcenters(evt);
@@ -206,11 +207,16 @@ for iFreq = 1:length(cfg.f_label)
     %         fprintf('\n MASTER_CollectGammaEvents: %d %s events remain after mean peak removal.\n',length(evt.tstart),cfg.f_label{iFreq});
     %
     %% check for evnts that are too long. 
-    cfg.max_len = 1;
-    keep_idx = evt.tend-evt.tstart < cfg.max_len;
-    evt = SelectIV([],evt,keep_idx);
+    % add in a user field for the length of the events (currently not used)
+    evt.usr.evt_len = (evt.tend - evt.tstart)';
+   
+    cfg_max_len = [];
+    cfg_max_len.operation = '<';
+    cfg_max_len.threshold = 1;
+    evt = SelectIV(cfg_max_len,evt,'evt_len');
     
-            
+    fprintf('\n MASTER_CollectGammaEvents: %d %s events remain after max length removal.\n',length(evt.tstart),cfg.f_label{iFreq});
+
     %% minlen only version
 if isempty(evt.tstart) ==0
     iv_temp = IVcenters(evt);

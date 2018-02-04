@@ -45,7 +45,11 @@ switch cfg.type
             if iChan ==1
                 d.data(iChan,:) = sin(2*pi*cfg.freq*d.tvec).*cfg.amp;
             else
-                d.data(iChan,:) = sin(2*pi*cfg.freq*d.tvec+degtorad(cfg.phase_off*iChan)).*cfg.amp*iChan;
+                if numel(cfg.phase_off) ==1
+                    d.data(iChan,:) = sin(2*pi*cfg.freq*d.tvec+degtorad(cfg.phase_off*iChan)).*cfg.amp*iChan;
+                else
+                    d.data(iChan,:) = sin(2*pi*cfg.freq*d.tvec+degtorad(cfg.phase_off(iChan))).*cfg.amp*iChan;
+                end
             end
             if strcmp(cfg.noise, 'on')
                 d.data(iChan,:) = d.data(iChan,:)+cfg.noise_val*randn(size(d.tvec));
@@ -59,7 +63,12 @@ switch cfg.type
                 d.data(iChan,:) = sin(2*pi*cfg.freq*d.tvec).*cfg.amp*iChan;
                 d.data(iChan,:) = d.data(iChan,:).*gausswin(length(d.data(1,:)),cfg.sd)';
             else
-                d.data(iChan,:) = sin(2*pi*cfg.freq*d.tvec+degtorad(cfg.phase_off*iChan)).*cfg.amp*iChan;
+                if numel(cfg.phase_off) ==1
+                    d.data(iChan,:) = sin(2*pi*cfg.freq*d.tvec+degtorad(cfg.phase_off*iChan)).*cfg.amp*iChan;
+                else
+                    d.data(iChan,:) = sin(2*pi*cfg.freq*d.tvec+degtorad(cfg.phase_off(iChan))).*cfg.amp*iChan;
+                    
+                end
                 d.data(iChan,:) = d.data(iChan,:).*gausswin(length(d.data(1,:)),cfg.sd)';
             end
             if strcmp(cfg.noise, 'on')
@@ -75,7 +84,11 @@ switch cfg.type
                 if iChan ==1
                     temp(ifreq,:) = sin(2*pi*freqs(ifreq)*d.tvec).*cfg.complex_amp(ifreq);
                 else
-                    temp(ifreq,:) = (sin(2*pi*freqs(ifreq)*d.tvec+degtorad(cfg.phase_off)).*cfg.complex_amp(ifreq));
+                    if numel(cfg.phase_off) ==1
+                        temp(ifreq,:) = (sin(2*pi*freqs(ifreq)*d.tvec+degtorad(cfg.phase_off*iChan)).*cfg.complex_amp(ifreq));
+                    else
+                        temp(ifreq,:) = (sin(2*pi*freqs(ifreq)*d.tvec+degtorad(cfg.phase_off(iChan))).*cfg.complex_amp(ifreq));
+                    end
                 end
             end
             d.data(iChan,:) = sum(temp);
@@ -93,11 +106,11 @@ end
 switch cfg.output
     
     case 'tsd' % time series data
-        d.cfg = cfg; 
+        d.cfg = cfg;
         for nChan = cfg.nChan:-1:1
-         d.cfg.hdr{nChan}.SamplingFrequency = cfg.Fs;
-         d.cfg.hdr{nChan}.FileType = 'CSC';
-         d.cfg.hdr{nChan}.AcqEntName = ['CSC' num2str(nChan)];
+            d.cfg.hdr{nChan}.SamplingFrequency = cfg.Fs;
+            d.cfg.hdr{nChan}.FileType = 'CSC';
+            d.cfg.hdr{nChan}.AcqEntName = ['CSC' num2str(nChan)];
         end
         d.type = cfg.output;
         d.cfg.SessionID = 'ARTIFICIAL';
@@ -110,7 +123,7 @@ switch cfg.output
         plot(data_out.tvec, data_out.data)
         xlim([0 cfg.len/25])
         legend(data_out.label, 'location', 'south', 'orientation', 'horizontal')
-
+        
     case 'FT' % fieldtrip
         data_out = TSDtoFT([],d);
         figure(9999)
