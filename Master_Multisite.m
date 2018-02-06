@@ -77,17 +77,17 @@ end
 % end
 % 
 %% get the ratio of the power in multiple bands relative to the exponential f curve
-fprintf(PARAMS.log,'\n\nExtracting Power Ratio');
-for iSub = 1:length(PARAMS.Subjects)
-    sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
-    for iSess  = 1:length(sess_list)
-        fprintf(PARAMS.log,['\nGetting ratio ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-        cfg_pow_ratio.id = sess_list{iSess};
-        [Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_p_ratio] = MS_get_power_ratio(cfg_pow_ratio,Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-%         Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio(cfg_pow_ratio,Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-        fprintf(PARAMS.log, '...complete');
-    end
-end
+% fprintf(PARAMS.log,'\n\nExtracting Power Ratio');
+% for iSub = 1:length(PARAMS.Subjects)
+%     sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
+%     for iSess  = 1:length(sess_list)
+%         fprintf(PARAMS.log,['\nGetting ratio ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+%         cfg_pow_ratio.id = sess_list{iSess};
+%         [Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_p_ratio] = MS_get_power_ratio(cfg_pow_ratio,Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+% %         Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio(cfg_pow_ratio,Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+%         fprintf(PARAMS.log, '...complete');
+%     end
+% end
 % %% save the intermediate files
 fprintf(PARAMS.log,'\n\nSaving intermediates');
 % mkdir(PARAMS.data_dir, 'temp');
@@ -119,11 +119,11 @@ fprintf(PARAMS.log,'\n\nSplitting the data into pot and trk');
 cfg_psd.type = 'white'; 
 MS_plot_psd(cfg_psd, Naris);
 
-%% count the events
-cfg_evt_plot =[];
-cfg_evt_plot.sites = {'PL_pot', 'IL_pot', 'OFC_pot', 'NAc_pot', 'CG_pot'};
-
-MS_plot_event_stats(cfg_evt_plot, Events)
+% %% count the events
+% cfg_evt_plot =[];
+% cfg_evt_plot.sites = {'PL_pot', 'IL_pot', 'OFC_pot', 'NAc_pot', 'CG_pot'};
+% 
+% MS_plot_event_stats(cfg_evt_plot, Events)
 
 %% get an example event from each session and plot all sites together for the same event.
 for iSub = 1:length(PARAMS.Subjects)
@@ -146,15 +146,15 @@ for iSub = 1:length(PARAMS.Subjects)
     end
 end
 %% plot the gamma band power ratios
-cfg_pow_ratio_plot.ylims = [-100 100];
-cfg_pow_ratio_plot.plot_type = 'raw';
-cfg_pow_ratio_plot.ylims_norm = [-2 2];
-% temporary
-cfg_pow_ratio_plot.power_ratio.contrast = [25 45; 90 110];
-cfg_pow_ratio_plot.power_ratio.gamma_freq = [45 65; 70 90];
-
-cfg_pow_ratio_plot.pot_trk = 'pot'; 
-MS_plot_power_ratio(cfg_pow_ratio_plot, Naris)
+% cfg_pow_ratio_plot.ylims = [-100 100];
+% cfg_pow_ratio_plot.plot_type = 'raw';
+% cfg_pow_ratio_plot.ylims_norm = [-2 2];
+% % temporary
+% cfg_pow_ratio_plot.power_ratio.contrast = [25 45; 90 110];
+% cfg_pow_ratio_plot.power_ratio.gamma_freq = [45 65; 70 90];
+% 
+% cfg_pow_ratio_plot.pot_trk = 'pot'; 
+% MS_plot_power_ratio(cfg_pow_ratio_plot, Naris)
 
 %% get the phase slope values across all subjects, sessions, pairs, events
 for iSub = 1:length(PARAMS.Subjects)

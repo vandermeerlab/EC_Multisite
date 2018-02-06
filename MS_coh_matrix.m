@@ -2,7 +2,7 @@ function [phase_coh_out] = MS_coh_matrix(trials, ExpKeys)
 %% MS_coh_matrix: 
 %
 %
-%
+% 
 %
 %         OUTPUT MATRIX
 %

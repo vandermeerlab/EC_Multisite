@@ -31,7 +31,7 @@ addpath(genpath(PARAMS.code_base_dir));
 addpath(genpath(PARAMS.code_MS_dir));
 cd(PARAMS.data_dir) % move to the data folder
 
-%% run the analysis
-Master_Multisite
-toc
-disp('this worked')
+% formatting
+set(groot, 'DefaultAxesTickLabelInterpreter', 'none')
+set(groot, 'DefaultLegendInterpreter', 'none')
+set(groot,'defaulttextinterpreter','none');  

@@ -29,3 +29,8 @@ PARAMS.all_sites = {'PL', 'IL', 'OFC', 'Piri_OFC', 'NAc', 'Piri_NAc', 'CG'};
 addpath(genpath(PARAMS.code_base_dir));
 addpath(genpath(PARAMS.code_MS_dir));
 cd(PARAMS.data_dir) % move to the data folder
+
+% formatting
+set(groot, 'DefaultAxesTickLabelInterpreter', 'none')
+set(groot, 'DefaultLegendInterpreter', 'none')
+set(groot,'defaulttextinterpreter','none');  
