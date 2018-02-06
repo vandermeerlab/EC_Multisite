@@ -1,4 +1,4 @@
-function [phase_slope] = MS_phase_slope(cfg_in, data1, data2);
+function [phase_slope] = MS_phase_slope(cfg_in, data1, data2)
 %% MS_phase_slope: calculates tyhe phase slope between data1 and data two
 %       for a specified frequency range in cfg.freq field.  Phase
 %       differences are caluculated across the full frequency range using
