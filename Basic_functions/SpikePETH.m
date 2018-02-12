@@ -20,11 +20,11 @@ cfg_def.window = [-2 5];
 cfg_def.dt = 0.00025;
 cfg_def.excessBounds = 1;
 cfg_def.outputGrid = 0;
-cfg_def.evt_color = [4,172,218]./255; 
+cfg_def.evt_color = [4,172,218]./255;
 cfg_def.binsize = cfg_def.dt; % used for gaussian kernal.  select a small bin size for good time resolution
 cfg_def.waves = [];
 cfg_def.contrast_waves = [];
-cfg_def.c_ord = linspecer(4); 
+cfg_def.c_ord = linspecer(4);
 cfg = ProcessConfig2(cfg_def, cfg_in);
 
 extract_varargin;
@@ -55,7 +55,7 @@ for iT = 1:nT
         outputT = [outputT; repmat(iT, length(S0.t{1}),1)];
         outputS = [outputS; S0.t{1}-t(iT)];
         
-        %convolve with gaussian for firing rate. 
+        %convolve with gaussian for firing rate.
         tbin_edges = t(iT)+cfg.window(1):cfg.binsize:t(iT)+cfg.window(2);
         tbin_centers = tbin_edges(1:end-1)+cfg.binsize/2;
         spk_count = histc(S0.t{1},tbin_edges);
@@ -66,7 +66,7 @@ for iT = 1:nT
         gk = gausskernel(gauss_window,gauss_SD); gk = gk./cfg.binsize; % normalize by binsize
         S_gau_sdf = conv2(spk_count,gk,'same'); % convolve with gaussian window
         if size(S_gau_sdf,1) >1
-            S_gau_sdf = S_gau_sdf'; 
+            S_gau_sdf = S_gau_sdf';
         end
         outputGau = [outputGau; S_gau_sdf];
         
@@ -106,9 +106,9 @@ rectangle('position', [0 1 mode(t(:,2)-t(:,1))  nT], 'facecolor', [cfg.evt_color
 %% add in the wave forms
 if ~isempty(cfg.waves)
     for ii = 1:4
-   axes('Position', [(.65+(.05*ii)) .8 0.05 .1])
-   plot(cfg.waves.mWV(:,ii), 'color', cfg.c_ord(ii, :))
-   set(gca, 'visible', 'off')
+        axes('Position', [(.65+(.05*ii)) .8 0.05 .1])
+        plot(cfg.waves.mWV(:,ii), 'color', cfg.c_ord(ii, :))
+        set(gca, 'visible', 'off')
     end
 end
 
@@ -132,4 +132,7 @@ mean_S_gau = nanmean(outputGau,1);
 % plot(outputIT(1:end-1),mean_S_gau, 'b',outputIT(1:end-1),mean_S_gau+se_S_gau, 'b:',outputIT(1:end-1),mean_S_gau-se_S_gau, 'b:' )
 plot(outputIT(1:end-1), mean_S_gau)
 rectangle('position', [0 1 mode(t(:,2)-t(:,1))  nT], 'facecolor', [cfg.evt_color 0.5], 'edgecolor', [cfg.evt_color 0.5])
+if ~(max(mean_S_gau)) ==0
+    ylim([0 max(mean_S_gau)])
+end
 
