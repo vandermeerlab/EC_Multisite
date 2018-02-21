@@ -157,21 +157,21 @@ end
 % MS_plot_power_ratio(cfg_pow_ratio_plot, Naris)
 
 %% get the phase slope values across all subjects, sessions, pairs, events
-% for iSub = 1:length(PARAMS.Subjects)
-%     sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
-%     for iSess = 1:length(sess_list)
-%         fprintf(PARAMS.log,['\nExtracting phase slope ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-%         mat_out.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_phase_metrics([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-%         fprintf(PARAMS.log, '...complete');
-%     end
-% end
-% 
-% 
-% save([PARAMS.data_dir 'MS_mat.mat'], 'mat_out', '-v7.3')
+for iSub = 1:length(PARAMS.Subjects)
+    sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
+    for iSess = 1:length(sess_list)
+        fprintf(PARAMS.log,['\nExtracting phase slope ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+        mat_out.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_phase_metrics([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+        fprintf(PARAMS.log, '...complete');
+    end
+end
+
+
+save([PARAMS.data_dir 'MS_mat.mat'], 'mat_out', '-v7.3')
 
 
 %%
-% MS_plot_power([], Naris);
+MS_plot_power([], Naris);
 
 % %% Get the phase coherence metrics
 % % create pairs of channels for detected events.
