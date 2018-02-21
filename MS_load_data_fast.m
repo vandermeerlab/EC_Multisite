@@ -73,7 +73,7 @@ for iPhase = 1:length(PARAMS.Phases)
         fprintf(['\n' ExpKeys.Chan_to_use_labels{iChan}(1:end-1) '_FS:' num2str(csc_out.(ExpKeys.Chan_to_use_labels{iChan}(1:end-1)).cfg.hdr{1}.SamplingFrequency) '\n'])
         % check to see if the data has been sampled appropriotely as per
         % cfg_load.resample
-        if csc_out.(ExpKeys.Chan_to_use_labels{iChan}(1:end-1)).cfg.hdr{1}.SamplingFrequency ~= cfg_load.resample
+        if csc_out.(ExpKeys.Chan_to_use_labels{iChan}(1:end-1)).cfg.hdr{1}.SamplingFrequency > cfg_load.resample
             cfg.decimateByFactor = csc_out.(ExpKeys.Chan_to_use_labels{iChan}(1:end-1)).cfg.hdr{1}.SamplingFrequency/cfg_load.resample;
             
             fprintf('%s: Decimating by factor %d...\n',mfun,cfg.decimateByFactor)

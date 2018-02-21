@@ -29,8 +29,8 @@ end
 for iPhase = 1:4
     for iBand = 1:2
         %         mat_out.(PARAMS.Phases{iPhase}).(bands{iBand}).sess_coh = cell(size(mat_out.labels));
-        %         mat_out.(PARAMS.Phases{iPhase}).(bands{iBand}).evt_coh = cell(size(mat_out.labels));
-        mat_out.(PARAMS.Phases{iPhase}).(bands{iBand}).sess_amp = cell(size(mat_out.labels));
+        mat_out.(PARAMS.Phases{iPhase}).(bands{iBand}).evt_coh = cell(size(mat_out.labels));
+%         mat_out.(PARAMS.Phases{iPhase}).(bands{iBand}).sess_amp = cell(size(mat_out.labels));
         mat_out.(PARAMS.Phases{iPhase}).(bands{iBand}).evt_amp_ac = cell(size(mat_out.labels));
         mat_out.(PARAMS.Phases{iPhase}).(bands{iBand}).evt_amp_lag = cell(size(mat_out.labels));
         mat_out.(PARAMS.Phases{iPhase}).(bands{iBand}).PS = cell(size(mat_out.labels));
@@ -151,7 +151,7 @@ for iPair = 1:length(pairs)
                     close all
                 end
                 fprintf(['Phase Measures: ' num2str(length(evts.tstart))  ' Events in, ' num2str(length(evts.tstart) - sum(isnan(phase_slopes))) ' Events out '  bands{iBand} '  ' PARAMS.Phases{iPhase} '\n'])
-                
+                mat_out.(PARAMS.Phases{iPhase}).(bands{iBand}).evt_coh{x_idx, y_idx} = all_coh;
                 mat_out.(PARAMS.Phases{iPhase}).(bands{iBand}).evt_amp_lag{x_idx, y_idx} = all_lag;
                 mat_out.(PARAMS.Phases{iPhase}).(bands{iBand}).evt_amp_ac{x_idx, y_idx} = all_ac;
                 mat_out.(PARAMS.Phases{iPhase}).(bands{iBand}).PS{x_idx, y_idx} = phase_slopes;
