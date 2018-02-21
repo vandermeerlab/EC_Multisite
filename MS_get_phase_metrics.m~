@@ -89,6 +89,15 @@ for iPair = 1:length(pairs)
                     d1 = restrict(this_data_1,this_event);
                     d2 = restrict(this_data_2,this_event);
                     
+                    %% get the phase coherence within each event. 
+                    cfg_coh.spec_window = 256;
+                    cfg_coh.NFFT = 1024;
+                    
+                     [Cxy,F] = cpsd(d1.data,d2.data,hamming(cfg_coh.spec_window),cfg_coh.spec_window/2,cfg_coh.NFFT,d1.cfg.hdr{1}.SamplingFrequency);
+                     coh_spec_phase= -angle(Cxy); %higher value means leading. outputs radians
+                     all_coh(iEvent) =rad2deg(circ_mean(coh_spec_phase(nearest_idx(cfg_filter.f(1), F):nearest_idx(cfg_filter.f(2), F))));
+                        
+                    
                     %% get the amp x-corr
                     amp_ev1 = restrict(d_abs_1, this_event);
                     amp_ev1 = amp_ev1.data - nanmean(amp_ev1.data);
