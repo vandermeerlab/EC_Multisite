@@ -17,7 +17,7 @@ function [data, cfg] = MS_load_data(cfg_in)
 %% Initial paramters
 global PARAMS
 
-mfun = mfilename;
+
 cfg_def = [];
 
 cfg= ProcessConfig2(cfg_def, cfg_in);
@@ -64,7 +64,7 @@ for iPhase = 1:length(PARAMS.Phases)
         error('trk session is too short');
     end
     
-%% load all the channels of interest
+    % subjects with only OFC, NAc, CG.
     for iChan = 1:length(ExpKeys.Chan_to_use)
         cfg_load.fc = ExpKeys.Chan_to_use(iChan);
         cfg_load.resample = 2000;
