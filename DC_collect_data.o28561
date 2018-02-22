@@ -1,0 +1,25 @@
+------------------------- Prologue ----------------------------
+         Started: Thu Feb 22 18:07:45 EST 2018
+          Job ID: 28561.knorr.hpcc.dartmouth.edu
+         User ID: f00287r
+        Group ID: rc-users
+        Job Name: DC_collect_data
+ Resources Req'd: nodes=1:ppn=8,walltime=08:00:00,neednodes=1:ppn=8
+      Queue Name: default
+    Account Name: BrainSci
+------------------------- Prologue ----------------------------
+
+
+------------------------- Epilogue ----------------------------
+        Finished: Thu Feb 22 18:07:45 EST 2018
+          Job ID: 28561.knorr.hpcc.dartmouth.edu
+         User ID: f00287r
+        Group ID: rc-users
+        Job Name: DC_collect_data
+      Session ID: 49757
+ Resources Req'd: nodes=1:ppn=8,walltime=08:00:00,neednodes=1:ppn=8
+  Resources Used: cput=00:00:00,vmem=120676kb,walltime=00:00:01,mem=1584kb,energy_used=0
+      Queue Name: default
+    Account Name: BrainSci
+------------------------- Epilogue ----------------------------
+
