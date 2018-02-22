@@ -6,7 +6,7 @@ global PARAMS
 
 if isunix
     PARAMS.data_dir = '/global/scratch/ecarmichael/Multisite/'; % where to find the raw data
-    PARAMS.inter_dir = '/global/scratch/ecarmichael/Multisite/temp/'; % where to put intermediate files
+    PARAMS.inter_dir = '/dartfs-hpc/rc/lab/M/MeerM/EC/temp/'; % where to put intermediate files
     PARAMS.stats_out = '/dartfs-hpc/rc/home/r/f00287r/MS/Stats/'; % where to put the statistical output .txt
     PARAMS.code_base_dir = '/dartfs-hpc/rc/home/r/f00287r/Code/vandermeerlab/code-matlab/shared'; % where the codebase repo can be found
     PARAMS.code_MS_dir = '/dartfs-hpc/rc/home/r/f00287r/Code/EC_Multisite'; % where the multisite repo can be found
@@ -19,7 +19,7 @@ else
     PARAMS.code_MS_dir = 'D:\Users\mvdmlab\My_Documents\GitHub\EC_Multisite'; % where the multisite repo can be found
 end
 % log the progress
-PARAMS.log = fopen([PARAMS.data_dir 'MS_log.txt'], 'w');
+PARAMS.log = fopen([PARAMS.inter 'MS_log.txt'], 'w');
 % define subjects, phases, 
 PARAMS.Phases = {'pre', 'ipsi', 'contra', 'post'}; % recording phases within each session
 PARAMS.Subjects = {'R102', 'R104', 'R107', 'R108', 'R112', 'R122', 'R123'}; %list of subjects
