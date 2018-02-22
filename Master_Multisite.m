@@ -64,7 +64,7 @@ end
 % summary of naris events
 % 
 % %     stats = MS_gamma_stats([], Events);
-%% generate PSDs & get the relative power ratios
+%% generate PSDs 
 fprintf(PARAMS.log,'\n\nExtracting Power Metrics');
 for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
@@ -75,6 +75,15 @@ for iSub = 1:length(PARAMS.Subjects)
         fprintf(PARAMS.log, '...complete');
     end
 end
+
+% %% save the intermediate files
+fprintf(PARAMS.log,'\n\nSaving intermediates');
+% mkdir(PARAMS.data_dir, 'temp');
+save([PARAMS.data_dir 'MS_data.mat'], 'data', '-v7.3')
+save([PARAMS.data_dir 'MS_naris.mat'], 'Naris', '-v7.3')
+save([PARAMS.data_dir 'MS_events.mat'], 'Events', '-v7.3')
+% 
+% % fclose(PARAMS.log);
 
 %% get the ratio of the power in multiple bands relative to the exponential f curve
 fprintf(PARAMS.log,'\n\nExtracting Power Ratio');
@@ -88,14 +97,8 @@ for iSub = 1:length(PARAMS.Subjects)
         fprintf(PARAMS.log, '...complete');
     end
 end
-% %% save the intermediate files
-fprintf(PARAMS.log,'\n\nSaving intermediates');
-% mkdir(PARAMS.data_dir, 'temp');
-save([PARAMS.data_dir 'MS_data.mat'], 'data', '-v7.3')
 save([PARAMS.data_dir 'MS_naris.mat'], 'Naris', '-v7.3')
-save([PARAMS.data_dir 'MS_events.mat'], 'Events', '-v7.3')
-% 
-% % fclose(PARAMS.log);
+
 
 %% load the intermediate files
 % PARAMS.log = fopen([PARAMS.data_dir '/PARAMS.log_2.txt'], 'w');

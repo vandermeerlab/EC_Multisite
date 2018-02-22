@@ -144,6 +144,8 @@ for iPair = 1:length(pairs)
                         cfg_phase = [];
                         cfg_phase.Fs = d1.cfg.hdr{1}.SamplingFrequency;
                         cfg_phase.debug = 0;
+                        cfg_phase.circ_reg.window_size = 9; 
+                        cfg_phase.circ_reg.offset_delta = pi/16; 
                         phase_slopes(iEvent) = MS_phase_slope(cfg_phase, d1.data, d2.data);
                     else
                         phase_slopes(iEvent) = NaN;
