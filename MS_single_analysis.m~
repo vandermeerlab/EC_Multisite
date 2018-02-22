@@ -5,7 +5,7 @@
 %% load the intermediate files
 PARAMS.log = fopen([PARAMS.data_dir '/PARAMS.log_2.txt'], 'w');
 fprintf(PARAMS.log, date);
-fprintf(PARAMS.log,'\n\nLoading intermediates');
+% fprintf(PARAMS.log,'\n\nLoading intermediates');
 load([PARAMS.data_dir 'MS_data.mat'])
 load([PARAMS.data_dir 'MS_naris.mat'])
 load([PARAMS.data_dir 'MS_events.mat'])
