@@ -144,6 +144,8 @@ bar(AOC_val_con.(type{iType,1}).([bands{2} '_con_' num2str(cfg.contrast (2,1)) '
 set(gca, 'xticklabel', phases)
 title(strrep([bands{2} '_con_' num2str(cfg.contrast (2,1)) '_' num2str(cfg.contrast (2,2))], '_', '-'))
 SetFigure([], gcf)
+
+    mkdir(PARAMS.inter_dir, 'AOC_fit')
 if isunix
     saveas(gcf, [PARAMS.inter_dir 'AOC_fit/AOC_val_all' type{iType,1}  '_' cfg.id])
     saveas(gcf, [PARAMS.inter_dir 'AOC_fit/AOC_val_all' type{iType,1}  '_' cfg.id], 'png')

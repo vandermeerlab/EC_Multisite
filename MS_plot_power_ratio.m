@@ -290,6 +290,7 @@ for iType = 1:length(types)
                 SetFigure(cfg_plt1, gcf)
         end
         %%
+        mkdir(PARAMS.inter_dir, 'AOC_fit')
         if isunix
             saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_Summary_' F_id '_' cfg.pot_trk '_' types{iType}  '_' cfg.plot_type])
             saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_Summary_' F_id '_' cfg.pot_trk '_' types{iType}  '_' cfg.plot_type], 'png')
