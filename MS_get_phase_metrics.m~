@@ -39,19 +39,19 @@ for iPhase = 1:4
 end
 
 %% cycle through events
-t_type = 'pot';
+type = 'pot';
 
 for iPair = 1:length(pairs)
     [S_out, ~] = strsplit(pairs{iPair}, '_');
-    if strfind(S_out{1}, 'PiriO')  % walk around if the pair name for piriform sites don't match the data names beacuse of an underscore
-         S_out{1} = strrep(S_out{1}, 'PiriO', 'Piri_O');
-    elseif strfind(S_out{2}, 'PiriO')
-        S_out{2} = strrep(S_out{2}, 'PiriO', 'Piri_O');
+    if strfind(S_out(1), 'PiriO')  % walk around if the pair name for piriform sites don't match the data names beacuse of an underscore
+         S_out(1) = strrep(S_out(1), 'PiriO', 'Piri_O');
+    elseif strfind(S_out(2), 'PiriO')
+        S_out(2) = strrep(S_out(2), 'PiriO', 'Piri_O');
     end
-    if strfind(S_out{1}, 'PiriN')  % walk around if the pair name for piriform sites don't match the data names beacuse of an underscore
-         S_out{1} = strrep(S_out{1}, 'PiriN', 'Piri_N');
-    elseif strfind(S_out{2}, 'PiriN')
-         S_out{2} = strrep(S_out{2}, 'PiriN', 'Piri_N');
+    if strfind(S_out(1), 'PiriN')  % walk around if the pair name for piriform sites don't match the data names beacuse of an underscore
+         S_out(1) = strrep(S_out(1), 'PiriN', 'Piri_N');
+    elseif strfind(S_out(2), 'PiriN')
+         S_out(2) = strrep(S_out(2), 'PiriN', 'Piri_N');
     end
     for Round = 1:2
         if Round ==1
@@ -66,9 +66,9 @@ for iPair = 1:length(pairs)
         [x_idx,y_idx] = find(not(cellfun('isempty', idx)));
         for iPhase = 1:length(PARAMS.Phases)
             for iBand = 1:length(bands)
-                evts = Events.([S1 '_' t_type]).(PARAMS.Phases{iPhase}).(bands{iBand});
-                this_data_1 = Data.(PARAMS.Phases{iPhase}).([S1 '_' t_type]);
-                this_data_2 = Data.(PARAMS.Phases{iPhase}).([S2 '_' t_type]);
+                evts = Events.([S1 '_' type]).(PARAMS.Phases{iPhase}).(bands{iBand});
+                this_data_1 = Data.(PARAMS.Phases{iPhase}).([S1 '_' type]);
+                this_data_2 = Data.(PARAMS.Phases{iPhase}).([S2 '_' type]);
                 
                 
                 % Filter the data for the amplitude x_corr

@@ -24,7 +24,7 @@ if ismember('power_ratio', analyses)
             fprintf(PARAMS.log, '...complete');
         end
     end
-    save([PARAMS.data_dir 'MS_naris.mat'], 'Naris', '-v7.3')
+    save([PARAMS.inter_dir 'MS_naris.mat'], 'Naris', '-v7.3')
     
     % plot the gamma band power ratios
     cfg_pow_ratio_plot.ylims = [-100 100];
