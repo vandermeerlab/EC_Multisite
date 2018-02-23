@@ -1,15 +1,16 @@
-% % single_analysis
+% function MS_single_analysis(to_run)
+%% single analyses lets you run individiual analyses 
 
 %% make a log
 % Extract the data from each recroding phase within each session and separate pot vs track sections
 %% load the intermediate files
-PARAMS.log = fopen([PARAMS.data_dir '/PARAMS.log_2.txt'], 'w');
 fprintf(PARAMS.log, date);
 fprintf(PARAMS.log,'\n\nLoading intermediates');
-load([PARAMS.data_dir 'MS_data.mat'])
-load([PARAMS.data_dir 'MS_naris.mat'])
-load([PARAMS.data_dir 'MS_events.mat'])
+load([PARAMS.inter_dir 'MS_data.mat'])
+load([PARAMS.inter_dir 'MS_naris.mat'])
+load([PARAMS.inter_dir 'MS_events.mat'])
 
+% if 
 %% get the ratio of the power in multiple bands relative to the exponential f curve
 % fprintf(PARAMS.log,'\n\nExtracting Power Ratio');
 % for iSub = 1:length(PARAMS.Subjects)

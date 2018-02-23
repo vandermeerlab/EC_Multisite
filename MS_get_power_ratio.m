@@ -145,12 +145,12 @@ set(gca, 'xticklabel', phases)
 title(strrep([bands{2} '_con_' num2str(cfg.contrast (2,1)) '_' num2str(cfg.contrast (2,2))], '_', '-'))
 SetFigure([], gcf)
 if isunix
-    saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_val_all' type{iType,1}  '_' cfg.id])
-    saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_val_all' type{iType,1}  '_' cfg.id], 'png')
+    saveas(gcf, [PARAMS.inter_dir 'AOC_fit/AOC_val_all' type{iType,1}  '_' cfg.id])
+    saveas(gcf, [PARAMS.inter_dir 'AOC_fit/AOC_val_all' type{iType,1}  '_' cfg.id], 'png')
 
 else
-    saveas(gcf, [PARAMS.inter_dir '\AOC_fit\AOC_val_all'  type{iType,1} '_' cfg.id])
-    saveas(gcf, [PARAMS.inter_dir '\AOC_fit\AOC_val_all'  type{iType,1} '_' cfg.id], 'png')
+    saveas(gcf, [PARAMS.inter_dir 'AOC_fit\AOC_val_all'  type{iType,1} '_' cfg.id])
+    saveas(gcf, [PARAMS.inter_dir 'AOC_fit\AOC_val_all'  type{iType,1} '_' cfg.id], 'png')
 end
 
 Naris_out.ratio.(type{iType,1}) = AOC_val.(type{iType,1});

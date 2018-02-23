@@ -19,7 +19,7 @@ else
     PARAMS.code_MS_dir = 'D:\Users\mvdmlab\My_Documents\GitHub\EC_Multisite'; % where the multisite repo can be found
 end
 % log the progress
-PARAMS.log = fopen([PARAMS.inter_dir 'MS_log.txt'], 'w');
+PARAMS.log = fopen([PARAMS.inter_dir 'MS_log2.txt'], 'w');
 % define subjects, phases, 
 PARAMS.Phases = {'pre', 'ipsi', 'contra', 'post'}; % recording phases within each session
 PARAMS.Subjects = {'R102', 'R104', 'R107', 'R108', 'R112', 'R122', 'R123'}; %list of subjects
