@@ -4,6 +4,7 @@ function MS_single_analysis(analyses)
 %% make a log
 % Extract the data from each recroding phase within each session and separate pot vs track sections
 %% load the intermediate files
+global PARAMS
 fprintf(PARAMS.log, date);
 fprintf(PARAMS.log,'\n\nLoading intermediates');
 load([PARAMS.inter_dir 'MS_data.mat'])
