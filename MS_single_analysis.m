@@ -1,4 +1,4 @@
-% function MS_single_analysis(to_run)
+function MS_single_analysis(analyses)
 %% single analyses lets you run individiual analyses 
 
 %% make a log
@@ -10,21 +10,32 @@ load([PARAMS.inter_dir 'MS_data.mat'])
 load([PARAMS.inter_dir 'MS_naris.mat'])
 load([PARAMS.inter_dir 'MS_events.mat'])
 
-% if 
 %% get the ratio of the power in multiple bands relative to the exponential f curve
-% fprintf(PARAMS.log,'\n\nExtracting Power Ratio');
-% for iSub = 1:length(PARAMS.Subjects)
-%     sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
-%     for iSess  = 1:length(sess_list)
-%         fprintf(PARAMS.log,['\nGetting ratio ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-%         cfg_pow_ratio.id = sess_list{iSess};
-%         [Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_p_ratio] = MS_get_power_ratio(cfg_pow_ratio,Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-% %         Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio(cfg_pow_ratio,Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-%         fprintf(PARAMS.log, '...complete');
-%     end
-% end
-% save([PARAMS.data_dir 'MS_naris.mat'], 'Naris', '-v7.3')
-
+if ismember('power_ratio', analyses)
+    fprintf(PARAMS.log,'\n\nExtracting Power Ratio');
+    for iSub = 1:length(PARAMS.Subjects)
+        sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
+        for iSess  = 1:length(sess_list)
+            fprintf(PARAMS.log,['\nGetting ratio ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+            cfg_pow_ratio.id = sess_list{iSess};
+            [Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_p_ratio] = MS_get_power_ratio(cfg_pow_ratio,Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+            %         Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio(cfg_pow_ratio,Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+            fprintf(PARAMS.log, '...complete');
+        end
+    end
+    save([PARAMS.data_dir 'MS_naris.mat'], 'Naris', '-v7.3')
+    
+    % plot the gamma band power ratios
+    cfg_pow_ratio_plot.ylims = [-100 100];
+    cfg_pow_ratio_plot.plot_type = 'raw';
+    cfg_pow_ratio_plot.ylims_norm = [-2 2];
+    % temporary
+    cfg_pow_ratio_plot.power_ratio.contrast = [25 45; 90 110];
+    cfg_pow_ratio_plot.power_ratio.gamma_freq = [45 65; 70 90];
+    
+    cfg_pow_ratio_plot.pot_trk = 'pot';
+    MS_plot_power_ratio(cfg_pow_ratio_plot, Naris)
+end
 
 
 
@@ -36,59 +47,55 @@ load([PARAMS.inter_dir 'MS_events.mat'])
 
 
 %% plot the PSDs
-% cfg_psd.type = 'white'; 
-% MS_plot_psd(cfg_psd, Naris);
-
-% %% count the events
-% cfg_evt_plot =[];
-% cfg_evt_plot.sites = {'PL_pot', 'IL_pot', 'OFC_pot', 'NAc_pot', 'CG_pot'};
-% 
-% MS_plot_event_stats(cfg_evt_plot, Events)
-
-%% get an example event from each session and plot all sites together for the same event.
-% for iSub = 1:length(PARAMS.Subjects)
-%     sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
-%     for iSess = 1:length(sess_list)
-%         fprintf(PARAMS.log,['\nPlotting Events ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-%         MS_event_fig([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-%         fprintf(PARAMS.log, '...complete');
-%     end
-% end
-% 
-% 
-% %% generate a spectrogram across each session for each site.
-% for iSub = 1:length(PARAMS.Subjects)
-%     sess_list = fieldnames(data_pot.(PARAMS.Subjects{iSub}));
-%     for iSess = 1:length(sess_list)
-%         fprintf(PARAMS.log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-%         MS_spec_fig([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-%         fprintf(PARAMS.log, '...complete');
-%     end
-% end
-%% plot the gamma band power ratios
-% cfg_pow_ratio_plot.ylims = [-100 100];
-% cfg_pow_ratio_plot.plot_type = 'raw';
-% cfg_pow_ratio_plot.ylims_norm = [-2 2];
-% % temporary
-% cfg_pow_ratio_plot.power_ratio.contrast = [25 45; 90 110];
-% cfg_pow_ratio_plot.power_ratio.gamma_freq = [45 65; 70 90];
-% 
-% cfg_pow_ratio_plot.pot_trk = 'pot'; 
-% MS_plot_power_ratio(cfg_pow_ratio_plot, Naris)
-
-%% get the phase slope values across all subjects, sessions, pairs, events
-for iSub = 1:length(PARAMS.Subjects)
-    sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
-    for iSess = 1:length(sess_list)
-        fprintf(PARAMS.log,['\nExtracting phase slope ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-        mat_out.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_phase_metrics([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-        fprintf(PARAMS.log, '...complete');
-    end
+if ismember('plot_psd', analyses)
+    cfg_psd.type = 'white';
+    MS_plot_psd(cfg_psd, Naris);
+    
+    %% count the events
+    cfg_evt_plot =[];
+    cfg_evt_plot.sites = {'PL_pot', 'OFC_pot', 'NAc_pot', 'CG_pot'};
+    
+    MS_plot_event_stats(cfg_evt_plot, Events)
 end
 
-
-save([PARAMS.data_dir 'MS_mat.mat'], 'mat_out', '-v7.3')
-
+%% get an example event from each session and plot all sites together for the same event.
+if ismember('event_fig', analyses)
+    for iSub = 1:length(PARAMS.Subjects)
+        sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
+        for iSess = 1:length(sess_list)
+            fprintf(PARAMS.log,['\nPlotting Events ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+            MS_event_fig([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+            fprintf(PARAMS.log, '...complete');
+        end
+    end
+    
+end
+    %% generate a spectrogram across each session for each site.
+if ismember('spectrogram', analyses) || ismember('spec', analyses)
+    for iSub = 1:length(PARAMS.Subjects)
+        sess_list = fieldnames(data_pot.(PARAMS.Subjects{iSub}));
+        for iSess = 1:length(sess_list)
+            fprintf(PARAMS.log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+            MS_spec_fig([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+            fprintf(PARAMS.log, '...complete');
+        end
+    end
+end
+%% get the phase slope values across all subjects, sessions, pairs, events
+if ismember('phase', analyses)
+    
+    for iSub = 1:length(PARAMS.Subjects)
+        sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
+        for iSess = 1:length(sess_list)
+            fprintf(PARAMS.log,['\nExtracting phase slope ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+            mat_out.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_phase_metrics([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+            fprintf(PARAMS.log, '...complete');
+        end
+    end
+    
+    
+    save([PARAMS.inter_dir 'MS_mat.mat'], 'mat_out', '-v7.3')
+end
 
 %%
 % MS_plot_power([], Naris);
