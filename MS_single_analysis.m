@@ -1,5 +1,5 @@
 function MS_single_analysis(analyses)
-%% single analyses lets you run individiual analyses 
+%% single analyses lets you run individiual analyses
 
 %% make a log
 % Extract the data from each recroding phase within each session and separate pot vs track sections
@@ -8,11 +8,25 @@ global PARAMS
 fprintf(PARAMS.log, date);
 fprintf(PARAMS.log,'\n\nLoading intermediates');
 load([PARAMS.inter_dir 'MS_data.mat'])
-load([PARAMS.inter_dir 'MS_naris.mat'])
+% load([PARAMS.inter_dir 'MS_naris.mat'])
 load([PARAMS.inter_dir 'MS_events.mat'])
 
 %% get the ratio of the power in multiple bands relative to the exponential f curve
 if ismember('power_ratio', analyses)
+    
+    fprintf(PARAMS.log,'\n\nExtracting Power Metrics');
+    for iSub = 1:length(PARAMS.Subjects)
+        sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
+        for iSess  = 1:length(sess_list)
+            fprintf(['Session ' sess_list{iSess} '\n'])
+            fprintf(PARAMS.log,['\nGetting Power ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+            Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_collect_psd([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+            fprintf(PARAMS.log, '...complete');
+        end
+    end
+    
+    save([PARAMS.inter_dir 'MS_narispre.mat'], 'Naris', '-v7.3')
+    
     fprintf(PARAMS.log,'\n\nExtracting Power Ratio');
     for iSub = 1:length(PARAMS.Subjects)
         sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
@@ -71,7 +85,7 @@ if ismember('event_fig', analyses)
     end
     
 end
-    %% generate a spectrogram across each session for each site.
+%% generate a spectrogram across each session for each site.
 if ismember('spectrogram', analyses) || ismember('spec', analyses)
     for iSub = 1:length(PARAMS.Subjects)
         sess_list = fieldnames(data_pot.(PARAMS.Subjects{iSub}));
@@ -103,16 +117,16 @@ end
 
 % %% Get the phase coherence metrics
 % % create pairs of channels for detected events.
-% 
+%
 % for iSub = 1:length(PARAMS.Subjects)
 %     sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
 %     for iSess = 1:length(sess_list)
 %         [Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), Coh_mat.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))]  = MS_event_pairs([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
 %     end
 % end
-% 
+%
 % %% plot the COH metrics
-% 
+%
 % stats_coh =  MS_Coh_plot_stats(Coh_mat);
 %
 %
