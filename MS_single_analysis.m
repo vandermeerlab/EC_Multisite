@@ -76,7 +76,7 @@ end
 %% get an example event from each session and plot all sites together for the same event.
 if ismember('event_fig', analyses)
     for iSub = 1:length(PARAMS.Subjects)
-        sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
+        sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
         for iSess = 1:length(sess_list)
             fprintf(PARAMS.log,['\nPlotting Events ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
             MS_event_fig([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
@@ -88,7 +88,7 @@ end
 %% generate a spectrogram across each session for each site.
 if ismember('spectrogram', analyses) || ismember('spec', analyses)
     for iSub = 1:length(PARAMS.Subjects)
-        sess_list = fieldnames(data_pot.(PARAMS.Subjects{iSub}));
+        sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
         for iSess = 1:length(sess_list)
             fprintf(PARAMS.log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
             MS_spec_fig([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
