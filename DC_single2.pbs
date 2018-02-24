@@ -2,7 +2,7 @@
 # Queue to use
 #PBS -q default
 # NAME of job
-#PBS -N DC_single
+#PBS -N DC_single2
 # Account resources to use
 #PBS -A BrainSci
 # Resources to reserve
