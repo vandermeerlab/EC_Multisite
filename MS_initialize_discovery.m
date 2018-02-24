@@ -6,7 +6,6 @@ global PARAMS
 
 if isunix
     PARAMS.data_dir = '/global/scratch/ecarmichael/Multisite/'; % where to find the raw data
-        mkdir(PARAMS.data_dir, 'Temp'); mkdir(PARAMS.data_dir, 'Stats'); 
     PARAMS.inter_dir = '/dartfs-hpc/rc/lab/M/MeerM/EC/temp/'; % where to put intermediate files
     PARAMS.stats_dir = '/dartfs-hpc/rc/home/r/f00287r/MS/Stats/'; % where to put the statistical output .txt
     PARAMS.code_base_dir = '/dartfs-hpc/rc/home/r/f00287r/Code/vandermeerlab/code-matlab/shared'; % where the codebase repo can be found
@@ -14,7 +13,6 @@ if isunix
     
 else
     PARAMS.data_dir = 'G:\JK_recordings\Naris\'; % where to find the raw data
-        mkdir(PARAMS.data_dir, 'Temp'); mkdir(PARAMS.data_dir, 'Stats'); 
     PARAMS.inter_dir = 'G:\JK_recordings\Naris\Multisite\temp\'; % where to put intermediate files
     PARAMS.stats_dir = 'G:\JK_recordings\Naris\Multisite\temp\Stats\'; % where to put the statistical output .txt
     PARAMS.code_base_dir = 'D:\Users\mvdmlab\My_Documents\GitHub\vandermeerlab\code-matlab\shared'; % where the codebase repo can be found
