@@ -53,8 +53,9 @@ if ismember('power_ratio', analyses)
     
     % plot the gamma band power ratios
     cfg_pow_ratio_plot = [];
+    cfg_pow_ratio_plot.ylims = [-5 5];
     cfg_pow_ratio_plot.plot_type = 'norm';
-    cfg_pow_ratio_plot.ylims_norm = [-2 3];
+    cfg_pow_ratio_plot.ylims_norm = [-2 2];
     % temporary
     cfg_pow_ratio_plot.power_ratio.contrast = [25 45; 90 110];
     cfg_pow_ratio_plot.power_ratio.gamma_freq = [45 65; 70 90];
@@ -112,16 +113,15 @@ if ismember('phase', analyses)
     
     for iSub = 1:length(PARAMS.Subjects)
         sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
-        parfor iSess = 1:length(sess_list)
-%             fprintf(PARAMS.log,['\nExtracting phase slope ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-            mat_all{iSub,iSess} = MS_get_phase_metrics([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-            
-%             fprintf(PARAMS.log, '...complete');
+        for iSess = 1:length(sess_list)
+            fprintf(PARAMS.log,['\nExtracting phase slope ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+            mat_out.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_phase_metrics([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+            fprintf(PARAMS.log, '...complete');
         end
     end
     
     
-    save([PARAMS.inter_dir 'MS_mat2.mat'], 'mat_all', '-v7.3')
+    save([PARAMS.inter_dir 'MS_mat.mat'], 'mat_out', '-v7.3')
 end
 
 %%

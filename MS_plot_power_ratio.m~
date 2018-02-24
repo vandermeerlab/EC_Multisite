@@ -285,7 +285,7 @@ for iType = 1:length(types)
                 %             legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
                 ylim([cfg.ylims_norm])
                 
-                cfg_plt1.pos = [600 50 560*1.4 560*1.8];
+%                 cfg_plt1.pos = [600 50 560*1.4 560*1.8];
                 cfg_plt1.ft_size = 18;
                 SetFigure(cfg_plt1, gcf)
         end

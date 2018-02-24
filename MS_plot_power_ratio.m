@@ -38,7 +38,7 @@ for iType = 1:length(types)
     it_log = {};
     for iSub = 1:length(subjects)
         sess_list = fieldnames(Naris_in.(subjects{iSub}));
-        sites = PARAMS.all_sites;
+        sites = {'PL'    'IL'    'OFC'    'PiriO'    'NAc'    'Piri_N'    'CG'};
         % create the empty array
         AOC_low.(types{iType}) = NaN(length(PARAMS.Phases)+1, length(sites),4);
         AOC_high.(types{iType}) = NaN(length(PARAMS.Phases)+1, length(sites),4);
@@ -285,7 +285,7 @@ for iType = 1:length(types)
                 %             legend(leg_val, 'location', 'eastoutside', 'orientation', 'vertical');
                 ylim([cfg.ylims_norm])
                 
-                cfg_plt1.pos = [600 50 560*1.4 560*1.8];
+%                 cfg_plt1.pos = [600 50 560*1.4 560*1.8];
                 cfg_plt1.ft_size = 18;
                 SetFigure(cfg_plt1, gcf)
         end

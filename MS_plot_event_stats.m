@@ -85,6 +85,7 @@ fprintf(fileID, ['_________________________________________\n'])
 fprintf(fileID, [date '\n'])
 
 for iband = 1:length(bands)
+    for iSite = 
     all_stats.(bands{iband}).avg_len = nanmean(all_stats.(bands{iband}).length);
     all_stats.(bands{iband}).std_len = nanstd(all_stats.(bands{iband}).length);
     all_stats.(bands{iband}).total = length(all_stats.(bands{iband}).length);
