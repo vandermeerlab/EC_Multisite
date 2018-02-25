@@ -67,7 +67,7 @@ for iPair = 1:length(pairs)
         % get the index of the current pair of sites
         idx = strfind(mat_out.labels, [S1 '_' S2]);
         [x_idx,y_idx] = find(not(cellfun('isempty', idx)));
-        for iPhase = 1:length(PARAMS.Phases)
+        for iPhase = 2:length(PARAMS.Phases)-1
             for iBand = 1:length(bands)
                 evts = Events.([S1 '_' t_type]).(PARAMS.Phases{iPhase}).(bands{iBand});
                 this_data_1 = Data.(PARAMS.Phases{iPhase}).([S1 '_' t_type]);

@@ -7,7 +7,9 @@ function MS_single_analysis(analyses)
 global PARAMS
 fprintf(PARAMS.log, date);
 fprintf(PARAMS.log,'\n\nLoading intermediates');
-load([PARAMS.inter_dir 'MS_data.mat'])
+load([PARAMS.inter_dir 'MS_data_R104.mat'])
+
+% load([PARAMS.inter_dir 'MS_data.mat'])
 % load([PARAMS.inter_dir 'MS_naris.mat'])
 load([PARAMS.inter_dir 'MS_events.mat'])
 
@@ -110,15 +112,16 @@ end
 %% get the phase slope values across all subjects, sessions, pairs, events
 if ismember('phase', analyses)
     
-    for iSub = 1:length(PARAMS.Subjects)
+    %for iSub = 1:length(PARAMS.Subjects)
         sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
-        for iSess = 1:length(sess_list)
-%             fprintf(PARAMS.log,['\nExtracting phase slope ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+    %    for iSess = 1:length(sess_list)
+iSub = 2 ; iSess =2; 
+    %fprintf(PARAMS.log,['\nExtracting phase slope ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
             mat_all{iSub,iSess} = MS_get_phase_metrics([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
             
 %             fprintf(PARAMS.log, '...complete');
         end
-    end
+   % end
     
     
     save([PARAMS.inter_dir 'MS_mat2.mat'], 'mat_all', '-v7.3')
