@@ -34,6 +34,10 @@ set(groot, 'DefaultAxesTickLabelInterpreter', 'none')
 set(groot, 'DefaultLegendInterpreter', 'none')
 set(groot,'defaulttextinterpreter','none');  
 
+load([PARAMS.inter_dir 'MS_data_R104.mat'])
+% load([PARAMS.inter_dir 'MS_naris.mat'])
+load([PARAMS.inter_dir 'MS_events.mat'])
+
 iSub = 2;
 sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
 for iSess = 1:length(sess_list)

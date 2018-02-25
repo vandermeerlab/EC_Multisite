@@ -1,6 +1,6 @@
 %MS_batch_control
 
-job = batch('MS_discovery_batch', 'Pool', 8);
+job = batch('MS_discovery_batch', 'Pool', 7);
 wait(job)
 load(job, 'mat_all')
 

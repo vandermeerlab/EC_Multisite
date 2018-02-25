@@ -17,4 +17,4 @@ cd $PBS_O_WORKDIR
 ##############################
 # Enter your code to run below
 ##############################
-matlab -nodisplay -r "MS_initialize_discovery_single"
+matlab -nodisplay -r "MS_btach_control"
