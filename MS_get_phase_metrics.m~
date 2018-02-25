@@ -146,7 +146,7 @@ for iPair = 1:length(pairs)
                             all_ac(iEvent,:) = ac; all_lag(iEvent,:) = lag.* (1./d1.cfg.hdr{1}.SamplingFrequency);
                         else
                             all_ac(iEvent,:) = NaN(length(ac),1); all_lag(iEvent,:) =NaN(length(ac),1);
-%                             fprintf(['Event failed shuffle: ' num2str(iEvent) ' in ' bands{iBand} '  ' PARAMS.Phases{iPhase} '\n'])
+                            fprintf(['Event failed shuffle: ' num2str(iEvent) ' in ' bands{iBand} '  ' PARAMS.Phases{iPhase} '\n'])
                         end
                     else
 %                         all_ac(iEvt,:) = ac; all_lag(iEvt,:) = lag.* (1./PARAM_Fs);
