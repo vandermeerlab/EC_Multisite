@@ -1,0 +1,6 @@
+{Error using mkdir
+Permission denied
+
+Error in MS_initialize_discovery_single (line 9)
+        mkdir(PARAMS.data_dir, 'Temp'); mkdir(PARAMS.data_dir, 'Stats');
+} 
