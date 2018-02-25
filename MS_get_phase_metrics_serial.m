@@ -90,6 +90,7 @@ for iPair = 1:length(pairs)
                 % %% phase slope index
                 % phase_slopes = {};
                 % cycle through all events
+                all_ac = []; all_coh = []; all_lag = []; phase_slopes = []; 
                 for iEvent = length(evts.tstart):-1:1
                     this_event = SelectIV([],evts,iEvent);
                     this_event = ResizeIV(cfg.resize,this_event);

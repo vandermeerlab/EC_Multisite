@@ -118,7 +118,7 @@ iSub = 2;
     %    for iSess = 1:length(sess_list)
  iSess =2; 
     %fprintf(PARAMS.log,['\nExtracting phase slope ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-            mat_all{iSub,iSess} = MS_get_phase_metrics([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+            mat_all{iSub,iSess} = MS_get_phase_metrics_serial([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
             
 %             fprintf(PARAMS.log, '...complete');
         end
