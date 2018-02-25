@@ -1,4 +1,4 @@
-function [mat_out] = MS_get_phase_metrics(cfg_in, Events, Data)
+function [mat_out] = MS_get_phase_metrics_serial(cfg_in, Events, Data)
 %% MS_get_phase_metrics: extracts the phase measurements.  This can be the
 %       phase coherence, amplitude cross correlation, or the phase slope.
 %
@@ -15,9 +15,6 @@ cfg_def.f = [45 65; 70 90];
 cfg_def.nShuffle = 10000;
 cfg_def.debug = 0; % used to check each event with a plot showing both the filtered data + envelope and the Amp_xcorr
 cfg = ProcessConfig2(cfg_def, cfg_in);
-
-cfg_coh.spec_window = 256;
-cfg_coh.NFFT = 1024;
 
 global PARAMS
 bands = {'low', 'high'};
@@ -93,7 +90,7 @@ for iPair = 1:length(pairs)
                 % %% phase slope index
                 % phase_slopes = {};
                 % cycle through all events
-                parfor iEvent = 1:length(evts.tstart)
+                for iEvent = length(evts.tstart):-1:1
                     this_event = SelectIV([],evts,iEvent);
                     this_event = ResizeIV(cfg.resize,this_event);
                     
@@ -104,7 +101,8 @@ for iPair = 1:length(pairs)
                     d2 = restrict(this_data_2,this_event);
                     
                     %% get the phase coherence within each event. 
-
+                    cfg_coh.spec_window = 256;
+                    cfg_coh.NFFT = 1024;
                     
                      [Cxy,F] = cpsd(d1.data,d2.data,hamming(cfg_coh.spec_window),cfg_coh.spec_window/2,cfg_coh.NFFT,d1.cfg.hdr{1}.SamplingFrequency);
                      coh_spec_phase= -angle(Cxy); %higher value means leading. outputs radians
@@ -134,7 +132,7 @@ for iPair = 1:length(pairs)
                         close all
                     end
                     if cfg.nShuffle > 0
-                        shuf_max_xcov = [];
+                        clear shuf_max_xcov;
                         
                         for iShuf = cfg.nShuffle:-1:1
                             %temp_whitenoise = rand(size(vStr_lg))-0.5;
@@ -143,13 +141,13 @@ for iPair = 1:length(pairs)
                             shuf_max_xcov(iShuf) = max(temp_corrvalues);
                         end
                         if max(ac) >= std(shuf_max_xcov)  % if the max ac value is greater than the max than 1sd of the shuffle max values then keep the event
-                            all_ac(iEvent,:) = ac; all_lag(iEvent,:) = lag.* (1./d1.cfg.hdr{1}.SamplingFrequency);
+                            all_ac(iEvent,:) = ac; all_lag(iEvent,:) = lag;
                         else
-                            all_ac(iEvent,:) = NaN(length(ac),1); all_lag(iEvent,:) =NaN(length(ac),1);
+                            all_ac(iEvent,:) = NaN; all_lag(iEvent,:) = NaN;
                             fprintf(['Event failed shuffle: ' num2str(iEvent) ' in ' bands{iBand} '  ' PARAMS.Phases{iPhase} '\n'])
                         end
                     else
-%                         all_ac(iEvt,:) = ac; all_lag(iEvt,:) = lag.* (1./PARAM_Fs);
+                        all_ac(iEvt,:) = ac; all_lag(iEvt,:) = lag.* (1./PARAM_Fs);
                     end
                     
                     %try the function
