@@ -36,7 +36,7 @@ set(groot, 'DefaultAxesTickLabelInterpreter', 'none')
 set(groot, 'DefaultLegendInterpreter', 'none')
 set(groot,'defaulttextinterpreter','none');  
 %Master_Multisite
-%analyses = {'phase'};
+analyses = {'phase'};
 %analyses = {'power_ratio', 'plot_psd', 'event_fig', 'spectrogram'};   % possibilities 'power_ratio', 'plot_psd', 'event_fig', 'spectrogram', 'phase'
-analyses = {'spectrogram'};
+%analyses = {'spectrogram'};
 MS_single_analysis(analyses)
