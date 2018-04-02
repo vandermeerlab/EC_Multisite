@@ -104,9 +104,9 @@ save([PARAMS.inter_dir 'MS_naris.mat'], 'Naris', '-v7.3')
 % PARAMS.log = fopen([PARAMS.data_dir '/PARAMS.log_2.txt'], 'w');
 % fprintf(PARAMS.log, date);
 % % fprintf(PARAMS.log,'\n\nLoading intermediates');
-% load([PARAMS.inter_dir 'MS_data.mat'])
-% load([PARAMS.inter_dir 'MS_naris.mat'])
-% load([PARAMS.inter_dir 'MS_events.mat'])
+load([PARAMS.inter_dir 'MS_data.mat'])
+load([PARAMS.inter_dir 'MS_naris.mat'])
+load([PARAMS.inter_dir 'MS_events.mat'])
 
 %% split pot vs trk
 % fprintf(PARAMS.log,'\n\nSplitting the data into pot and trk');
