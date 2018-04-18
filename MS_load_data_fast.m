@@ -95,6 +95,9 @@ for iPhase = 1:length(PARAMS.Phases)
         end
     end
     % get the position for each phase
+    if isempty(FindFiles('*.nvt'))
+        unzip('VT1.zip')
+    end
     cfg_load = [];
     pos = LoadPos(cfg_load);
     data.(PARAMS.Phases{iPhase}).pos.pot = restrict(pos,evt.t{start_idx}(1),evt.t{stop_idx}(1));

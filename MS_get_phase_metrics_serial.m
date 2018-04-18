@@ -64,7 +64,7 @@ for iPair = 1:length(pairs)
         % get the index of the current pair of sites
         idx = strfind(mat_out.labels, [S1 '_' S2]);
         [x_idx,y_idx] = find(not(cellfun('isempty', idx)));
-        for iPhase = 1:length(PARAMS.Phases)
+        for iPhase = 2:length(PARAMS.Phases)
             for iBand = 1:length(bands)
                 evts = Events.([S1 '_' t_type]).(PARAMS.Phases{iPhase}).(bands{iBand});
                 this_data_1 = Data.(PARAMS.Phases{iPhase}).([S1 '_' t_type]);
@@ -101,7 +101,7 @@ for iPair = 1:length(pairs)
                     d1 = restrict(this_data_1,this_event);
                     d2 = restrict(this_data_2,this_event);
                     
-                    %% get the phase coherence within each event. 
+                    %% get the phase angle within each event. 
                     cfg_coh.spec_window = 256;
                     cfg_coh.NFFT = 1024;
                     
@@ -148,7 +148,7 @@ for iPair = 1:length(pairs)
                             fprintf(['Event failed shuffle: ' num2str(iEvent) ' in ' bands{iBand} '  ' PARAMS.Phases{iPhase} '\n'])
                         end
                     else
-                        all_ac(iEvt,:) = ac; all_lag(iEvt,:) = lag.* (1./PARAM_Fs);
+                        all_ac(iEvt,:) = ac; all_lag(iEvt,:) = lag;
                     end
                     
                     %try the function

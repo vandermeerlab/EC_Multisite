@@ -1,4 +1,4 @@
-function [phase_slope] = MS_phase_slope(cfg_in, data1, data2)
+function [Slopes,F, h] = MS_phase_slope(cfg_in, data1, data2)
 %% MS_phase_slope: calculates tyhe phase slope between data1 and data two
 %       for a specified frequency range in cfg.freq field.  Phase
 %       differences are caluculated across the full frequency range using
@@ -47,7 +47,7 @@ phase_diff = angle(Pxy);
 phase_diff_plus_pi = phase_diff+pi;
 
 if cfg.debug
-    figure(99); subplot(3,3,1); cla;
+    h = figure(99); subplot(3,3,1); cla;
     h1 = plot(data1); hold on; h2 = plot(data2,'r');
     axis tight;
     
@@ -102,8 +102,11 @@ if cfg.debug
         
     end
 end
-%% get the mean slope values
+% %% get the mean slope values
 
-phase_slope = mean(slopes);
-
+Slopes = slopes;
+F = Freq_out; 
+if cfg.debug ==0
+    h = []; 
+end
 end

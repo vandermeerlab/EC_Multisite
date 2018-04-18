@@ -104,9 +104,9 @@ save([PARAMS.inter_dir 'MS_naris.mat'], 'Naris', '-v7.3')
 % PARAMS.log = fopen([PARAMS.data_dir '/PARAMS.log_2.txt'], 'w');
 % fprintf(PARAMS.log, date);
 % % fprintf(PARAMS.log,'\n\nLoading intermediates');
-% load([PARAMS.inter_dir 'MS_data.mat'])
-% load([PARAMS.inter_dir 'MS_naris.mat'])
-% load([PARAMS.inter_dir 'MS_events.mat'])
+load([PARAMS.inter_dir 'MS_data.mat'])
+load([PARAMS.inter_dir 'MS_naris.mat'])
+load([PARAMS.inter_dir 'MS_events.mat'])
 
 %% split pot vs trk
 % fprintf(PARAMS.log,'\n\nSplitting the data into pot and trk');
@@ -149,15 +149,15 @@ for iSub = 1:length(PARAMS.Subjects)
     end
 end
 %% plot the gamma band power ratios
-% cfg_pow_ratio_plot.ylims = [-100 100];
-% cfg_pow_ratio_plot.plot_type = 'raw';
-% cfg_pow_ratio_plot.ylims_norm = [-2 2];
-% % temporary
-% cfg_pow_ratio_plot.power_ratio.contrast = [25 45; 90 110];
-% cfg_pow_ratio_plot.power_ratio.gamma_freq = [45 65; 70 90];
-% 
-% cfg_pow_ratio_plot.pot_trk = 'pot'; 
-% MS_plot_power_ratio(cfg_pow_ratio_plot, Naris)
+cfg_pow_ratio_plot.ylims = [-100 100];
+cfg_pow_ratio_plot.plot_type = 'raw';
+cfg_pow_ratio_plot.ylims_norm = [-2 2];
+% temporary
+cfg_pow_ratio_plot.power_ratio.contrast = [25 45; 90 110];
+cfg_pow_ratio_plot.power_ratio.gamma_freq = [45 65; 70 90];
+
+cfg_pow_ratio_plot.pot_trk = 'pot'; 
+MS_plot_power_ratio(cfg_pow_ratio_plot, Naris)
 
 %% get the phase slope values across all subjects, sessions, pairs, events
 % for iSub = 1:length(PARAMS.Subjects)

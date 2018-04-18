@@ -122,6 +122,7 @@ iSub = 2;
             mat_all{iSub,iSess} = MS_get_phase_metrics_serial([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
             
 %             fprintf(PARAMS.log, '...complete');
+
  %       end
 end
    % end
@@ -130,6 +131,25 @@ end
     save([PARAMS.inter_dir 'MS_mat23.mat'], 'mat_all', '-v7.3')
 end
 
+
+%% get the phase slope values across all subjects, sessions, pairs, events
+% if ismember('coh', analyses)
+    
+    %for iSub = 1:length(PARAMS.Subjects)
+iSub = 2;
+        sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
+    %    for iSess = 1:length(sess_list)
+ iSess =2; 
+    %fprintf(PARAMS.log,['\nExtracting phase slope ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+            Coh_matl{iSub,iSess} = MS_coherence([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+            
+%             fprintf(PARAMS.log, '...complete');
+       end
+   end
+    
+    
+%     save([PARAMS.inter_dir 'MS_matS2.mat'], 'mat_all', '-v7.3')
+% end
 %%
 % MS_plot_power([], Naris);
 
