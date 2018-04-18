@@ -1,8 +1,0 @@
-{Undefined function or variable "iSub".
-
-Error in MS_single_analysis (line 116)
-        sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
-
-Error in MS_initialize_discovery_single (line 42)
-MS_single_analysis(analyses)
-} 
