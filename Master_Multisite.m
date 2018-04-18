@@ -149,15 +149,15 @@ for iSub = 1:length(PARAMS.Subjects)
     end
 end
 %% plot the gamma band power ratios
-% cfg_pow_ratio_plot.ylims = [-100 100];
-% cfg_pow_ratio_plot.plot_type = 'raw';
-% cfg_pow_ratio_plot.ylims_norm = [-2 2];
-% % temporary
-% cfg_pow_ratio_plot.power_ratio.contrast = [25 45; 90 110];
-% cfg_pow_ratio_plot.power_ratio.gamma_freq = [45 65; 70 90];
-% 
-% cfg_pow_ratio_plot.pot_trk = 'pot'; 
-% MS_plot_power_ratio(cfg_pow_ratio_plot, Naris)
+cfg_pow_ratio_plot.ylims = [-100 100];
+cfg_pow_ratio_plot.plot_type = 'raw';
+cfg_pow_ratio_plot.ylims_norm = [-2 2];
+% temporary
+cfg_pow_ratio_plot.power_ratio.contrast = [25 45; 90 110];
+cfg_pow_ratio_plot.power_ratio.gamma_freq = [45 65; 70 90];
+
+cfg_pow_ratio_plot.pot_trk = 'pot'; 
+MS_plot_power_ratio(cfg_pow_ratio_plot, Naris)
 
 %% get the phase slope values across all subjects, sessions, pairs, events
 % for iSub = 1:length(PARAMS.Subjects)

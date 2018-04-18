@@ -24,7 +24,10 @@ PARAMS.log = fopen([PARAMS.data_dir 'MS_log.txt'], 'w');
 PARAMS.Phases = {'pre', 'ipsi', 'contra', 'post'}; % recording phases within each session
 PARAMS.Subjects = {'R102', 'R104','R107', 'R108', 'R112', 'R122', 'R123'}; %list of subjects
 PARAMS.Sub_xpiri = {'R108', 'R112', 'R122', 'R123'};  % subjects with electrodes spanning the piriform cortex
-PARAMS.all_sites = {'PL', 'IL', 'OFC', 'Piri_OFC', 'NAc', 'Piri_NAc', 'CG'}; 
+PARAMS.all_sites = {'PL', 'IL', 'OFC', 'PiriO', 'NAc', 'PiriN', 'CG'}; 
+rng(10,'twister') % for reproducibility
+
+
 % add the required code
 addpath(genpath(PARAMS.code_base_dir));
 addpath(genpath(PARAMS.code_MS_dir));
