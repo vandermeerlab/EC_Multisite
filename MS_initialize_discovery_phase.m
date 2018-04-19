@@ -24,7 +24,7 @@ PARAMS.log = fopen([PARAMS.inter_dir 'MS_log.txt'], 'w');
 PARAMS.Phases = {'pre', 'ipsi', 'contra', 'post'}; % recording phases within each session
 PARAMS.Subjects = {'R102', 'R104', 'R107', 'R108', 'R112', 'R122', 'R123'}; %list of subjects
 PARAMS.Sub_xpiri = {'R108', 'R112', 'R122', 'R123'};  % subjects with electrodes spanning the piriform cortex
-PARAMS.all_sites = {'PL', 'IL', 'OFC', 'PiriO', 'NAc', 'PiriN', 'CG'}; 
+PARAMS.all_sites = {'PL', 'IL', 'OFC', 'Piri_O', 'NAc', 'Piri_N', 'CG'}; 
 
 % add the required code
 addpath(genpath(PARAMS.code_base_dir));
@@ -35,5 +35,4 @@ cd(PARAMS.data_dir) % move to the data folder
 set(groot, 'DefaultAxesTickLabelInterpreter', 'none')
 set(groot, 'DefaultLegendInterpreter', 'none')
 set(groot,'defaulttextinterpreter','none');  
-
-load([PARAMS.data_dir
+Master_Phase

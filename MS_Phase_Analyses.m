@@ -1,4 +1,4 @@
-function MS_Phase_Analyses(cfg_in, data, Events)
+function mat_out = MS_Phase_Analyses(cfg_in, data, Events)
 %% MS_Phase_Analyses: completes a series of phase related analyses:
 %   - coherence: measures the degree of similarity in the change of two
 %   signals in time
@@ -34,10 +34,10 @@ cfg_def.check = 1; % used to create a plot for verification.
 cfg_def.check_dir = [PARAMS.inter_dir '/phase_check']; %where to save the check figure.
 
 
-%cfgs for amp x-corr 
+%cfgs for amp x-corr
 cfg_def.cfg_amp = [];
-cfg_def.cfg_amp.count = 100; 
-cfg_def.cfg_amp.nShuffle = 100; 
+cfg_def.cfg_amp.count = 100;
+cfg_def.cfg_amp.nShuffle = 100;
 
 % cfgs for power spectral densities (only just for checking plot
 cfg_def.cfg_psd = [];
@@ -179,8 +179,8 @@ for iPhase = 1:length(PARAMS.Phases)
                 FILT.(pairs{iPair}).([S{2} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt} = restrict(d_filter.([S{2} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}), Re_Events.([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}).tstart(iEvt), Re_Events.([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}).tend(iEvt));
                 
                 % get the power evelop signal for each
-                AMP.(pairs{iPair}).([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt} = restrict(d_filter.([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}), Re_Events.([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}).tstart(iEvt), Re_Events.([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}).tend(iEvt));
-                AMP.(pairs{iPair}).([S{2} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt} = restrict(d_filter.([S{2} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}), Re_Events.([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}).tstart(iEvt), Re_Events.([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}).tend(iEvt));
+                AMP.(pairs{iPair}).([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt} = restrict(d_amp.([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}), Re_Events.([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}).tstart(iEvt), Re_Events.([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}).tend(iEvt));
+                AMP.(pairs{iPair}).([S{2} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt} = restrict(d_amp.([S{2} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}), Re_Events.([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}).tstart(iEvt), Re_Events.([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}).tend(iEvt));
                 
                 AMP.(pairs{iPair}).([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt}.data = AMP.(pairs{iPair}).([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt}.data - nanmean(AMP.(pairs{iPair}).([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt}.data);
                 AMP.(pairs{iPair}).([S{2} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt}.data = AMP.(pairs{iPair}).([S{2} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt}.data - nanmean(AMP.(pairs{iPair}).([S{2} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt}.data);
@@ -203,19 +203,31 @@ for iPhase = 1:length(PARAMS.Phases)
             idx = strfind(mat_out.labels, [S{1} '_' S{2}]);
             [x_idx,y_idx] = find(not(cellfun('isempty', idx)));
             for iEvt = length(Re_Events.([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}).tstart):-1:1
+                % rename the current event to a shorthand
+                this_RAW1 = RAW.(pairs{iPair}).([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt};
+                this_RAW2 = RAW.(pairs{iPair}).([S{2} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt};
+                
+                this_AMP1 = AMP.(pairs{iPair}).([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt};
+                this_AMP2 = AMP.(pairs{iPair}).([S{2} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt};
+                
+                this_FILT1 = FILT.(pairs{iPair}).([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt};
+                this_FILT2 = FILT.(pairs{iPair}).([S{2} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt};
+                
+                this_PSD1 = PSD.(pairs{iPair}).([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt};
+                this_PSD2 = PSD.(pairs{iPair}).([S{2} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt};
                 
                 %amp xcorr
-                [ac, lag] = xcov(AMP.(pairs{iPair}).([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt}.data,AMP.(pairs{iPair}).([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt}.data,100,  'coeff');
-                lag = lag * 1/AMP.(pairs{iPair}).([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt}.cfg.hdr{1}.SamplingFrequency;
+                [ac, lag] = xcov(this_AMP1.data,this_AMP2.data,100,  'coeff');
+                lag = lag * 1/this_AMP1.cfg.hdr{1}.SamplingFrequency;
                 
-                % determine if the event 
+                % determine if the event
                 if cfg.cfg_amp.nShuffle > 0
                     clear shuf_max_xcov;
                     
                     for iShuf = cfg.cfg_amp.nShuffle:-1:1
                         %temp_whitenoise = rand(size(vStr_lg))-0.5;
-                        temp_whitenoise = AUX_shuffle_phases(AMP.(pairs{iPair}).([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt}.data);
-                        temp_corrvalues = xcov(AMP.(pairs{iPair}).([S{1} cfg.type]).(PARAMS.Phases{iPhase}).(bands{iBand}){iEvt}.data,temp_whitenoise,'coeff');
+                        temp_whitenoise = AUX_shuffle_phases(this_AMP2.data);
+                        temp_corrvalues = xcov(this_AMP1.data,temp_whitenoise,'coeff');
                         shuf_max_xcov(iShuf) = max(temp_corrvalues);
                     end
                     if max(ac) >= std(shuf_max_xcov)  % if the max ac value is greater than the max than 1sd of the shuffle max values then keep the event
@@ -230,6 +242,119 @@ for iPhase = 1:length(PARAMS.Phases)
                     mat_out.(PARAMS.Phases{iPhase}).AMP_AC.(bands{iBand}){x_idx, y_idx, iEvt} = ac;
                     mat_out.(PARAMS.Phases{iPhase}).AMP_LAG.(bands{iBand}){x_idx, y_idx, iEvt} = lag;
                 end
+                
+                %% get the coherence the same way.
+                if max(ac) >= std(shuf_max_xcov)
+                    
+                    [cxx, fxx] = mscohere(this_RAW1.data,this_RAW2.data,hanning(cfg.cfg_coh.spec_window),cfg.cfg_coh.spec_window/2, cfg.cfg_coh.NFFT, this_RAW1.cfg.hdr{1}.SamplingFrequency);
+                    
+                    mat_out.(PARAMS.Phases{iPhase}).COH_cxx.(bands{iBand}){x_idx, y_idx, iEvt} = cxx;
+                    mat_out.(PARAMS.Phases{iPhase}).COH_fxx.(bands{iBand}){x_idx, y_idx, iEvt} = fxx;
+                    
+                else
+                    mat_out.(PARAMS.Phases{iPhase}).COH_cxx.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
+                    mat_out.(PARAMS.Phases{iPhase}).COH_fxx.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
+                end
+                %% get the phase lag
+                if max(ac) >= std(shuf_max_xcov)
+                    
+                    [Cxy,F] = cpsd(this_RAW1.data, this_RAW2.data,length(this_RAW1.data),0,cfg.cfg_coh.NFFT,this_RAW1.cfg.hdr{1}.SamplingFrequency);
+                    
+                    coh_spec_phase= -angle(Cxy); %higher value means leading. outputs radians
+                    phase_off =circ_mean(coh_spec_phase(nearest_idx(cfg.(['cfg_filter' num2str(iBand)]).f(1), F):nearest_idx(cfg.(['cfg_filter' num2str(iBand)]).f(2), F)));
+                    
+                    mat_out.(PARAMS.Phases{iPhase}).Phase_lag_cxy.(bands{iBand}){x_idx, y_idx, iEvt} = coh_spec_phase;
+                    mat_out.(PARAMS.Phases{iPhase}).Phase_lag_F.(bands{iBand}){x_idx, y_idx, iEvt} = F;
+                    mat_out.(PARAMS.Phases{iPhase}).Phase_lag_mean.(bands{iBand}){x_idx, y_idx, iEvt} =phase_off;
+                    
+                else
+                    mat_out.(PARAMS.Phases{iPhase}).COH_cxx.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
+                    mat_out.(PARAMS.Phases{iPhase}).COH_fxx.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
+                    mat_out.(PARAMS.Phases{iPhase}).Phase_lag_mean.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
+                end
+                %% get the phase slope index.
+                if max(ac) >= std(shuf_max_xcov)
+                    cfg.cfg_phase.Fs = this_RAW1.cfg.hdr{1}.SamplingFrequency;
+                    [phase_slopes, F_PS] = MS_phase_slope(cfg.cfg_phase,this_RAW1.data,this_RAW2.data);
+                    
+                    mat_out.(PARAMS.Phases{iPhase}).PS_slope.(bands{iBand}){x_idx, y_idx, iEvt} = phase_slopes;
+                    mat_out.(PARAMS.Phases{iPhase}).PS_F.(bands{iBand}){x_idx, y_idx, iEvt} = F_PS;
+                    
+                else
+                    mat_out.(PARAMS.Phases{iPhase}).PS_slope.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
+                    mat_out.(PARAMS.Phases{iPhase}).PS_F.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
+                end
+            end
+            if cfg.check
+                close all
+                figure(111)
+                
+                % plot the raw event
+                subplot(2,3,1)
+                hold on
+                plot(this_RAW1.tvec, this_RAW1.data, 'b')
+                plot(this_RAW2.tvec, this_RAW2.data, 'r')
+                xlim([this_RAW1.tvec(1) this_RAW1.tvec(end)])
+                legend({S{1} S{2}}, 'location', 'northwest')
+                                xlabel('Time (s)')
+
+                % plot the PSD
+                subplot(2,3,2)
+                hold on
+                plot(this_PSD1.f, 10*log10(this_PSD1.pxx), 'b');
+                plot(this_PSD2.f, 10*log10(this_PSD2.pxx), 'r');
+                %                 legend({S{1} S{2}}, 'location', 'northwest')
+                xlim([0 100])
+                text(5, max(10*log10(this_PSD1.pxx)) +10, [S{1} '-' S{2} ' Event: ' num2str(iEvt) ' ' bands{iBand}])
+                ylabel('Power')
+                legend({S{1} S{2}}, 'location', 'northwest')
+                xlabel('Frequency')
+
+                % plot the phase and amp
+                subplot(2,3,3)
+                hold on
+                plot(this_FILT1.tvec, this_FILT1.data, 'b')
+                plot(this_AMP1.tvec, this_AMP1.data, 'b')
+                
+                plot(this_FILT2.tvec, this_FILT2.data, 'r')
+                plot(this_AMP2.tvec, this_AMP2.data, 'r')
+                
+                xlim([this_AMP1.tvec(1) this_AMP1.tvec(end)])
+                y_l = get(gca, 'ylim');
+                [ac_max, idx] =  max(ac);
+                s_amp = sprintf('Amp xcorr = %.2f\nLag = %.2fms', ac_max, lag(idx)*1000);
+                text(this_AMP1.tvec(5), y_l(2)-(y_l(2)*.1), s_amp, 'fontsize', 12);
+                                xlabel('Frequency')
+
+                % coherence between
+                subplot(2,3,4)
+                plot(fxx, cxx)
+                xlim([0 100])
+                vline([cfg.cfg_filter1.f,cfg.cfg_filter2.f], {'--b', '--b', '--g', '--g'})
+                ylabel('Coherence')
+                xlabel('Frequency')
+                % get the phase offset value and plot in the corner
+                subplot(2,3,5)
+                hold on
+                plot(F, rad2deg(coh_spec_phase), 'b');
+                vline([cfg.cfg_filter1.f,cfg.cfg_filter2.f], {'--b', '--b', '--g', '--g'})
+                xlim([0 100])
+                plot([0:100], zeros(101), 'k--')
+                text(5, 20, ['Offset = ' num2str(rad2deg(phase_off),3) ' Degrees'], 'fontsize', 12);
+                xlabel('Frequency')
+                ylabel('Phase offset (deg)')
+
+                % plot the phase slope
+                subplot(2,3,6)
+                plot(F_PS, phase_slopes(iEvt,:))
+                xlim(cfg.cfg_phase.freq)
+                vline([cfg.cfg_filter1.f,cfg.cfg_filter2.f], {'--b', '--b', '--g', '--g'})
+                hline(0, '--k')
+                ylabel('phase/deg')
+                                xlabel('Frequency')
+                cfg_fig.pos = [145 45 1200 750];
+                SetFigure(cfg_fig, gcf)
+                saveas(gcf, [PARAMS.inter_dir 'Phase_checks/' S{1} '_' S{2} '_Event_' num2str(iEvt) '_' bands{iBand} '.png'])
             end
         end
     end
