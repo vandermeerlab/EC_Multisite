@@ -40,20 +40,22 @@ set(groot,'defaulttextinterpreter','none');
 load([PARAMS.inter_dir 'MS_data.mat'])
 load([PARAMS.inter_dir 'MS_naris.mat'])
 load([PARAMS.inter_dir 'MS_events.mat'])
-d_t = data; 
+d_t = data;s
 e_t = Events;
 n_t = Naris;
-
+%%
 for iSub = 1:length(PARAMS.Subjects)
+    clear data Events Naris
     data = d_t.(PARAMS.Subjects{iSub});
-    data = e_t.(PARAMS.Subjects{iSub});
+    Events = e_t.(PARAMS.Subjects{iSub});
     Naris = n_t.(PARAMS.Subjects{iSub});
 
-    save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data'], data, '-v7.3')
-    save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events'], Events, '-v7.3')
-    save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris'], Naris, '-v7.3')
-clear data Events Naris
+    save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data'], 'data', '-v7.3')
+    save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events'], 'Events', '-v7.3')
+    save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris'], 'Naris', '-v7.3')
 end
+
+
     
     
     

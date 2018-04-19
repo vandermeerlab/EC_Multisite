@@ -13,8 +13,8 @@ function MS_get_phase_discovery(Subject)
 
 MS_initialize_discovery
 
-Load([PARAMS.inter_dir Subject 'Data.mat']);
-Load([PARAMS.inter_dir Subject 'Events.mat']);
+load([PARAMS.inter_dir Subject '_Data.mat']);
+load([PARAMS.inter_dir Subject '_Events.mat']);
 
 sess_list = fieldnames(data); 
 for iSess = 1:length(sess_list)

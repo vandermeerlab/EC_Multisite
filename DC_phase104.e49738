@@ -1,0 +1,182 @@
+
+------------------------------------------------------------------------
+       Segmentation violation detected at Thu Apr 19 00:11:39 2018
+------------------------------------------------------------------------
+
+Configuration:
+  Crash Decoding     : Disabled
+  Current Visual     : None
+  Default Encoding   : ISO-8859-1
+  GNU C Library      : 2.17 stable
+  MATLAB Architecture: glnxa64
+  MATLAB Root        : /opt/matlab/R2014b
+  MATLAB Version     : 8.4.0.150421 (R2014b)
+  Operating System   : Linux 3.10.0-693.21.1.el7.x86_64 #1 SMP Wed Mar 7 19:03:37 UTC 2018 x86_64
+  Processor ID       : x86 Family 6 Model 63 Stepping 2, GenuineIntel
+  Software OpenGL    : 0
+  Virtual Machine    : Java 1.7.0_11-b21 with Oracle Corporation Java HotSpot(TM) 64-Bit Server VM mixed mode
+  Window System      : No active display
+
+Fault Count: 1
+
+
+Abnormal termination:
+Segmentation violation
+
+Register State (from fault):
+  RAX = 0000000000000000  RBX = 00002b667e320840
+  RCX = 00002b667e323d00  RDX = 00000000ffffffff
+  RSP = 00002b6407ff1878  RBP = 00002b6407ff18d0
+  RSI = 00002b640c000030  RDI = 00002b640c000020
+
+   R8 = 00002b667e323d40   R9 = 00002b667e323d80
+  R10 = cccccccccccccccd  R11 = 0000000000000000
+  R12 = 00002b6407ff1980  R13 = 00002b667e320840
+  R14 = 0000000000000000  R15 = 00002b646acdac40
+
+  RIP = 0000000000000000  EFL = 0000000000010206
+
+   CS = 0033   FS = 0000   GS = 0000
+
+Stack Trace (from fault):
+[  0] 0x0000000000000000                                   <unknown-module>+00000000
+[  1] 0x00002b646ab3cca9 /opt/matlab/R2014b/bin/glnxa64/libmwhandle_graphics.so+19913897 _ZN8graphics9primitive6canvas10JavaCanvas7doSetupEv+00000025
+[  2] 0x00002b646acdac87 /opt/matlab/R2014b/bin/glnxa64/libmwhandle_graphics.so+21609607 _ZN8graphics9primitive6canvas10JavaCanvas5SetupEN4mcos15COSInterfacePtrE+00000071
+[  3] 0x00002b646ace02ae /opt/matlab/R2014b/bin/glnxa64/libmwhandle_graphics.so+21631662 _ZNK7hgutils12ObjectCtorMIIN8graphics9primitive6canvas10JavaCanvasENS_23PublicConstructorAccessEE6invokeEPKN4mcos9COSClientERiPNS7_8COSValueEiPKSC_+00000206
+[  4] 0x00002b63edddd016        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02019350
+[  5] 0x00002b63edddd4ea        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02020586
+[  6] 0x00002b63edddf2a5        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02028197
+[  7] 0x00002b63edde4b70        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02050928
+[  8] 0x00002b63edde021c        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02032156
+[  9] 0x00002b63edde0349        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02032457
+[ 10] 0x00002b63edde0984        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02034052
+[ 11] 0x00002b63edde0b3a        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02034490 _Z27omConstructObjectWithClientN4mcos9COSNameIDEiPPK11mxArray_tagPKNS_9COSClientE+00000074
+[ 12] 0x00002b646ac97156 /opt/matlab/R2014b/bin/glnxa64/libmwhandle_graphics.so+21332310 _ZN8graphics9primitive6canvas13CanvasFactory16createJavaCanvasEv+00000054
+[ 13] 0x00002b646b3fe7f8 /opt/matlab/R2014b/bin/glnxa64/libmwhandle_graphics.so+29095928 _ZNK8graphics9primitive6canvas13CanvasFactory18createJavaCanvasMI6invokeEPKN4mcos9COSClientERiPNS4_8COSValueEiPKS9_+00000072
+[ 14] 0x00002b63edddd262        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02019938
+[ 15] 0x00002b63edddf2a5        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02028197
+[ 16] 0x00002b63edde4b70        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02050928
+[ 17] 0x00002b63edde06c3        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02033347
+[ 18] 0x00002b63edde07df        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02033631 _Z12omCallMethodN4mcos9COSNameIDES0_PKNS_9COSClientEiPP11mxArray_tagiPPKS4_b+00000127
+[ 19] 0x00002b64632932f2     /opt/matlab/R2014b/bin/glnxa64/libmwhgutils.so+01078002 _ZN7hgutils17MCOSMethodInvoker6invokeEPKN4mcos9COSClientERiPNS1_8COSValueEiPKS6_+00000882
+[ 20] 0x00002b6463293a2f     /opt/matlab/R2014b/bin/glnxa64/libmwhgutils.so+01079855 _ZN7hgutils14callMCOSMethodERKN4mcos9COSNameIDERKNS0_12MemberAccessEPNS0_8COSClassEPKNS0_9COSClientERiPNS0_8COSValueEiPKSD_+00000111
+[ 21] 0x00002b6463293ac1     /opt/matlab/R2014b/bin/glnxa64/libmwhgutils.so+01080001 _ZN7hgutils14callMCOSMethodERKN4mcos9COSNameIDEPNS0_8COSClassEPKNS0_9COSClientERiPNS0_8COSValueEiPKSA_+00000049
+[ 22] 0x00002b64626b3598          /opt/matlab/R2014b/bin/glnxa64/libmwhg.so+05465496
+[ 23] 0x00002b64626b38a5          /opt/matlab/R2014b/bin/glnxa64/libmwhg.so+05466277
+[ 24] 0x00002b6462a348ac          /opt/matlab/R2014b/bin/glnxa64/libmwhg.so+09140396
+[ 25] 0x00002b63edddd262        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02019938
+[ 26] 0x00002b63edddf2a5        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02028197
+[ 27] 0x00002b63edde4b70        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02050928
+[ 28] 0x00002b63edde06c3        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02033347
+[ 29] 0x00002b63edde07df        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02033631 _Z12omCallMethodN4mcos9COSNameIDES0_PKNS_9COSClientEiPP11mxArray_tagiPPKS4_b+00000127
+[ 30] 0x00002b64632932f2     /opt/matlab/R2014b/bin/glnxa64/libmwhgutils.so+01078002 _ZN7hgutils17MCOSMethodInvoker6invokeEPKN4mcos9COSClientERiPNS1_8COSValueEiPKS6_+00000882
+[ 31] 0x00002b646ac4c680 /opt/matlab/R2014b/bin/glnxa64/libmwhandle_graphics.so+21026432 _ZN8graphics5mixin12parent_utils14getSceneViewerEN4mcos15COSInterfacePtrE+00000400
+[ 32] 0x00002b646ac4ce6d /opt/matlab/R2014b/bin/glnxa64/libmwhandle_graphics.so+21028461 _ZN8graphics5mixin12UIParentable13setParentImplEP11mxArray_tag+00000525
+[ 33] 0x00002b646b0fd49c /opt/matlab/R2014b/bin/glnxa64/libmwhandle_graphics.so+25945244 _ZNK8graphics5mixin12UIParentable15setParentImplMI6invokeEPKN4mcos9COSClientERiPNS3_8COSValueEiPKS8_+00000092
+[ 34] 0x00002b63edddd262        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02019938
+[ 35] 0x00002b63edddf2a5        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02028197
+[ 36] 0x00002b63edde4b70        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02050928
+[ 37] 0x00002b63edde06c3        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02033347
+[ 38] 0x00002b63edde07df        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02033631 _Z12omCallMethodN4mcos9COSNameIDES0_PKNS_9COSClientEiPP11mxArray_tagiPPKS4_b+00000127
+[ 39] 0x00002b64632932f2     /opt/matlab/R2014b/bin/glnxa64/libmwhgutils.so+01078002 _ZN7hgutils17MCOSMethodInvoker6invokeEPKN4mcos9COSClientERiPNS1_8COSValueEiPKS6_+00000882
+[ 40] 0x00002b646ac8f913 /opt/matlab/R2014b/bin/glnxa64/libmwhandle_graphics.so+21301523 _ZN8graphics9primitive5world9SceneNode13setParentImplEPN4mcos11COSPropInfoEPNS3_9COSClientEPNS3_12COSInterfaceENS3_8COSValueE+00000499
+[ 41] 0x00002b646b3a0bb9 /opt/matlab/R2014b/bin/glnxa64/libmwhandle_graphics.so+28711865 _ZNK8graphics9primitive5world9SceneNode10Parent_IPI5doSetEPS2_PN4mcos12COSInterfaceENS5_8COSValueE+00000073
+[ 42] 0x00002b646b3a78bd /opt/matlab/R2014b/bin/glnxa64/libmwhandle_graphics.so+28739773 _ZN7hgutils12StubPropInfoIN8graphics9primitive5world9SceneNodeENS4_10Parent_IPIENS_14ObjectPropTypeEE8setValueEPN4mcos12COSInterfaceENS8_8COSValueE+00000093
+[ 43] 0x00002b646b3a3ffb /opt/matlab/R2014b/bin/glnxa64/libmwhandle_graphics.so+28725243 _ZN7hgutils17DependentPropInfoIN8graphics9primitive5world9SceneNodeENS4_8ParentPIEE8setValueEPN4mcos12COSInterfaceENS7_8COSValueE+00000107
+[ 44] 0x00002b646b3a40c6 /opt/matlab/R2014b/bin/glnxa64/libmwhandle_graphics.so+28725446 _ZN8graphics9primitive5world9SceneNode8ParentPI8setValueEPN4mcos12COSInterfaceENS4_8COSValueE+00000102
+[ 45] 0x00002b63edd9f418        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+01766424
+[ 46] 0x00002b646326e451     /opt/matlab/R2014b/bin/glnxa64/libmwhgutils.so+00926801 _ZN7hgutils17HGCustomMetaClass22customSetPropertyValueEPKN4mcos9COSClientERNS1_15COSInterfacePtrES6_NS1_8COSValueE+00000113
+[ 47] 0x00002b63edd9a7df        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+01746911
+[ 48] 0x00002b63edd9aab6        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+01747638
+[ 49] 0x00002b646327bcc8     /opt/matlab/R2014b/bin/glnxa64/libmwhgutils.so+00982216 _ZN7hgutils8HGHandle11setPropertyEPKN4mcos9COSClientENS1_15COSInterfacePtrEPKcP11mxArray_tag+00000968
+[ 50] 0x00002b646327c57c     /opt/matlab/R2014b/bin/glnxa64/libmwhgutils.so+00984444 _ZN7hgutils8HGHandle10setPVPairsEPKN4mcos9COSClientENS1_15COSInterfacePtrEiPKNS1_8COSValueE+00000220
+[ 51] 0x00002b646ae541ba /opt/matlab/R2014b/bin/glnxa64/libmwhandle_graphics.so+23155130 _ZNK7hgutils12ObjectCtorMIIN8graphics4axis4AxesENS_23PublicConstructorAccessEE6invokeEPKN4mcos9COSClientERiPNS6_8COSValueEiPKSB_+00000298
+[ 52] 0x00002b63edddd016        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02019350
+[ 53] 0x00002b63edddd4ea        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02020586
+[ 54] 0x00002b63edddf2a5        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02028197
+[ 55] 0x00002b63edde4b70        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02050928
+[ 56] 0x00002b63edde021c        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02032156
+[ 57] 0x00002b63edde0349        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02032457
+[ 58] 0x00002b63edde0984        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02034052
+[ 59] 0x00002b63edde0b3a        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02034490 _Z27omConstructObjectWithClientN4mcos9COSNameIDEiPPK11mxArray_tagPKNS_9COSClientE+00000074
+[ 60] 0x00002b63ede48fd5        /opt/matlab/R2014b/bin/glnxa64/libmwmcos.so+02461653
+[ 61] 0x00002b64616d2924  /opt/matlab/R2014b/bin/glnxa64/libmwhgbuiltins.so+01288484
+[ 62] 0x00002b64616d2f7e  /opt/matlab/R2014b/bin/glnxa64/libmwhgbuiltins.so+01290110
+[ 63] 0x00002b64616e30b6  /opt/matlab/R2014b/bin/glnxa64/libmwhgbuiltins.so+01355958
+[ 64] 0x00002b63ed9762d5 /opt/matlab/R2014b/bin/glnxa64/libmwm_dispatcher.so+00545493
+[ 65] 0x00002b63ed95de34 /opt/matlab/R2014b/bin/glnxa64/libmwm_dispatcher.so+00446004 _ZN13Mfh_MATLAB_fn11dispatch_fhEiPP11mxArray_tagiS2_+00000244
+[ 66] 0x00002b63ee920b70 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+04053872
+[ 67] 0x00002b63ee8d0e02 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03726850
+[ 68] 0x00002b63ee8d3022 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03735586
+[ 69] 0x00002b63ee8d8f87 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03760007
+[ 70] 0x00002b63ee8d46ff /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03741439
+[ 71] 0x00002b63ee8d5334 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03744564
+[ 72] 0x00002b63ee94a52e /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+04224302
+[ 73] 0x00002b63ed9b2329 /opt/matlab/R2014b/bin/glnxa64/libmwm_dispatcher.so+00791337 _ZN8Mfh_file11dispatch_fhEiPP11mxArray_tagiS2_+00000697
+[ 74] 0x00002b63eeafaef4 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+05996276
+[ 75] 0x00002b63eeafc809 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+06002697
+[ 76] 0x00002b63eeafd03c /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+06004796
+[ 77] 0x00002b63ee9711a3 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+04383139
+[ 78] 0x00002b63ee97e86e /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+04438126
+[ 79] 0x00002b63ee97e953 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+04438355
+[ 80] 0x00002b63eeab6284 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+05714564
+[ 81] 0x00002b63ee8d33c9 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03736521
+[ 82] 0x00002b63ee8d8f87 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03760007
+[ 83] 0x00002b63ee8d46ff /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03741439
+[ 84] 0x00002b63ee8d5334 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03744564
+[ 85] 0x00002b63ee94a52e /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+04224302
+[ 86] 0x00002b63ed9b2329 /opt/matlab/R2014b/bin/glnxa64/libmwm_dispatcher.so+00791337 _ZN8Mfh_file11dispatch_fhEiPP11mxArray_tagiS2_+00000697
+[ 87] 0x00002b63eeafaef4 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+05996276
+[ 88] 0x00002b63eeafc809 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+06002697
+[ 89] 0x00002b63eeafd03c /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+06004796
+[ 90] 0x00002b63ee9711a3 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+04383139
+[ 91] 0x00002b63ee97e86e /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+04438126
+[ 92] 0x00002b63ee97e953 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+04438355
+[ 93] 0x00002b63eeab6284 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+05714564
+[ 94] 0x00002b63ee8d33c9 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03736521
+[ 95] 0x00002b63ee8d8f87 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03760007
+[ 96] 0x00002b63ee8d46ff /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03741439
+[ 97] 0x00002b63ee8d5334 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03744564
+[ 98] 0x00002b63ee94a52e /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+04224302
+[ 99] 0x00002b63ed9b2329 /opt/matlab/R2014b/bin/glnxa64/libmwm_dispatcher.so+00791337 _ZN8Mfh_file11dispatch_fhEiPP11mxArray_tagiS2_+00000697
+[100] 0x00002b63ee920b70 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+04053872
+[101] 0x00002b63ee8d0e02 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03726850
+[102] 0x00002b63ee8d3022 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03735586
+[103] 0x00002b63ee8d8f87 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03760007
+[104] 0x00002b63ee8d46ff /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03741439
+[105] 0x00002b63ee8d5334 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03744564
+[106] 0x00002b63ee94a52e /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+04224302
+[107] 0x00002b63ed9b2329 /opt/matlab/R2014b/bin/glnxa64/libmwm_dispatcher.so+00791337 _ZN8Mfh_file11dispatch_fhEiPP11mxArray_tagiS2_+00000697
+[108] 0x00002b63ee920b70 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+04053872
+[109] 0x00002b63ee8a1293 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03531411
+[110] 0x00002b63ee8d20de /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03731678
+[111] 0x00002b63ee8d8f87 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03760007
+[112] 0x00002b63ee8d46ff /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03741439
+[113] 0x00002b63ee8d5334 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03744564
+[114] 0x00002b63ee94a52e /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+04224302
+[115] 0x00002b63ed9b24af /opt/matlab/R2014b/bin/glnxa64/libmwm_dispatcher.so+00791727 _ZN8Mfh_file11dispatch_fhEiPP11mxArray_tagiS2_+00001087
+[116] 0x00002b63ee908ff5 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03956725
+[117] 0x00002b63ee8ca699 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03700377
+[118] 0x00002b63ee8c6a87 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03684999
+[119] 0x00002b63ee8c7143 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03686723
+[120] 0x00002b63ee8c4b40 /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03676992
+[121] 0x00002b63ee8423ed /opt/matlab/R2014b/bin/glnxa64/libmwm_interpreter.so+03142637 _Z51inEvalCmdWithLocalReturnInDesiredWSAndPublishEventsRKSbIDsSt11char_traitsIDsESaIDsEEPibbP15inWorkSpace_tag+00000077
+[122] 0x00002b63ec7a7cae         /opt/matlab/R2014b/bin/glnxa64/libmwiqm.so+00687278 _ZNK3iqm18InternalEvalPlugin24inEvalCmdWithLocalReturnERKSbIDsSt11char_traitsIDsESaIDsEEP15inWorkSpace_tag+00000094
+[123] 0x00002b63ec7a7e58         /opt/matlab/R2014b/bin/glnxa64/libmwiqm.so+00687704 _ZN3iqm18InternalEvalPlugin7executeEP15inWorkSpace_tagRN5boost10shared_ptrIN14cmddistributor17IIPCompletedEventEEE+00000120
+[124] 0x00002b63e236fb15         /opt/matlab/R2014b/bin/glnxa64/libmwmcr.so+00711445
+[125] 0x00002b63ec79a926         /opt/matlab/R2014b/bin/glnxa64/libmwiqm.so+00633126
+[126] 0x00002b63ec787515         /opt/matlab/R2014b/bin/glnxa64/libmwiqm.so+00554261
+[127] 0x00002b63eca327d9      /opt/matlab/R2014b/bin/glnxa64/libmwbridge.so+00202713
+
+
+If this problem is reproducible, please submit a Service Request via:
+    http://www.mathworks.com/support/contact_us/
+
+A technical support engineer might contact you with further information.
+
+Thank you for your help.** This crash report has been saved to disk as /dartfs-hpc/rc/home/r/f00287r/matlab_crash_dump.3418-1 **
+
+
+
+MATLAB is exiting because of fatal error
+/var/spool/torque/mom_priv/jobs/49738.knorr.hpcc.dartmouth.edu.SC: line 21:  3418 Killed                  matlab -nodisplay -r "MS_get_phase_discovery('R104')"

@@ -1,6 +1,7 @@
 %% MS_initialize: initialize the default parameters and 
 tic
-clear all; close all
+%clear all;
+close all
 restoredefaultpath
 global PARAMS
 
@@ -35,4 +36,4 @@ cd(PARAMS.data_dir) % move to the data folder
 set(groot, 'DefaultAxesTickLabelInterpreter', 'none')
 set(groot, 'DefaultLegendInterpreter', 'none')
 set(groot,'defaulttextinterpreter','none');  
-Master_Multisite
+%Master_Multisite

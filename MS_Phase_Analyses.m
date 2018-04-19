@@ -236,7 +236,7 @@ for iPhase = 1:length(PARAMS.Phases)
                     else
                         mat_out.(PARAMS.Phases{iPhase}).AMP_AC.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
                         mat_out.(PARAMS.Phases{iPhase}).AMP_LAG.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
-                        fprintf(['Event failed shuffle: ' num2str(iEvent) ' in ' bands{iBand} '  ' PARAMS.Phases{iPhase} '\n'])
+                        fprintf(['Event failed shuffle: ' num2str(iEvt) ' in ' bands{iBand} '  ' PARAMS.Phases{iPhase} '\n'])
                     end
                 else
                     mat_out.(PARAMS.Phases{iPhase}).AMP_AC.(bands{iBand}){x_idx, y_idx, iEvt} = ac;
