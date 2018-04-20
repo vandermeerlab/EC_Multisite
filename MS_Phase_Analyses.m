@@ -346,7 +346,7 @@ for iPhase = 1:length(PARAMS.Phases)
 
                 % plot the phase slope
                 subplot(2,3,6)
-                plot(F_PS, phase_slopes(iEvt,:))
+                plot(F_PS, phase_slopes)
                 xlim(cfg.cfg_phase.freq)
                 vline([cfg.cfg_filter1.f,cfg.cfg_filter2.f], {'--b', '--b', '--g', '--g'})
                 hline(0, '--k')
