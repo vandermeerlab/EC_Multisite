@@ -19,13 +19,20 @@ load([PARAMS.inter_dir Subject '_Events.mat']);
 sess_list = fieldnames(data); 
 for iSess = 1:length(sess_list)
    fprintf(['\nRunning Phases Analyses on ' sess_list{iSess} '....\n']);
+<<<<<<< HEAD
             cfg_in = []
 %	cfg.check = 1;
    Phase_mat.(sess_list{iSess}) =  MS_Phase_Analyses([], data.(sess_list{iSess}), Events.(sess_list{iSess}));
+=======
+	cfg_in = []
+%	cfg.check = 1;   
+   Phase_mat.(sess_list{iSess}) =  MS_Phase_Analyses(cfg_in, data.(sess_list{iSess}), Events.(sess_list{iSess}));
+>>>>>>> 49533cf76945d2e1e0851e30477e1646c41ff40c
     
    fprintf('...Complete\n');
 end
 
 fprintf('/nSaving Phase_mat output...');
 save([PARAMS.inter_dir '/Phase_outputs/' Subject '_phase_out.mat'], 'Phase_mat', '-v7.3')
-fprintf('...Complete');
+fprintf('...Complete');   Phase_mat.(sess_list{iSess}) =  MS_Phase_Analyses([], data.(sess_list{iSess}), Events.(sess_list{iSess}));
+
