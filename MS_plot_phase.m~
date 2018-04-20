@@ -28,25 +28,20 @@ for iPhase =1:length(PARAMS.Phases)
     measures = fieldnames(mat_in.(sess_list{1}).(PARAMS.Phases{iPhase}));
     for iMs = 1:length(measures)
         for iBand = 1:2
-            all_out.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}) = {};
+            all_out.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}) = {}; 
         end
     end
 end
 %% temp
 sess_list = fieldnames(mat_in);
+all_out = [];
 
-for iSess = [1, 3]%1:length(sess_list)
-    for iPhase =1:length(PARAMS.Phases)
-        for iMs = 1:length(measures)
-            for iBand = 1:2
-                all_out.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}) = cat(3,all_out.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}), mat_in.(sess_list{iSess}).(PARAMS.Phases{iPhase}).(measures{iMs}).(bands{iBand}));
-            end
-        end
-    end
+for iSess = 1:length(sess_list)
+    PS = cat(3,PS, mat_out.(sess_list{iSess}).(PARAMS.Phases{iPhase}).(measure{iMes}).(bands{iBand}))
 end
 
 
-%%
+
 labels = {'PL', 'OFC', 'NAc', 'CG'};
 for ii =1:size(PS,1)
     for jj =1:size(PS,2)
