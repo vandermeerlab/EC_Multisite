@@ -148,9 +148,9 @@ end
 
 
 
-for ii = 1:length(site_list)
-    for jj = 1:length(site_list)
-        mat_out.labels{ii,jj} = [site_list{ii}(1:end-4) '_' site_list{jj}(1:end-4)];
+for ii = 1:length(PARAMS.all_sites)
+    for jj = 1:length(PARAMS.all_sites)
+        mat_out.labels{ii,jj} = [PARAMS.all_sites{ii} '_' PARAMS.all_sites{jj}];
     end
 end
 
@@ -158,13 +158,18 @@ end
 for iPhase = 1:length(PARAMS.Phases)
     for iBand = 1:length(bands)
         all_evts = []; 
-        for iSite = 1:length(PARAMS.all_sites)
-            all_evts = cat(2, length(Re_Events.(site_list{iSite}).(PARAMS.Phases{iPhase}).(bands{iBand}).tstart)
+        for iSite = 1:length(site_list)
+            all_evts = cat(2,all_evts, length(Re_Events.(site_list{iSite}).(PARAMS.Phases{iPhase}).(bands{iBand}).tstart));
         end
-        mat_out.(PARAMS.Phases{iPhase}).COH.(bands{iBand}) = cell(size(mat_out.labels));   % for the coherence
-        mat_out.(PARAMS.Phases{iPhase}).AMP_AC.(bands{iBand}) = cell(size(mat_out.labels));  % for the amplitude x-cor
-        mat_out.(PARAMS.Phases{iPhase}).AMP_LAG.(bands{iBand}) = cell(size(mat_out.labels));  % for the amplitude lag
-        mat_out.(PARAMS.Phases{iPhase}).PS.(bands{iBand}) = cell(size(mat_out.labels));   % for the phase slope
+        mat_out.(PARAMS.Phases{iPhase}).COH_cxx.(bands{iBand})        = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));   % for the coherence values
+        mat_out.(PARAMS.Phases{iPhase}).COH_fxx.(bands{iBand})        = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));   % for the coherence frequency
+        mat_out.(PARAMS.Phases{iPhase}).AMP_AC.(bands{iBand})         = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));  % for the amplitude x-cor
+        mat_out.(PARAMS.Phases{iPhase}).AMP_LAG.(bands{iBand})        = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));  % for the amplitude lag
+        mat_out.(PARAMS.Phases{iPhase}).Phase_lag_cxy.(bands{iBand})  = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));   % for the phase slope
+        mat_out.(PARAMS.Phases{iPhase}).Phase_lag_F.(bands{iBand})    = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));   % for the phase slope
+        mat_out.(PARAMS.Phases{iPhase}).Phase_lag_mean.(bands{iBand}) = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));   % for the phase slope
+        mat_out.(PARAMS.Phases{iPhase}).PS_slope.(bands{iBand})       = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));   % for the phase slope values
+        mat_out.(PARAMS.Phases{iPhase}).PS_F.(bands{iBand})           = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));   % for the phase slope frequency
     end
 end
 %% Loop over site pairs for comparisons.  Loop over each event.
@@ -252,8 +257,8 @@ for iPhase = 1:length(PARAMS.Phases)
                     
                     [cxx, fxx] = mscohere(this_RAW1.data,this_RAW2.data,hanning(cfg.cfg_coh.spec_window),cfg.cfg_coh.spec_window/2, cfg.cfg_coh.NFFT, this_RAW1.cfg.hdr{1}.SamplingFrequency);
                     
-                    mat_out.(PARAMS.Phases{iPhase}).COH_cxx.(bands{iBand}){x_idx, y_idx, iEvt} = cxx;
-                    mat_out.(PARAMS.Phases{iPhase}).COH_fxx.(bands{iBand}){x_idx, y_idx, iEvt} = fxx;
+                    mat_out.(PARAMS.Phases{iPhase}).COH_cxx.(bands{iBand}){x_idx, y_idx, iEvt} = cxx';
+                    mat_out.(PARAMS.Phases{iPhase}).COH_fxx.(bands{iBand}){x_idx, y_idx, iEvt} = fxx';
                     
                 else
                     mat_out.(PARAMS.Phases{iPhase}).COH_cxx.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
@@ -272,8 +277,8 @@ for iPhase = 1:length(PARAMS.Phases)
                     mat_out.(PARAMS.Phases{iPhase}).Phase_lag_mean.(bands{iBand}){x_idx, y_idx, iEvt} =phase_off;
                     
                 else
-                    mat_out.(PARAMS.Phases{iPhase}).COH_cxx.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
-                    mat_out.(PARAMS.Phases{iPhase}).COH_fxx.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
+                    mat_out.(PARAMS.Phases{iPhase}).Phase_lag_cxy.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
+                    mat_out.(PARAMS.Phases{iPhase}).Phase_lag_F.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
                     mat_out.(PARAMS.Phases{iPhase}).Phase_lag_mean.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
                 end
                 %% get the phase slope index.
@@ -357,7 +362,7 @@ for iPhase = 1:length(PARAMS.Phases)
                 ylabel('phase/deg')
                                 xlabel('Frequency')
                 cfg_fig.pos = [145 45 1200 750];
-                SetFigure(cfg_fig, gcf)
+               % SetFigure(cfg_fig, gcf)
                 saveas(gcf, [PARAMS.inter_dir 'Phase_checks/' S{1} '_' S{2} '_Event_' num2str(iEvt) '_' bands{iBand} '.png'])
             end
         end
