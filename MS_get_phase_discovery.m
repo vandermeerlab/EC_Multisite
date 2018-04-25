@@ -21,6 +21,7 @@ for iSess = 1:length(sess_list)
    fprintf(['\nRunning Phases Analyses on ' sess_list{iSess} '....\n']);
 
 	cfg_in = []
+    cfg_in.Subject = Subject; 
 %	cfg.check = 1;   
    Phase_mat.(sess_list{iSess}) =  MS_Phase_Analyses(cfg_in, data.(sess_list{iSess}), Events.(sess_list{iSess}));
     
