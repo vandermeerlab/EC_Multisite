@@ -243,8 +243,8 @@ for iPhase = 1:length(PARAMS.Phases)
                         mat_out.(PARAMS.Phases{iPhase}).AMP_AC.(bands{iBand}){x_idx, y_idx, iEvt} = ac;
                         mat_out.(PARAMS.Phases{iPhase}).AMP_LAG.(bands{iBand}){x_idx, y_idx, iEvt} = lag;
                     else
-                        mat_out.(PARAMS.Phases{iPhase}).AMP_AC.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
-                        mat_out.(PARAMS.Phases{iPhase}).AMP_LAG.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
+                        mat_out.(PARAMS.Phases{iPhase}).AMP_AC.(bands{iBand}){x_idx, y_idx, iEvt} = NaN(size(ac));
+                        mat_out.(PARAMS.Phases{iPhase}).AMP_LAG.(bands{iBand}){x_idx, y_idx, iEvt} = NaN(size(lag));
                         fprintf(['Event failed shuffle: ' num2str(iEvt) ' in ' bands{iBand} '  ' PARAMS.Phases{iPhase} '\n'])
                     end
                 else
@@ -257,12 +257,13 @@ for iPhase = 1:length(PARAMS.Phases)
                     
                     [cxx, fxx] = mscohere(this_RAW1.data,this_RAW2.data,hanning(cfg.cfg_coh.spec_window),cfg.cfg_coh.spec_window/2, cfg.cfg_coh.NFFT, this_RAW1.cfg.hdr{1}.SamplingFrequency);
                     
-                    mat_out.(PARAMS.Phases{iPhase}).COH_cxx.(bands{iBand}){x_idx, y_idx, iEvt} = cxx;
-                    mat_out.(PARAMS.Phases{iPhase}).COH_fxx.(bands{iBand}){x_idx, y_idx, iEvt} = fxx;
+                    mat_out.(PARAMS.Phases{iPhase}).COH_cxx.(bands{iBand}){x_idx, y_idx, iEvt} = cxx';
+                    mat_out.(PARAMS.Phases{iPhase}).COH_fxx.(bands{iBand}){x_idx, y_idx, iEvt} = fxx';
                     
                 else
-                    mat_out.(PARAMS.Phases{iPhase}).COH_cxx.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
-                    mat_out.(PARAMS.Phases{iPhase}).COH_fxx.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
+                    [cxx, fxx] = mscohere(this_RAW1.data,this_RAW2.data,hanning(cfg.cfg_coh.spec_window),cfg.cfg_coh.spec_window/2, cfg.cfg_coh.NFFT, this_RAW1.cfg.hdr{1}.SamplingFrequency);
+                    mat_out.(PARAMS.Phases{iPhase}).COH_cxx.(bands{iBand}){x_idx, y_idx, iEvt} = NaN(size(cxx'));
+                    mat_out.(PARAMS.Phases{iPhase}).COH_fxx.(bands{iBand}){x_idx, y_idx, iEvt} = NaN(size(fxx'));
                 end
                 %% get the phase lag
                 if max(ac) >= std(shuf_max_xcov)
@@ -277,8 +278,9 @@ for iPhase = 1:length(PARAMS.Phases)
                     mat_out.(PARAMS.Phases{iPhase}).Phase_lag_mean.(bands{iBand}){x_idx, y_idx, iEvt} =phase_off;
                     
                 else
-                    mat_out.(PARAMS.Phases{iPhase}).Phase_lag_cxy.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
-                    mat_out.(PARAMS.Phases{iPhase}).Phase_lag_F.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
+                    [Cxy,F] = cpsd(this_RAW1.data, this_RAW2.data,length(this_RAW1.data),0,cfg.cfg_coh.NFFT,this_RAW1.cfg.hdr{1}.SamplingFrequency);
+                    mat_out.(PARAMS.Phases{iPhase}).Phase_lag_cxy.(bands{iBand}){x_idx, y_idx, iEvt} = NaN(size(Cxy));
+                    mat_out.(PARAMS.Phases{iPhase}).Phase_lag_F.(bands{iBand}){x_idx, y_idx, iEvt} = NaN(size(F));
                     mat_out.(PARAMS.Phases{iPhase}).Phase_lag_mean.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
                 end
                 %% get the phase slope index.
@@ -287,11 +289,11 @@ for iPhase = 1:length(PARAMS.Phases)
                     [phase_slopes, F_PS] = MS_phase_slope(cfg.cfg_phase,this_RAW1.data,this_RAW2.data);
                     
                     mat_out.(PARAMS.Phases{iPhase}).PS_slope.(bands{iBand}){x_idx, y_idx, iEvt} = phase_slopes;
-                    mat_out.(PARAMS.Phases{iPhase}).PS_F.(bands{iBand}){x_idx, y_idx, iEvt} = F_PS;
+                    mat_out.(PARAMS.Phases{iPhase}).PS_F.(bands{iBand}){x_idx, y_idx, iEvt} = F_PS';
                     
                 else
-                    mat_out.(PARAMS.Phases{iPhase}).PS_slope.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
-                    mat_out.(PARAMS.Phases{iPhase}).PS_F.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
+                    mat_out.(PARAMS.Phases{iPhase}).PS_slope.(bands{iBand}){x_idx, y_idx, iEvt} = NaN(size(phase_slopes));
+                    mat_out.(PARAMS.Phases{iPhase}).PS_F.(bands{iBand}){x_idx, y_idx, iEvt} = NaN(size(F_PS'));
                 end
             end
             if cfg.check
