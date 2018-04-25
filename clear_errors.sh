@@ -10,3 +10,11 @@ rm DC_phase107.e*
 rm DC_phase107.o*
 rm DC_phase112.e*
 rm DC_phase112.o*
+rm DC_phase108.e*
+rm DC_phase108.o*
+rm DC_phase122.e*
+rm DC_phase122.o*
+rm DC_phase102.e*
+rm DC_phase102.o*
+rm DC_phase123.e*
+rm DC_phase123.o*
