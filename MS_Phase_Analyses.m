@@ -366,7 +366,7 @@ for iPhase = 1:length(PARAMS.Phases)
                                 xlabel('Frequency')
                 cfg_fig.pos = [145 45 1200 750];
                % SetFigure(cfg_fig, gcf)
-                saveas(gcf, [PARAMS.inter_dir 'Phase_checks/' cfg.Subject '_' S{1} '_' S{2} '_Event_' num2str(iEvt) '_' bands{iBand} '.png'])
+                saveas(gcf, [PARAMS.inter_dir 'Phase_checks/' cfg.Subject_id '_' S{1} '_' S{2} '_Event_' num2str(iEvt) '_' bands{iBand} '.png'])
             end
         end
     end
