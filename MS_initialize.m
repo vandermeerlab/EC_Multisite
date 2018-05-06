@@ -1,6 +1,7 @@
 %% MS_initialize: initialize the default parameters and 
 
-clear all; close all
+% clear all; 
+close all
 restoredefaultpath
 global PARAMS
 
