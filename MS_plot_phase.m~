@@ -1,7 +1,7 @@
 %% for debugging
 run('/Users/jericcarmichael/Documents/GitHub/EC_Multisite/MS_initialize.m')
 
-Subjects = {'R122', 'R123','R104','R108'};
+Subjects = {'R108'};
 for iSub = Subjects
 
     load([PARAMS.inter_dir '/Phase_outputs/' iSub{1} '_phase_out.mat']);
