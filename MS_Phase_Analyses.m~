@@ -157,7 +157,7 @@ end
 % pre-make the output matrices
 for iPhase = 1:length(PARAMS.Phases)
     for iBand = 1:length(bands)
-        all_evts = [];
+        all_evts = []; 
         for iSite = 1:length(site_list)
             all_evts = cat(2,all_evts, length(Re_Events.(site_list{iSite}).(PARAMS.Phases{iPhase}).(bands{iBand}).tstart));
         end
@@ -165,14 +165,11 @@ for iPhase = 1:length(PARAMS.Phases)
         mat_out.(PARAMS.Phases{iPhase}).COH_fxx.(bands{iBand})        = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));   % for the coherence frequency
         mat_out.(PARAMS.Phases{iPhase}).AMP_AC.(bands{iBand})         = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));  % for the amplitude x-cor
         mat_out.(PARAMS.Phases{iPhase}).AMP_LAG.(bands{iBand})        = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));  % for the amplitude lag
-        mat_out.(PARAMS.Phases{iPhase}).AMP_AC_max.(bands{iBand})         = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));  % for the amplitude x-cor
-        mat_out.(PARAMS.Phases{iPhase}).AMP_LAG_max.(bands{iBand})        = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));  % for the amplitude lag
         mat_out.(PARAMS.Phases{iPhase}).Phase_lag_cxy.(bands{iBand})  = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));   % for the phase slope
         mat_out.(PARAMS.Phases{iPhase}).Phase_lag_F.(bands{iBand})    = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));   % for the phase slope
         mat_out.(PARAMS.Phases{iPhase}).Phase_lag_mean.(bands{iBand}) = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));   % for the phase slope
         mat_out.(PARAMS.Phases{iPhase}).PS_slope.(bands{iBand})       = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));   % for the phase slope values
         mat_out.(PARAMS.Phases{iPhase}).PS_F.(bands{iBand})           = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));   % for the phase slope frequency
-        mat_out.(PARAMS.Phases{iPhase}).EVT_COUNT.(bands{iBand})         = cell(size(mat_out.labels,1),size(mat_out.labels,2), max(all_evts));  % for the amplitude x-cor
     end
 end
 %% Loop over site pairs for comparisons.  Loop over each event.
@@ -246,23 +243,17 @@ for iPhase = 1:length(PARAMS.Phases)
                     if max(ac) >= std(shuf_max_xcov)  % if the max ac value is greater than the max than 1sd of the shuffle max values then keep the event
                         mat_out.(PARAMS.Phases{iPhase}).AMP_AC.(bands{iBand}){x_idx, y_idx, iEvt} = ac;
                         mat_out.(PARAMS.Phases{iPhase}).AMP_LAG.(bands{iBand}){x_idx, y_idx, iEvt} = lag;
-                        mat_out.(PARAMS.Phases{iPhase}).EVT_COUNT.(bands{iBand}){x_idx, y_idx, iEvt} = 1
-                        
+                        [t_max, idx] = max(ac);
+                        mat_out.(PARAMS.Phases{iPhase}).AMP_AC_max.(bands{iBand}){x_idx, y_idx, iEvt} = t_max;
+                        mat_out.(PARAMS.Phases{iPhase}).AMP_LAG_max.(bands{iBand}){x_idx, y_idx, iEvt} = lag(idx);
                     else
                         mat_out.(PARAMS.Phases{iPhase}).AMP_AC.(bands{iBand}){x_idx, y_idx, iEvt} = NaN(size(ac));
                         mat_out.(PARAMS.Phases{iPhase}).AMP_LAG.(bands{iBand}){x_idx, y_idx, iEvt} = NaN(size(lag));
-                        mat_out.(PARAMS.Phases{iPhase}).AMP_AC_max.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
-                        mat_out.(PARAMS.Phases{iPhase}).AMP_LAG_max.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
-                        mat_out.(PARAMS.Phases{iPhase}).EVT_COUNT.(bands{iBand}){x_idx, y_idx, iEvt} = 0;
-
                         fprintf(['Event failed shuffle: ' num2str(iEvt) ' in ' bands{iBand} '  ' PARAMS.Phases{iPhase} '\n'])
                     end
                 else
                     mat_out.(PARAMS.Phases{iPhase}).AMP_AC.(bands{iBand}){x_idx, y_idx, iEvt} = ac;
                     mat_out.(PARAMS.Phases{iPhase}).AMP_LAG.(bands{iBand}){x_idx, y_idx, iEvt} = lag;
-                    [t_max, idx] = max(ac);
-                    mat_out.(PARAMS.Phases{iPhase}).AMP_AC_max.(bands{iBand}){x_idx, y_idx, iEvt} = t_max;
-                    mat_out.(PARAMS.Phases{iPhase}).AMP_LAG_max.(bands{iBand}){x_idx, y_idx, iEvt} = lag(idx);
                 end
                 
                 %% get the coherence the same way.
@@ -320,8 +311,8 @@ for iPhase = 1:length(PARAMS.Phases)
                 plot(this_RAW2.tvec, this_RAW2.data, 'r')
                 xlim([this_RAW1.tvec(1) this_RAW1.tvec(end)])
                 legend({S{1} S{2}}, 'location', 'northwest')
-                xlabel('Time (s)')
-                
+                                xlabel('Time (s)')
+
                 % plot the PSD
                 subplot(2,3,2)
                 hold on
@@ -333,7 +324,7 @@ for iPhase = 1:length(PARAMS.Phases)
                 ylabel('Power')
                 legend({S{1} S{2}}, 'location', 'northwest')
                 xlabel('Frequency')
-                
+
                 % plot the phase and amp
                 subplot(2,3,3)
                 hold on
@@ -348,8 +339,8 @@ for iPhase = 1:length(PARAMS.Phases)
                 [ac_max, idx] =  max(ac);
                 s_amp = sprintf('Amp xcorr = %.2f\nLag = %.2fms', ac_max, lag(idx)*1000);
                 text(this_AMP1.tvec(5), y_l(2)-(y_l(2)*.1), s_amp, 'fontsize', 12);
-                xlabel('Frequency')
-                
+                                xlabel('Frequency')
+
                 % coherence between
                 subplot(2,3,4)
                 plot(fxx, cxx)
@@ -367,7 +358,7 @@ for iPhase = 1:length(PARAMS.Phases)
                 text(5, 20, ['Offset = ' num2str(rad2deg(phase_off),3) ' Degrees'], 'fontsize', 12);
                 xlabel('Frequency')
                 ylabel('Phase offset (deg)')
-                
+
                 % plot the phase slope
                 subplot(2,3,6)
                 plot(F_PS, phase_slopes)
@@ -375,9 +366,9 @@ for iPhase = 1:length(PARAMS.Phases)
                 vline([cfg.cfg_filter1.f,cfg.cfg_filter2.f], {'--b', '--b', '--g', '--g'})
                 hline(0, '--k')
                 ylabel('phase/deg')
-                xlabel('Frequency')
+                                xlabel('Frequency')
                 cfg_fig.pos = [145 45 1200 750];
-                % SetFigure(cfg_fig, gcf)
+               % SetFigure(cfg_fig, gcf)
                 saveas(gcf, [PARAMS.inter_dir 'Phase_checks/' cfg.Subject_id '_' S{1} '_' S{2} '_Event_' num2str(iEvt) '_' bands{iBand} '.png'])
             end
         end

@@ -1,6 +1,6 @@
 %% for debugging
 run('/Users/jericcarmichael/Documents/GitHub/EC_Multisite/MS_initialize.m')
-
+global PARAMS
 Subjects = {'R122', 'R123','R104','R108'};
 for iSub = Subjects
 
@@ -265,6 +265,6 @@ saveas(Phase_off_f, [PARAMS.inter_dir 'Phase_plots/' iSub{1} '_Phase_off'], 'png
 
 close all
 % clear everything except the subject
-clearvars -except Subjects iSub
+clearvars -except Subjects iSub PARAMS
 
 end
