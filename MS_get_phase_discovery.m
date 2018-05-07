@@ -22,7 +22,7 @@ for iSess = 1:length(sess_list)
  
 	cfg_in = [];
     cfg_in.Subject_id = [Subject '_' sess_list{iSess}]; 
-%	cfg.check = 1;   
+    cfg.check = 0;   
 
    Phase_mat.(sess_list{iSess}) =  MS_Phase_Analyses(cfg_in, data.(sess_list{iSess}), Events.(sess_list{iSess}));
     
