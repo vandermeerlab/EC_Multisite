@@ -15,7 +15,11 @@ end
 if nargin <4
     font_size = get(gca, 'fontsize');
 end
-if n_dec == 2
+if n_dec == 0
+    textStrings = num2str(x(:),'%0.0f');  %# Create strings from the matrix values
+elseif n_dec == 1
+    textStrings = num2str(x(:),'%0.1f');  %# Create strings from the matrix values
+elseif n_dec == 2
     textStrings = num2str(x(:),'%0.2f');  %# Create strings from the matrix values
 elseif n_dec == 3
     textStrings = num2str(x(:),'%0.3f');  %# Create strings from the matrix values
