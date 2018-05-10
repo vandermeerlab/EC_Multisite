@@ -246,7 +246,7 @@ for iPhase = 1:length(PARAMS.Phases)
                     if max(ac) >= std(shuf_max_xcov)  % if the max ac value is greater than the max than 1sd of the shuffle max values then keep the event
                         mat_out.(PARAMS.Phases{iPhase}).AMP_AC.(bands{iBand}){x_idx, y_idx, iEvt} = ac;
                         mat_out.(PARAMS.Phases{iPhase}).AMP_LAG.(bands{iBand}){x_idx, y_idx, iEvt} = lag;
-                        mat_out.(PARAMS.Phases{iPhase}).EVT_COUNT.(bands{iBand}){x_idx, y_idx, iEvt} = 1
+                        mat_out.(PARAMS.Phases{iPhase}).EVT_COUNT.(bands{iBand}){x_idx, y_idx, iEvt} = 1;
                         
                     else
                         mat_out.(PARAMS.Phases{iPhase}).AMP_AC.(bands{iBand}){x_idx, y_idx, iEvt} = NaN(size(ac));

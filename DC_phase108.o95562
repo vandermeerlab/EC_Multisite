@@ -1,0 +1,772 @@
+------------------------- Prologue ----------------------------
+         Started: Thu May 10 13:47:45 EDT 2018
+          Job ID: 95562.knorr.hpcc.dartmouth.edu
+         User ID: f00287r
+        Group ID: rc-users
+        Job Name: DC_phase108
+ Resources Req'd: nodes=1:ppn=10,walltime=34:00:00,neednodes=1:ppn=10
+      Queue Name: default
+    Account Name: BrainSci
+------------------------- Prologue ----------------------------
+
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2017 The MathWorks, Inc.
+                   R2017a (9.2.0.556344) 64-bit (glnxa64)
+                               March 27, 2017
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+[Warning: Function plot has the same name as a MATLAB builtin. We suggest you
+rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+  In addpath (line 88)
+  In MS_initialize_discovery (line 31)
+  In MS_get_phase_discovery (line 14)] 
+
+Running Phases Analyses on R108_2017_07_31....
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+WARNING by CheckIV: input iv is empty.
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+WARNING by CheckIV: input iv is empty.
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+WARNING by CheckIV: input iv is empty.
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+WARNING by CheckIV: input iv is empty.
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+WARNING by CheckIV: input iv is empty.
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+WARNING by CheckIV: input iv is empty.
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+WARNING by CheckIV: input iv is empty.
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+WARNING by CheckIV: input iv is empty.
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+WARNING by CheckIV: input iv is empty.
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+WARNING by CheckIV: input iv is empty.
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+WARNING by CheckIV: input iv is empty.
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+WARNING by CheckIV: input iv is empty.
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+FilterLFP.m: reported Fs 2000.00, median tvec Fs 2000.00.
+FilterLFP.m: filtering signal 1/1...
+Event failed shuffle: 2 in low  pre
+Event failed shuffle: 11 in low  pre
+Event failed shuffle: 4 in low  pre
+Event failed shuffle: 31 in low  pre
+Event failed shuffle: 9 in low  pre
+Event failed shuffle: 6 in low  pre
+Event failed shuffle: 17 in low  pre
+Event failed shuffle: 11 in low  pre
+Event failed shuffle: 6 in low  pre
+Event failed shuffle: 1 in high  pre
+Event failed shuffle: 13 in low  pre
+Event failed shuffle: 9 in low  pre
+Event failed shuffle: 30 in low  pre
+Event failed shuffle: 228 in high  pre
+Event failed shuffle: 223 in high  pre
+Event failed shuffle: 201 in high  pre
+Event failed shuffle: 189 in high  pre
+Event failed shuffle: 153 in high  pre
+Event failed shuffle: 151 in high  pre
+Event failed shuffle: 145 in high  pre
+Event failed shuffle: 139 in high  pre
+Event failed shuffle: 88 in high  pre
+Event failed shuffle: 80 in high  pre
+Event failed shuffle: 61 in high  pre
+Event failed shuffle: 38 in high  pre
+Event failed shuffle: 24 in high  pre
+Event failed shuffle: 20 in high  pre
+Event failed shuffle: 17 in high  pre
+Event failed shuffle: 46 in low  pre
+Event failed shuffle: 10 in low  pre
+Event failed shuffle: 235 in high  pre
+Event failed shuffle: 217 in high  pre
+Event failed shuffle: 215 in high  pre
+Event failed shuffle: 196 in high  pre
+Event failed shuffle: 189 in high  pre
+Event failed shuffle: 140 in high  pre
+Event failed shuffle: 127 in high  pre
+Event failed shuffle: 17 in high  pre
+Event failed shuffle: 6 in high  pre
+Event failed shuffle: 174 in high  pre
+Event failed shuffle: 132 in high  pre
+Event failed shuffle: 109 in high  pre
+Event failed shuffle: 66 in high  pre
+Event failed shuffle: 22 in high  pre
+Event failed shuffle: 33 in low  pre
+Event failed shuffle: 17 in low  pre
+Event failed shuffle: 12 in low  pre
+Event failed shuffle: 10 in low  pre
+Event failed shuffle: 2 in low  pre
+Event failed shuffle: 244 in high  pre
+Event failed shuffle: 235 in high  pre
+Event failed shuffle: 222 in high  pre
+Event failed shuffle: 204 in high  pre
+Event failed shuffle: 164 in high  pre
+Event failed shuffle: 151 in high  pre
+Event failed shuffle: 140 in high  pre
+Event failed shuffle: 130 in high  pre
+Event failed shuffle: 128 in high  pre
+Event failed shuffle: 125 in high  pre
+Event failed shuffle: 106 in high  pre
+Event failed shuffle: 84 in high  pre
+Event failed shuffle: 65 in high  pre
+Event failed shuffle: 53 in high  pre
+Event failed shuffle: 30 in high  pre
+Event failed shuffle: 66 in high  pre
+Event failed shuffle: 61 in high  pre
+Event failed shuffle: 56 in high  pre
+Event failed shuffle: 22 in high  pre
+Event failed shuffle: 210 in high  pre
+Event failed shuffle: 140 in high  pre
+Event failed shuffle: 136 in high  pre
+Event failed shuffle: 130 in high  pre
+Event failed shuffle: 121 in high  pre
+Event failed shuffle: 104 in high  pre
+Event failed shuffle: 77 in high  pre
+Event failed shuffle: 67 in high  pre
+Event failed shuffle: 50 in high  pre
+Event failed shuffle: 47 in high  pre
+Event failed shuffle: 43 in high  pre
+Event failed shuffle: 33 in high  pre
+Event failed shuffle: 24 in high  pre
+Event failed shuffle: 6 in high  pre
+Event failed shuffle: 16 in low  pre
+Event failed shuffle: 15 in low  pre
+Event failed shuffle: 136 in high  pre
+Event failed shuffle: 130 in high  pre
+Event failed shuffle: 99 in high  pre
+Event failed shuffle: 92 in high  pre
+Event failed shuffle: 61 in high  pre
+Event failed shuffle: 47 in high  pre
+Event failed shuffle: 21 in high  pre
+Event failed shuffle: 16 in high  pre
+Event failed shuffle: 4 in low  pre
+Event failed shuffle: 3 in low  pre
+Event failed shuffle: 119 in high  pre
+Event failed shuffle: 92 in high  pre
+Event failed shuffle: 60 in high  pre
+Event failed shuffle: 40 in high  pre
+Event failed shuffle: 39 in high  pre
+Event failed shuffle: 36 in high  pre
+Event failed shuffle: 30 in high  pre
+Event failed shuffle: 142 in high  pre
+Event failed shuffle: 139 in high  pre
+Event failed shuffle: 136 in high  pre
+Event failed shuffle: 130 in high  pre
+Event failed shuffle: 123 in high  pre
+Event failed shuffle: 99 in high  pre
+Event failed shuffle: 80 in high  pre
+Event failed shuffle: 68 in high  pre
+Event failed shuffle: 61 in high  pre
+Event failed shuffle: 59 in high  pre
+Event failed shuffle: 57 in high  pre
+Event failed shuffle: 52 in high  pre
+Event failed shuffle: 31 in high  pre
+Event failed shuffle: 23 in high  pre
+Event failed shuffle: 6 in high  pre
+Event failed shuffle: 4 in low  pre
+Event failed shuffle: 3 in low  pre
+Event failed shuffle: 99 in high  pre
+Event failed shuffle: 40 in high  pre
+Event failed shuffle: 30 in high  pre
+Event failed shuffle: 29 in high  pre
+Event failed shuffle: 13 in high  pre
+Event failed shuffle: 40 in high  pre
+Event failed shuffle: 13 in high  pre
+Event failed shuffle: 5 in low  pre
+Event failed shuffle: 41 in low  pre
+Event failed shuffle: 21 in low  pre
+Event failed shuffle: 318 in high  pre
+Event failed shuffle: 308 in high  pre
+Event failed shuffle: 307 in high  pre
+Event failed shuffle: 289 in high  pre
+Event failed shuffle: 280 in high  pre
+Event failed shuffle: 264 in high  pre
+Event failed shuffle: 261 in high  pre
+Event failed shuffle: 259 in high  pre
+Event failed shuffle: 210 in high  pre
+Event failed shuffle: 197 in high  pre
+Event failed shuffle: 169 in high  pre
+Event failed shuffle: 148 in high  pre
+Event failed shuffle: 144 in high  pre
+Event failed shuffle: 137 in high  pre
+Event failed shuffle: 125 in high  pre
+Event failed shuffle: 117 in high  pre
+Event failed shuffle: 114 in high  pre
+Event failed shuffle: 105 in high  pre
+Event failed shuffle: 99 in high  pre
+Event failed shuffle: 94 in high  pre
+Event failed shuffle: 65 in high  pre
+Event failed shuffle: 28 in high  pre
+Event failed shuffle: 25 in high  pre
+Event failed shuffle: 48 in low  pre
+Event failed shuffle: 6 in low  pre
+Event failed shuffle: 315 in high  pre
+Event failed shuffle: 284 in high  pre
+Event failed shuffle: 269 in high  pre
+Event failed shuffle: 264 in high  pre
+Event failed shuffle: 259 in high  pre
+Event failed shuffle: 219 in high  pre
+Event failed shuffle: 214 in high  pre
+Event failed shuffle: 209 in high  pre
+Event failed shuffle: 203 in high  pre
+Event failed shuffle: 188 in high  pre
+Event failed shuffle: 184 in high  pre
+Event failed shuffle: 182 in high  pre
+Event failed shuffle: 167 in high  pre
+Event failed shuffle: 149 in high  pre
+Event failed shuffle: 120 in high  pre
+Event failed shuffle: 89 in high  pre
+Event failed shuffle: 80 in high  pre
+Event failed shuffle: 47 in high  pre
+Event failed shuffle: 43 in high  pre
+Event failed shuffle: 39 in high  pre
+Event failed shuffle: 27 in high  pre
+Event failed shuffle: 2 in high  pre
+Event failed shuffle: 3 in high  pre
+Event failed shuffle: 2 in high  pre
+Event failed shuffle: 87 in low  pre
+Event failed shuffle: 76 in low  pre
+Event failed shuffle: 323 in high  pre
+Event failed shuffle: 234 in high  pre
+Event failed shuffle: 148 in high  pre
+Event failed shuffle: 75 in high  pre
+Event failed shuffle: 93 in low  pre
+Event failed shuffle: 83 in low  pre
+Event failed shuffle: 82 in low  pre
+Event failed shuffle: 79 in low  pre
+Event failed shuffle: 75 in low  pre
+Event failed shuffle: 57 in low  pre
+Event failed shuffle: 54 in low  pre
+Event failed shuffle: 51 in low  pre
+Event failed shuffle: 40 in low  pre
+Event failed shuffle: 33 in low  pre
+Event failed shuffle: 30 in low  pre
+Event failed shuffle: 24 in low  pre
+Event failed shuffle: 22 in low  pre
+Event failed shuffle: 17 in low  pre
+Event failed shuffle: 16 in low  pre
+Event failed shuffle: 15 in low  pre
+Event failed shuffle: 13 in low  pre
+Event failed shuffle: 327 in high  pre
+Event failed shuffle: 314 in high  pre
+Event failed shuffle: 300 in high  pre
+Event failed shuffle: 292 in high  pre
+Event failed shuffle: 263 in high  pre
+Event failed shuffle: 259 in high  pre
+Event failed shuffle: 246 in high  pre
+Event failed shuffle: 208 in high  pre
+Event failed shuffle: 182 in high  pre
+Event failed shuffle: 181 in high  pre
+Event failed shuffle: 180 in high  pre
+Event failed shuffle: 166 in high  pre
+Event failed shuffle: 155 in high  pre
+Event failed shuffle: 151 in high  pre
+Event failed shuffle: 141 in high  pre
+Event failed shuffle: 124 in high  pre
+Event failed shuffle: 123 in high  pre
+Event failed shuffle: 79 in high  pre
+Event failed shuffle: 75 in high  pre
+Event failed shuffle: 65 in high  pre
+Event failed shuffle: 62 in high  pre
+Event failed shuffle: 61 in high  pre
+Event failed shuffle: 58 in high  pre
+Event failed shuffle: 48 in high  pre
+Event failed shuffle: 37 in high  pre
+Event failed shuffle: 29 in high  pre
+Event failed shuffle: 25 in high  pre
+Event failed shuffle: 11 in high  pre
+Event failed shuffle: 246 in high  pre
+Event failed shuffle: 108 in high  pre
+Event failed shuffle: 73 in high  pre
+Event failed shuffle: 56 in low  pre
+Event failed shuffle: 30 in low  pre
+Event failed shuffle: 15 in low  pre
+Event failed shuffle: 3 in low  pre
+Event failed shuffle: 170 in high  pre
+Event failed shuffle: 159 in high  pre
+Event failed shuffle: 153 in high  pre
+Event failed shuffle: 144 in high  pre
+Event failed shuffle: 142 in high  pre
+Event failed shuffle: 117 in high  pre
+Event failed shuffle: 112 in high  pre
+Event failed shuffle: 98 in high  pre
+Event failed shuffle: 50 in high  pre
+Event failed shuffle: 33 in high  pre
+Event failed shuffle: 56 in low  pre
+Event failed shuffle: 39 in low  pre
+Event failed shuffle: 174 in high  pre
+Event failed shuffle: 171 in high  pre
+Event failed shuffle: 157 in high  pre
+Event failed shuffle: 137 in high  pre
+Event failed shuffle: 133 in high  pre
+Event failed shuffle: 110 in high  pre
+Event failed shuffle: 105 in high  pre
+Event failed shuffle: 45 in high  pre
+Event failed shuffle: 142 in high  pre
+Event failed shuffle: 86 in high  pre
+Event failed shuffle: 65 in high  pre
+Event failed shuffle: 58 in low  pre
+Event failed shuffle: 57 in low  pre
+Event failed shuffle: 53 in low  pre
+Event failed shuffle: 38 in low  pre
+Event failed shuffle: 15 in low  pre
+Event failed shuffle: 12 in low  pre
+Event failed shuffle: 180 in high  pre
+Event failed shuffle: 127 in high  pre
+Event failed shuffle: 116 in high  pre
+Event failed shuffle: 109 in high  pre
+Event failed shuffle: 102 in high  pre
+Event failed shuffle: 95 in high  pre
+Event failed shuffle: 75 in high  pre
+Event failed shuffle: 58 in high  pre
+Event failed shuffle: 9 in high  pre
+Event failed shuffle: 53 in high  pre
+Event failed shuffle: 52 in high  pre
+Event failed shuffle: 22 in low  ipsi
+Event failed shuffle: 21 in low  ipsi
+Event failed shuffle: 19 in low  ipsi
+Event failed shuffle: 34 in low  ipsi
+Event failed shuffle: 26 in low  ipsi
+Event failed shuffle: 19 in low  ipsi
+Event failed shuffle: 14 in low  ipsi
+Event failed shuffle: 47 in low  ipsi
+Event failed shuffle: 20 in low  ipsi
+Event failed shuffle: 47 in low  ipsi
+Event failed shuffle: 39 in low  ipsi
+Event failed shuffle: 34 in low  ipsi
+Event failed shuffle: 22 in low  ipsi
+Event failed shuffle: 19 in low  ipsi
+Event failed shuffle: 2 in low  ipsi
+Event failed shuffle: 45 in low  ipsi
+Event failed shuffle: 26 in low  ipsi
+Event failed shuffle: 21 in low  ipsi
+Event failed shuffle: 19 in low  ipsi
+Event failed shuffle: 1 in low  ipsi
+Event failed shuffle: 23 in low  ipsi
+Event failed shuffle: 7 in low  ipsi
+Event failed shuffle: 4 in low  ipsi
+Event failed shuffle: 5 in low  ipsi
+Event failed shuffle: 26 in low  ipsi
+Event failed shuffle: 22 in low  ipsi
+Event failed shuffle: 13 in low  ipsi
+Event failed shuffle: 18 in low  ipsi
+Event failed shuffle: 11 in low  ipsi
+Event failed shuffle: 27 in high  ipsi
+Event failed shuffle: 10 in high  ipsi
+Event failed shuffle: 5 in low  ipsi
+Event failed shuffle: 22 in high  ipsi
+Event failed shuffle: 7 in high  ipsi
+Event failed shuffle: 3 in high  ipsi
+Event failed shuffle: 41 in high  ipsi
+Event failed shuffle: 38 in high  ipsi
+Event failed shuffle: 19 in low  ipsi
+Event failed shuffle: 5 in low  ipsi
+Event failed shuffle: 3 in high  ipsi
+Event failed shuffle: 8 in low  ipsi
+Event failed shuffle: 3 in low  ipsi
+Event failed shuffle: 73 in high  ipsi
+Event failed shuffle: 49 in high  ipsi
+Event failed shuffle: 16 in high  ipsi
+Event failed shuffle: 1 in high  ipsi
+Event failed shuffle: 10 in low  ipsi
+Event failed shuffle: 70 in high  ipsi
+Event failed shuffle: 61 in high  ipsi
+Event failed shuffle: 26 in high  ipsi
+Event failed shuffle: 9 in high  ipsi
+Event failed shuffle: 46 in high  ipsi
+Event failed shuffle: 5 in high  ipsi
+Event failed shuffle: 74 in high  ipsi
+Event failed shuffle: 65 in high  ipsi
+Event failed shuffle: 40 in high  ipsi
+Event failed shuffle: 30 in high  ipsi
+Event failed shuffle: 1 in high  ipsi
+Event failed shuffle: 2 in low  ipsi
+Event failed shuffle: 10 in high  ipsi
+Event failed shuffle: 5 in high  ipsi
+Event failed shuffle: 2 in low  ipsi
+Event failed shuffle: 1 in low  ipsi
+Event failed shuffle: 17 in high  ipsi
+Event failed shuffle: 15 in high  ipsi
+Event failed shuffle: 9 in high  ipsi
+Event failed shuffle: 27 in high  ipsi
+Event failed shuffle: 17 in high  ipsi
+Event failed shuffle: 14 in high  ipsi
+Event failed shuffle: 22 in high  ipsi
+Event failed shuffle: 12 in high  ipsi
+Event failed shuffle: 26 in low  ipsi
+Event failed shuffle: 17 in low  ipsi
+Event failed shuffle: 7 in low  ipsi
+Event failed shuffle: 3 in low  ipsi
+Event failed shuffle: 23 in low  ipsi
+Event failed shuffle: 14 in low  ipsi
+Event failed shuffle: 29 in low  contra
+Event failed shuffle: 116 in low  contra
+Event failed shuffle: 64 in low  contra
+Event failed shuffle: 25 in low  contra
+Event failed shuffle: 15 in low  contra
+Event failed shuffle: 121 in low  contra
+Event failed shuffle: 120 in low  contra
+Event failed shuffle: 119 in low  contra
+Event failed shuffle: 115 in low  contra
+Event failed shuffle: 111 in low  contra
+Event failed shuffle: 72 in low  contra
+Event failed shuffle: 61 in low  contra
+Event failed shuffle: 43 in low  contra
+Event failed shuffle: 121 in low  contra
+Event failed shuffle: 120 in low  contra
+Event failed shuffle: 116 in low  contra
+Event failed shuffle: 103 in low  contra
+Event failed shuffle: 64 in low  contra
+Event failed shuffle: 38 in low  contra
+Event failed shuffle: 25 in low  contra
+Event failed shuffle: 15 in low  contra
+Event failed shuffle: 128 in low  contra
+Event failed shuffle: 120 in low  contra
+Event failed shuffle: 116 in low  contra
+Event failed shuffle: 15 in low  contra
+Event failed shuffle: 5 in low  contra
+Event failed shuffle: 95 in low  contra
+Event failed shuffle: 67 in low  contra
+Event failed shuffle: 57 in low  contra
+Event failed shuffle: 5 in low  contra
+Event failed shuffle: 91 in low  contra
+Event failed shuffle: 73 in low  contra
+Event failed shuffle: 42 in low  contra
+Event failed shuffle: 41 in low  contra
+Event failed shuffle: 5 in low  contra
+Event failed shuffle: 5 in low  contra
+Event failed shuffle: 594 in low  contra
+Event failed shuffle: 593 in low  contra
+Event failed shuffle: 591 in low  contra
+Event failed shuffle: 573 in low  contra
+Event failed shuffle: 572 in low  contra
+Event failed shuffle: 570 in low  contra
+Event failed shuffle: 567 in low  contra
+Event failed shuffle: 556 in low  contra
+Event failed shuffle: 528 in low  contra
+Event failed shuffle: 524 in low  contra
+Event failed shuffle: 517 in low  contra
+Event failed shuffle: 508 in low  contra
+Event failed shuffle: 507 in low  contra
+Event failed shuffle: 506 in low  contra
+Event failed shuffle: 449 in low  contra
+Event failed shuffle: 406 in low  contra
+Event failed shuffle: 398 in low  contra
+Event failed shuffle: 396 in low  contra
+Event failed shuffle: 359 in low  contra
+Event failed shuffle: 357 in low  contra
+Event failed shuffle: 345 in low  contra
+Event failed shuffle: 330 in low  contra
+Event failed shuffle: 328 in low  contra
+Event failed shuffle: 323 in low  contra
+Event failed shuffle: 314 in low  contra
+Event failed shuffle: 303 in low  contra
+Event failed shuffle: 296 in low  contra
+Event failed shuffle: 294 in low  contra
+Event failed shuffle: 291 in low  contra
+Event failed shuffle: 278 in low  contra
+Event failed shuffle: 270 in low  contra
+Event failed shuffle: 232 in low  contra
+Event failed shuffle: 220 in low  contra
+Event failed shuffle: 175 in low  contra
+Event failed shuffle: 149 in low  contra
+Event failed shuffle: 127 in low  contra
+Event failed shuffle: 99 in low  contra
+Event failed shuffle: 90 in low  contra
+Event failed shuffle: 87 in low  contra
+Event failed shuffle: 52 in low  contra
+Event failed shuffle: 36 in low  contra
+Event failed shuffle: 22 in low  contra
+Event failed shuffle: 266 in high  contra
+Event failed shuffle: 259 in high  contra
+Event failed shuffle: 252 in high  contra
+Event failed shuffle: 243 in high  contra
+Event failed shuffle: 239 in high  contra
+Event failed shuffle: 237 in high  contra
+Event failed shuffle: 231 in high  contra
+Event failed shuffle: 187 in high  contra
+Event failed shuffle: 52 in high  contra
+Event failed shuffle: 39 in high  contra
+Event failed shuffle: 21 in high  contra
+Event failed shuffle: 6 in high  contra
+Event failed shuffle: 597 in low  contra
+Event failed shuffle: 572 in low  contra
+Event failed shuffle: 569 in low  contra
+Event failed shuffle: 567 in low  contra
+Event failed shuffle: 547 in low  contra
+Event failed shuffle: 545 in low  contra
+Event failed shuffle: 510 in low  contra
+Event failed shuffle: 505 in low  contra
+Event failed shuffle: 483 in low  contra
+Event failed shuffle: 458 in low  contra
+Event failed shuffle: 406 in low  contra
+Event failed shuffle: 396 in low  contra
+Event failed shuffle: 330 in low  contra
+Event failed shuffle: 314 in low  contra
+Event failed shuffle: 294 in low  contra
+Event failed shuffle: 291 in low  contra
+Event failed shuffle: 277 in low  contra
+Event failed shuffle: 247 in low  contra
+Event failed shuffle: 172 in low  contra
+Event failed shuffle: 168 in low  contra
+Event failed shuffle: 157 in low  contra
+Event failed shuffle: 130 in low  contra
+Event failed shuffle: 118 in low  contra
+Event failed shuffle: 102 in low  contra
+Event failed shuffle: 99 in low  contra
+Event failed shuffle: 96 in low  contra
+Event failed shuffle: 90 in low  contra
+Event failed shuffle: 82 in low  contra
+Event failed shuffle: 52 in low  contra
+Event failed shuffle: 5 in low  contra
+Event failed shuffle: 259 in high  contra
+Event failed shuffle: 257 in high  contra
+Event failed shuffle: 237 in high  contra
+Event failed shuffle: 218 in high  contra
+Event failed shuffle: 105 in high  contra
+Event failed shuffle: 63 in high  contra
+Event failed shuffle: 56 in high  contra
+Event failed shuffle: 52 in high  contra
+Event failed shuffle: 42 in high  contra
+Event failed shuffle: 31 in high  contra
+Event failed shuffle: 558 in low  contra
+Event failed shuffle: 511 in low  contra
+Event failed shuffle: 490 in low  contra
+Event failed shuffle: 416 in low  contra
+Event failed shuffle: 403 in low  contra
+Event failed shuffle: 351 in low  contra
+Event failed shuffle: 251 in low  contra
+Event failed shuffle: 171 in low  contra
+Event failed shuffle: 253 in high  contra
+Event failed shuffle: 198 in high  contra
+Event failed shuffle: 155 in high  contra
+Event failed shuffle: 130 in high  contra
+Event failed shuffle: 597 in low  contra
+Event failed shuffle: 594 in low  contra
+Event failed shuffle: 590 in low  contra
+Event failed shuffle: 588 in low  contra
+Event failed shuffle: 587 in low  contra
+Event failed shuffle: 573 in low  contra
+Event failed shuffle: 570 in low  contra
+Event failed shuffle: 566 in low  contra
+Event failed shuffle: 559 in low  contra
+Event failed shuffle: 555 in low  contra
+Event failed shuffle: 554 in low  contra
+Event failed shuffle: 532 in low  contra
+Event failed shuffle: 530 in low  contra
+Event failed shuffle: 527 in low  contra
+Event failed shuffle: 526 in low  contra
+Event failed shuffle: 504 in low  contra
+Event failed shuffle: 499 in low  contra
+Event failed shuffle: 483 in low  contra
+Event failed shuffle: 482 in low  contra
+Event failed shuffle: 480 in low  contra
+Event failed shuffle: 450 in low  contra
+Event failed shuffle: 449 in low  contra
+Event failed shuffle: 446 in low  contra
+Event failed shuffle: 438 in low  contra
+Event failed shuffle: 432 in low  contra
+Event failed shuffle: 429 in low  contra
+Event failed shuffle: 424 in low  contra
+Event failed shuffle: 412 in low  contra
+Event failed shuffle: 410 in low  contra
+Event failed shuffle: 408 in low  contra
+Event failed shuffle: 406 in low  contra
+Event failed shuffle: 400 in low  contra
+Event failed shuffle: 398 in low  contra
+Event failed shuffle: 396 in low  contra
+Event failed shuffle: 389 in low  contra
+Event failed shuffle: 377 in low  contra
+Event failed shuffle: 373 in low  contra
+Event failed shuffle: 371 in low  contra
+Event failed shuffle: 350 in low  contra
+Event failed shuffle: 347 in low  contra
+Event failed shuffle: 344 in low  contra
+Event failed shuffle: 336 in low  contra
+Event failed shuffle: 333 in low  contra
+Event failed shuffle: 327 in low  contra
+Event failed shuffle: 323 in low  contra
+Event failed shuffle: 320 in low  contra
+Event failed shuffle: 316 in low  contra
+Event failed shuffle: 310 in low  contra
+Event failed shuffle: 308 in low  contra
+Event failed shuffle: 279 in low  contra
+Event failed shuffle: 277 in low  contra
+Event failed shuffle: 273 in low  contra
+Event failed shuffle: 270 in low  contra
+Event failed shuffle: 261 in low  contra
+Event failed shuffle: 259 in low  contra
+Event failed shuffle: 255 in low  contra
+Event failed shuffle: 254 in low  contra
+Event failed shuffle: 253 in low  contra
+Event failed shuffle: 247 in low  contra
+Event failed shuffle: 241 in low  contra
+Event failed shuffle: 230 in low  contra
+Event failed shuffle: 227 in low  contra
+Event failed shuffle: 222 in low  contra
+Event failed shuffle: 208 in low  contra
+Event failed shuffle: 207 in low  contra
+Event failed shuffle: 196 in low  contra
+Event failed shuffle: 189 in low  contra
+Event failed shuffle: 188 in low  contra
+Event failed shuffle: 185 in low  contra
+Event failed shuffle: 184 in low  contra
+Event failed shuffle: 180 in low  contra
+Event failed shuffle: 175 in low  contra
+Event failed shuffle: 160 in low  contra
+Event failed shuffle: 149 in low  contra
+Event failed shuffle: 135 in low  contra
+Event failed shuffle: 131 in low  contra
+Event failed shuffle: 123 in low  contra
+Event failed shuffle: 122 in low  contra
+Event failed shuffle: 121 in low  contra
+Event failed shuffle: 120 in low  contra
+Event failed shuffle: 103 in low  contra
+Event failed shuffle: 96 in low  contra
+Event failed shuffle: 87 in low  contra
+Event failed shuffle: 74 in low  contra
+Event failed shuffle: 62 in low  contra
+Event failed shuffle: 52 in low  contra
+Event failed shuffle: 40 in low  contra
+Event failed shuffle: 31 in low  contra
+Event failed shuffle: 27 in low  contra
+Event failed shuffle: 13 in low  contra
+Event failed shuffle: 10 in low  contra
+Event failed shuffle: 9 in low  contra
+Event failed shuffle: 270 in high  contra
+Event failed shuffle: 263 in high  contra
+Event failed shuffle: 212 in high  contra
+Event failed shuffle: 195 in high  contra
+Event failed shuffle: 194 in high  contra
+Event failed shuffle: 184 in high  contra
+Event failed shuffle: 165 in high  contra
+Event failed shuffle: 164 in high  contra
+Event failed shuffle: 158 in high  contra
+Event failed shuffle: 156 in high  contra
+Event failed shuffle: 146 in high  contra
+Event failed shuffle: 116 in high  contra
+Event failed shuffle: 102 in high  contra
+Event failed shuffle: 86 in high  contra
+Event failed shuffle: 71 in high  contra
+Event failed shuffle: 37 in high  contra
+Event failed shuffle: 15 in high  contra
+Event failed shuffle: 14 in high  contra
+Event failed shuffle: 12 in high  contra
+
+------------------------- Epilogue ----------------------------
+        Finished: Thu May 10 19:23:16 EDT 2018
+          Job ID: 95562.knorr.hpcc.dartmouth.edu
+         User ID: f00287r
+        Group ID: rc-users
+        Job Name: DC_phase108
+      Session ID: 62469
+ Resources Req'd: nodes=1:ppn=10,walltime=34:00:00,neednodes=1:ppn=10
+  Resources Used: cput=14:16:53,vmem=19597796kb,walltime=05:35:32,mem=10723584kb,energy_used=0
+      Queue Name: default
+    Account Name: BrainSci
+------------------------- Epilogue ----------------------------
+
