@@ -32,7 +32,7 @@ t_id = FindFile_str(cd, cfg.spike_id);
 S_list = {};
 for iS = 1:length(t_id)
     spike = ft_read_spike(t_id{iS}); % needs fixed read_mclust_t.m
-    spike.label{1} = t_id{iS}(1:end-3); 
+    spike.label{1} = t_id{iS}(1:end-4); 
     disp([spike.label{1} 'Contained: ' num2str(length(spike.timestamp{1})) ' spikes'])
     if length(spike.timestamp{1}) < cfg.min_nSpikes
         continue
