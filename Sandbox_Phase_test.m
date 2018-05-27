@@ -326,7 +326,6 @@ n = 100;
 figure(2222)
 subplot(2,2,1)
 [t,r] = rose(coh.R107_2017_08_03_OFC_NAc.lg,n);
-mean(
 h1 = polar(t,r);
 set(h1, 'color',c_ord(1,:), 'linewidth', 2)
 view([90 -90])
