@@ -21,6 +21,7 @@ cfg_in.shuffle = 500;
 cfg_in.plot = 1;
 cfg_in.min_nSpikes = 500; 
 cfg_in.spike_id = 'TT7_cut'; 
+PPC_comparison_CG(cfg_in); 
 
 %%
 cfg_in = [];
@@ -32,6 +33,7 @@ cfg_in.shuffle = 500;
 cfg_in.plot = 1;
 cfg_in.min_nSpikes = 500; 
 cfg_in.spike_id = 'ST1_cut'; 
+PPC_comparison_CG(cfg_in); 
 
 %%
 cfg_in = [];
@@ -43,3 +45,4 @@ cfg_in.shuffle = 500;
 cfg_in.plot = 1;
 cfg_in.min_nSpikes = 500; 
 cfg_in.spike_id = 'ST6_cut'; 
+PPC_comparison_CG(cfg_in); 
