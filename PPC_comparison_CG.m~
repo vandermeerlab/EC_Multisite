@@ -166,13 +166,13 @@ for  iLFP = 1:length(LFP_list)
             
             %             mkdir(cfg.inter_dir, 'PPC')
             sess_id = strsplit(pwd, '/');
-            sess_id = strrep(sess_id{end}, '-', '_');
+            sess_id = sess_id{end};
             if isunix
-                saveas(gcf, [cfg.inter_dir '/' sess_id '_' id '_' lfp_chan(1:end-4)], 'fig');
-                saveas(gcf, [cfg.inter_dir '/' sess_id '_' id '_' lfp_chan(1:end-4)], 'png');
+                saveas(gcf, [cfg.inter_dir '/' sess_id '_' id '_csc_' lfp_chan(1:end-4)], 'fig');
+                saveas(gcf, [cfg.inter_dir '/' sess_id '_' id '_csc_' lfp_chan(1:end-4)], 'png');
             else
-                saveas(gcf, [cfg.inter_dir '\' sess_id '_' id '_' lfp_chan(1:end-4)], 'fig');
-                saveas(gcf, [cfg.inter_dir '\' sess_id '_' id '_' lfp_chan(1:end-4)], 'png');
+                saveas(gcf, [cfg.inter_dir '\' sess_id '_' id '_csc_' lfp_chan(1:end-4)], 'fig');
+                saveas(gcf, [cfg.inter_dir '\' sess_id '_' id '_csc_' lfp_chan(1:end-4)], 'png');
             end
         end
         %% collect variables for export
