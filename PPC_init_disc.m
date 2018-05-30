@@ -26,7 +26,7 @@ cfg_in.shuffle = nShuffle;
 cfg_in.plot = 1;
 cfg_in.min_nSpikes = 500; 
 cfg_in.spike_id = 'TT7_cut'; 
-PPC_comparison_CG(cfg_in); 
+%PPC_comparison_CG(cfg_in); 
 disp('complete')
 %%
 disp('112 St1 ...')
@@ -53,23 +53,23 @@ cfg_in.shuffle = nShuffle;
 cfg_in.plot = 1;
 cfg_in.min_nSpikes = 500; 
 cfg_in.spike_id = 'ST6_cut'; 
-PPC_comparison_CG(cfg_in); 
-disp('complete')
+%PPC_comparison_CG(cfg_in); 
+%disp('complete')
 
 
 %%
 disp('108 ST3 ...')
-cfg_in = [];
-cfg_in.dataset = {'CSC5.ncs'};
-cfg_in.data_dir = [data_root '/R108-2017-08-04_pre'];
-cfg_in.inter_dir = [data_root '/PPC_figs'];
-cfg_in.phase = 1; % corresponds to the first recording phase ('pre').  2 = 'task', 3 = 'post'.
-cfg_in.shuffle = nShuffle; 
-cfg_in.plot = 1;
-cfg_in.min_nSpikes = 500; 
-cfg_in.spike_id = 'ST3_cut'; 
-PPC_comparison_CG(cfg_in); 
-disp('complete')
+%cfg_in = [];
+%cfg_in.dataset = {'CSC5.ncs'};
+%cfg_in.data_dir = [data_root '/R108-2017-08-04_pre'];
+%cfg_in.inter_dir = [data_root '/PPC_figs'];
+%cfg_in.phase = 1; % corresponds to the first recording phase ('pre').  2 = 'task', 3 = 'post'.
+%cfg_in.shuffle = nShuffle; 
+%cfg_in.plot = 1;
+%cfg_in.min_nSpikes = 500; 
+%cfg_in.spike_id = 'ST3_cut'; 
+%PPC_comparison_CG(cfg_in); 
+%disp('complete')
 
 %%
 disp('108 TT7 ...')
