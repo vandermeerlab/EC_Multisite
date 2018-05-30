@@ -11,7 +11,7 @@ if isunix
     PARAMS.stats_dir = '/dartfs-hpc/rc/home/r/f00287r/MS/Stats/'; % where to put the statistical output .txt
     PARAMS.code_base_dir = '/dartfs-hpc/rc/home/r/f00287r/Code/vandermeerlab/code-matlab/shared'; % where the codebase repo can be found
     PARAMS.code_MS_dir = '/dartfs-hpc/rc/home/r/f00287r/Code/EC_Multisite'; % where the multisite repo can be found
-    
+    PARAMS.Chronux_dir = '/dartfs-hpc/rc/home/r/f00287r/Code/chronux_2_11'; % where to find chronux toolbox for coherogram    
 else
     PARAMS.data_dir = 'G:\JK_recordings\Naris\'; % where to find the raw data
     PARAMS.inter_dir = 'G:\JK_recordings\Naris\Multisite\temp\'; % where to put intermediate files
@@ -36,4 +36,4 @@ cd(PARAMS.data_dir) % move to the data folder
 set(groot, 'DefaultAxesTickLabelInterpreter', 'none')
 set(groot, 'DefaultLegendInterpreter', 'none')
 set(groot,'defaulttextinterpreter','none');  
-%Master_Multisite
+Master_Multisite

@@ -38,7 +38,7 @@ else
     save_dir = [PARAMS.inter_dir, 'Coherogram\'];
 end
 
-addpath(genpath('/Users/jericcarmichael/Documents/chronux_2_11'))
+addpath(genpath(PARAMS.Chronux_dir))
 
 %% append the data
 sites = fieldnames(data.pre);

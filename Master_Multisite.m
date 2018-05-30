@@ -150,8 +150,8 @@ load([PARAMS.inter_dir 'MS_events.mat'])
 % end
 
 %% generate a Coherogram across each session for each site.
-for iSub = 1:length(PARAMS.Subjects)
-    sess_list = fieldnames(data_pot.(PARAMS.Subjects{iSub}));
+for iSub = 3:length(PARAMS.Subjects)
+    sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
         fprintf(PARAMS.log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
         MS_coherogram_fig([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));

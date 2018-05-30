@@ -1,0 +1,8 @@
+{Undefined variable "data_pot" or class "data_pot.R102".
+
+Error in Master_Multisite (line 154)
+    sess_list = fieldnames(data_pot.(PARAMS.Subjects{iSub}));
+
+Error in MS_initialize_discovery (line 39)
+Master_Multisite
+} 

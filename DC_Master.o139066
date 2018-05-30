@@ -1,0 +1,40 @@
+------------------------- Prologue ----------------------------
+         Started: Wed May 30 02:14:54 EDT 2018
+          Job ID: 139066.knorr.hpcc.dartmouth.edu
+         User ID: f00287r
+        Group ID: rc-users
+        Job Name: DC_Master
+ Resources Req'd: nodes=1:ppn=10,walltime=18:00:00,neednodes=1:ppn=10
+      Queue Name: default
+    Account Name: BrainSci
+------------------------- Prologue ----------------------------
+
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2014 The MathWorks, Inc.
+                   R2014b (8.4.0.150421) 64-bit (glnxa64)
+                             September 15, 2014
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+[Warning: Function plot has the same name as a MATLAB builtin. We suggest you
+rename the function to avoid a potential name conflict.] 
+[> In path at 109
+  In addpath at 86
+  In MS_initialize_discovery at 31] 
+>> 
+------------------------- Epilogue ----------------------------
+        Finished: Wed May 30 02:18:21 EDT 2018
+          Job ID: 139066.knorr.hpcc.dartmouth.edu
+         User ID: f00287r
+        Group ID: rc-users
+        Job Name: DC_Master
+      Session ID: 44863
+ Resources Req'd: nodes=1:ppn=10,walltime=18:00:00,neednodes=1:ppn=10
+  Resources Used: cput=00:02:29,vmem=22127040kb,walltime=00:03:28,mem=19185832kb,energy_used=0
+      Queue Name: default
+    Account Name: BrainSci
+------------------------- Epilogue ----------------------------
+

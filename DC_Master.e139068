@@ -1,0 +1,29 @@
+log4j:WARN No appenders could be found for logger (org.apache.fop.util.ContentHandlerFactoryRegistry).
+log4j:WARN Please initialize the log4j system properly.
+{Error using save
+Error closing file
+/dartfs-hpc/rc/lab/M/MeerM/EC/temp/Coherogram/R104_2016_09_26_PL_pot_OFC_pot_Coherogram.fig.
+
+Error in matlab.graphics.internal.figfile.FigFile/write (line 32)
+save(obj.Path, obj.MatVersion, '-struct', 'SaveVars');
+
+Error in savefig (line 91)
+
+
+
+Error in saveasfig (line 6)
+savefig(h, name);
+
+Error in saveas (line 140)
+    feval( ['saveas' format], h, name )
+
+Error in MS_coherogram_fig (line 159)
+saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'fig')
+
+Error in Master_Multisite (line 157)
+        MS_coherogram_fig([],
+        data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+
+Error in MS_initialize_discovery (line 39)
+Master_Multisite
+} 
