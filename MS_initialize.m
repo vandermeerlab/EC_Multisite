@@ -11,7 +11,7 @@ if isunix
     PARAMS.stats_dir = '/Users/jericcarmichael/Documents/Multisite/Stats/'; % where to put the statistical output .txt
     PARAMS.code_base_dir = '/Users/jericcarmichael/Documents/GitHub/vandermeerlab/code-matlab/shared'; % where the codebase repo can be found
     PARAMS.code_MS_dir = '/Users/jericcarmichael/Documents/GitHub/EC_Multisite'; % where the multisite repo can be found
-
+    PARAMS.Chronux_dir = '/Users/jericcarmichael/Documents/chronux_2_11'; 
 else
     PARAMS.data_dir = 'G:\JK_recordings\Naris\'; % where to find the raw data
     PARAMS.inter_dir = 'G:\JK_recordings\Naris\Multisite\temp\'; % where to put intermediate files

@@ -79,7 +79,7 @@ for iSite =1:length(sites)
         Sites.(sites{iSite}) = all_data;
     end
 end
-
+clear csc_artif
 
 %%  loop through the pairs of good cites to make the coherograms
 
@@ -165,6 +165,8 @@ fname = [sess '_' S{1} '_' S{2} '_Coherogram'];
 pushdir(save_dir)
 eval(sprintf('print -depsc2 -tiff -r300 -painters %s',fname));
 popdir
+close all
+clearvars('C', 'D1', 'D2');
 end
 
 %%
