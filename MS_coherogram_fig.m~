@@ -26,7 +26,7 @@ cfg_def.trialave=0; % average over trials
 cfg_def.err=0; % no error computation
 cfg_def.pad = -1;
 
-movingwin=[5 0.1]; % set the moving window dimensions
+movingwin=[5 1]; % set the moving window dimensions
 
 cfg = ProcessConfig2(cfg_def, cfg_in);
 c_ord = linspecer(4);
@@ -154,7 +154,7 @@ for iPair  =1:length(data.pre.ExpKeys.GoodPairs)
     text(854.5, 121, 'V', 'fontsize', 18, 'Color', c_ord(2,:))
 
     SetFigure([],gcf);
-    set(gcf, 'position', [0 50 1600*.9 480*.9]);
+    set(gcf, 'position', [0 50 1600*.9 440*.9]);
     tightfig;
     hc = colorbar;
     caxis([0 1])
@@ -186,7 +186,7 @@ close all
 
 %% get a zoom in 
 movingwin = [1 0.01];
-[C,~,~,~,~,t,f]=cohgramc(D1.data',D2.data',movingwin, cfg);
+    [C,~,~,~,~,t,f]=cohgramc(D1.data',D2.data',movingwin, cfg);
 
 
 figure(111)
@@ -233,13 +233,13 @@ set(icons, 'LineWidth', 2)
 
 SetFigure([], gcf)
 
-saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_ipsi_sample'], 'png')
+saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'png')
 % saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'fig')
 h1 = get(gcf);
 D = h1.PaperPosition; % Returns 1x4 vector [left right width height]
 set(gcf, 'PaperSize', [D(3) D(4)]); %default PaperSize is [8.5 11]
 %         saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'epsc')
-fname = [sess '_' S{1} '_' S{2} '_ipsi_sample'];
+fname = [sess '_' S{1} '_' S{2} '_Coherogram'];
 pushdir(save_dir)
 eval(sprintf('print -depsc2 -tiff -r300 -painters %s',fname));
 popdir
@@ -255,6 +255,20 @@ close all
 % plot(D1.tvec_norm,(D1.data)+0.00020, 'color', [0.4 0.4 0.4]) 
 % plot(D2.tvec_norm, D2.data, 'color', [0.6 0.6 0.6])
 % xlim([254 255])
+
+
+%% save the session wide spectrogram
+saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'png')
+% saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'fig')
+h1 = get(gcf);
+D = h1.PaperPosition; % Returns 1x4 vector [left right width height]
+set(gcf, 'PaperSize', [D(3) D(4)]); %default PaperSize is [8.5 11]
+%         saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'epsc')
+fname = [sess '_' S{1} '_' S{2} '_Coherogram'];
+pushdir(save_dir)
+eval(sprintf('print -depsc2 -tiff -r300 -painters %s',fname));
+popdir
+close all
 clearvars('C', 'D1', 'D2');
 end
 
