@@ -1,3 +1,5 @@
+rm DC_Master.e*
+rm DC_Master.o*
 rm DC_PPC.e*
 rm DC_PPC.o*
 rm DC_collect_data.e* 

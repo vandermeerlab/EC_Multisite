@@ -156,9 +156,9 @@ end
 sess = strrep(sess, '-', '_');
 %% save the session wide spectrogram
 saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'png')
-saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'fig')
-h = get(gcf);
-D = h.PaperPosition; % Returns 1x4 vector [left right width height]
+%saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'fig')
+h1= get(gcf);
+D = h1.PaperPosition; % Returns 1x4 vector [left right width height]
 set(gcf, 'PaperSize', [D(3) D(4)]); %default PaperSize is [8.5 11]
 %         saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'epsc')
 fname = [sess '_' S{1} '_' S{2} '_Coherogram'];
