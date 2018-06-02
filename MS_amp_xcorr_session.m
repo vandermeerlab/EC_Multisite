@@ -1,4 +1,14 @@
-function MS_amp_xcorr_session(cfg_in, data)
+function MS_amp_xcorr_session%(cfg_in, data)
+
+%% temp
+cfg_in = [];
+global PARAMS
+
+load([PARAMS.inter_dir 'R102_Data.mat'])
+data = data.R102_2016_09_24;
+
+load([PARAMS.inter_dir 'R102_Events.mat'])
+
 %% MS_amp_xcorr: gets the amplitude cross correlation for eahc event across a range of frequencies specified in cfg.freq in steps of cfg.freq_step (default is 1Hz) for a given pair of channels.
 %
 %
