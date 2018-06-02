@@ -26,7 +26,7 @@ cfg_def.trialave=0; % average over trials
 cfg_def.err=0; % no error computation
 cfg_def.pad = -1;
 
-movingwin=[5 0.1]; % set the moving window dimensions
+movingwin=[5 1]; % set the moving window dimensions
 
 cfg = ProcessConfig2(cfg_def, cfg_in);
 c_ord = linspecer(4);
@@ -185,7 +185,7 @@ close all
 
 
 %% get a zoom in 
-movingwin = [1 0.01];
+movingwin = [1 0.1];
 [C,~,~,~,~,t,f]=cohgramc(D1.data',D2.data',movingwin, cfg);
 
 
