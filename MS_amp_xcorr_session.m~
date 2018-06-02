@@ -1,4 +1,14 @@
-function MS_amp_xcorr_session(cfg_in, data)
+function MS_amp_xcorr_session%(cfg_in, data)
+
+%% temp
+cfg_in = [];
+global PARAMS
+
+load([PARAMS.inter_dir 'R102_Data.mat'])
+data = data.R102_2016_09_24;
+
+load([PARAMS.inter_dir 'R102_Events.mat'])
+
 %% MS_amp_xcorr: gets the amplitude cross correlation for eahc event across a range of frequencies specified in cfg.freq in steps of cfg.freq_step (default is 1Hz) for a given pair of channels.
 %
 %
@@ -25,7 +35,7 @@ global PARAMS
 cfg_def = [];
 cfg_def.type = '_pot'; % can also be '_trk'.  For now only works with pot or track and not both.  to get both just run it again with the other cfg.type
 cfg_def.check = 1; % used to create a plot for verification.
-cfg_def.check_dir = [PARAMS.inter_dir '/phase_check']; %where to save the check figure.
+cfg_def.check_dir = [PARAMS.inter_dir 'phase_check']; %where to save the check figure.
 
 cfg_def.cfg_filter = [];
 cfg_def.cfg_filter.freq = [1 100];
@@ -37,7 +47,8 @@ cfg_def.cfg_amp.count = 100;
 cfg_def.cfg_amp.nShuffle = 100;
 
 % cfgs for amp-corr-ogram
-cfg_.dT
+cfg_def.cfg_amp_cor_ogram = [];
+cfg_def.cfg_amp_cor_ogram.dT = 0.5;
 
 cfg = ProcessConfig2(cfg_def, cfg_in);
 %% rename any "piri_x_..." data labels.
@@ -90,7 +101,9 @@ for iPhase = 3:length(PARAMS.Phases)
     
     % set up an NaN array
     Freq_list = cfg.cfg_filter.freq(1): cfg.cfg_filter.freq_step:cfg.cfg_filter.freq(end);
-    times = data.(PARAMS.Phases{iPhase}).([S{1} '_pot']).tvec(1):cfg.dT:data.(PARAMS.Phases{iPhase}).([S{1} '_pot']).tvec(end);
+    
+    times = data.(PARAMS.Phases{iPhase}).([S{1} '_pot']).tvec(1):cfg.cfg_amp_cor_ogram:data.(PARAMS.Phases{iPhase}).([S{1} '_pot']).tvec(end);
+    
     amp_ac.(pairs{iPair}).(PARAMS.Phases{iPhase}) =NaN(length(Freq_list), length(times));
     
     S = strsplit(pairs{iPair}, '_');
@@ -213,5 +226,7 @@ imagesc(all_sess(1:end,1:end-1))
 axis xy
 set(gca, 'ytick',1:size(all_sess,1)-1, 'yticklabel',Freq_list(2:end))%, 'xticklabel', amp_ac_t.NAc_PiriO.pre(:,1))
 
+amp_out.amp_ac = amp_ac;
+amp_out.amp_ac_t = amp_ac
 
-
+save(PARAMS.inter_dir 'R102_amp.mat', 

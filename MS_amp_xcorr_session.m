@@ -226,5 +226,8 @@ imagesc(all_sess(1:end,1:end-1))
 axis xy
 set(gca, 'ytick',1:size(all_sess,1)-1, 'yticklabel',Freq_list(2:end))%, 'xticklabel', amp_ac_t.NAc_PiriO.pre(:,1))
 
+amp_out.amp_ac = amp_ac;
+amp_out.amp_ac_t = amp_ac_t;
+amp_out.AMP = Amp; 
 
-
+save([PARAMS.inter_dir 'R102_amp.mat'], 'amp_out','-v7.3') 
