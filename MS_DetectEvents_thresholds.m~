@@ -14,7 +14,7 @@ csc = data;
 %% set params
 % gamma event detection
 cfg_def.f_label = {'low','high'};
-cfg_def.f_bandpass = {[45 65],[70 90]}; % frequency bands for event detection
+cfg_def.f_bandpass = {[40 55],[70 85]}; % frequency bands for event detection
 cfg_def.detect_thr = [0.95 .95]; % threshold for event detection: 95th percentile of (amplitude) envelope
 cfg_def.detect_method = 'percentile'; %'raw'; % 'raw', 'zscore', 'percentile'
 cfg_def.detect_nCycles = 4; % require minimum number of gamma cycles

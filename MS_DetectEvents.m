@@ -14,13 +14,13 @@ csc = data;
 %% set params
 % gamma event detection
 cfg_def.f_label = {'low','high'};%, 'low_low_tr', 'high_low_tr'};
-cfg_def.f_bandpass = {[40 55],[70 85]};%,[40 55], [70 85]}; % frequency bands for event detection
-cfg_def.detect_thr = [0.95 .95 0.90 .90]; % threshold for event detection: 95th percentile of (amplitude) envelope
+cfg_def.f_bandpass = {[45 65],[70 90]};%,[40 55], [70 85]}; % frequency bands for event detection
+cfg_def.detect_thr = [0.95 .95 ]; % threshold for event detection: 95th percentile of (amplitude) envelope
 cfg_def.detect_method = 'percentile'; %'raw'; % 'raw', 'zscore', 'percentile'
 cfg_def.detect_nCycles = 4; % require minimum number of gamma cycles
 cfg_def.var_thr = 1.5; % def: variance/mean of cycle peaks and throughs must be smaller than this
 cfg_def.detect_epoch = 'all'; % 'all', 'post', 'task'; % set threshold based on what data (for events)
-cfg_def.ampl_min = [0.5e-04 0.5e-04 0.5e-04 0.5e-04]; % all peaks of event must be larger than this (in V)
+cfg_def.ampl_min = [0.5e-04 0.5e-04]; % all peaks of event must be larger than this (in V)
 
 % artifact, chewing, and spindle detection
 cfg_def.artif_thr =  std(csc.data)*4;   %0.75 * 10^-3; % raw amplitude must be smaller than this (in V) to pass artifact detection

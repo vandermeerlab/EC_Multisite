@@ -36,5 +36,8 @@ cd(PARAMS.data_dir) % move to the data folder
 set(groot, 'DefaultAxesTickLabelInterpreter', 'none')
 set(groot, 'DefaultLegendInterpreter', 'none')
 set(groot,'defaulttextinterpreter','none');  
+<<<<<<< HEAD
 % Master_Multisite
-MS_amp_xcorr_session
+%MS_amp_xcorr_session
+Master_Multisite_preprocess
+
