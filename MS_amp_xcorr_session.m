@@ -96,17 +96,19 @@ end
 
 
 %% loop over pairs for each frequency band
-for iPhase = 3:length(PARAMS.Phases)
-    %     for iPair = 1:length(pairs)
+for iPhase = 1:length(PARAMS.Phases)
+  for  iPair = 1:length(pairs)
     
+S = strsplit(pairs{iPair}, '_');
+
     % set up an NaN array
     Freq_list = cfg.cfg_filter.freq(1): cfg.cfg_filter.freq_step:cfg.cfg_filter.freq(end);
     
-    times = data.(PARAMS.Phases{iPhase}).([S{1} '_pot']).tvec(1):cfg.cfg_amp_cor_ogram:data.(PARAMS.Phases{iPhase}).([S{1} '_pot']).tvec(end);
+    times = data.(PARAMS.Phases{iPhase}).([S{1} '_pot']).tvec(1):cfg.cfg_amp_cor_ogram.dT:data.(PARAMS.Phases{iPhase}).([S{1} '_pot']).tvec(end);
     
     amp_ac.(pairs{iPair}).(PARAMS.Phases{iPhase}) =NaN(length(Freq_list), length(times));
     
-    S = strsplit(pairs{iPair}, '_');
+   % S = strsplit(pairs{iPair}, '_');
     fprintf(['Processing: Frequency (Hz)  '])
     Amp.f.(pairs{iPair}).(PARAMS.Phases{iPhase}) = NaN(1,length(Freq_list));
     Amp.ac.(pairs{iPair}).(PARAMS.Phases{iPhase}) = NaN(1,length(Freq_list));
@@ -171,7 +173,7 @@ for iPhase = 3:length(PARAMS.Phases)
         
     end
     fprintf(['\n' S{1} '-' S{2} '...complete\n'])
-    %     end
+        end
 end
 
 %% check plot
