@@ -1,0 +1,45 @@
+------------------------- Prologue ----------------------------
+         Started: Sat Jun  2 22:33:15 EDT 2018
+          Job ID: 142929.knorr.hpcc.dartmouth.edu
+         User ID: f00287r
+        Group ID: rc-users
+        Job Name: DC_Master
+ Resources Req'd: nodes=1:ppn=10,walltime=18:00:00,neednodes=1:ppn=10
+      Queue Name: default
+    Account Name: BrainSci
+------------------------- Prologue ----------------------------
+
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2014 The MathWorks, Inc.
+                   R2014b (8.4.0.150421) 64-bit (glnxa64)
+                             September 15, 2014
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+    ----------------------------------------------------
+	Your MATLAB license will expire in 58 days.
+	Please contact your system administrator or
+	MathWorks to renew this license.
+    ----------------------------------------------------
+[Warning: Function plot has the same name as a MATLAB builtin. We suggest you
+rename the function to avoid a potential name conflict.] 
+[> In path at 109
+  In addpath at 86
+  In MS_initialize_discovery at 31] 
+
+------------------------- Epilogue ----------------------------
+        Finished: Sat Jun  2 22:33:51 EDT 2018
+          Job ID: 142929.knorr.hpcc.dartmouth.edu
+         User ID: f00287r
+        Group ID: rc-users
+        Job Name: DC_Master
+      Session ID: 42286
+ Resources Req'd: nodes=1:ppn=10,walltime=18:00:00,neednodes=1:ppn=10
+  Resources Used: cput=00:00:26,vmem=4874340kb,walltime=00:00:38,mem=1978484kb,energy_used=0
+      Queue Name: default
+    Account Name: BrainSci
+------------------------- Epilogue ----------------------------
+

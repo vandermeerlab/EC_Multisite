@@ -1,0 +1,40 @@
+------------------------- Prologue ----------------------------
+         Started: Sat Jun  2 22:05:24 EDT 2018
+          Job ID: 142926.knorr.hpcc.dartmouth.edu
+         User ID: f00287r
+        Group ID: rc-users
+        Job Name: DC_Master
+ Resources Req'd: nodes=1:ppn=10,walltime=18:00:00,neednodes=1:ppn=10
+      Queue Name: default
+    Account Name: BrainSci
+------------------------- Prologue ----------------------------
+
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2014 The MathWorks, Inc.
+                   R2014b (8.4.0.150421) 64-bit (glnxa64)
+                             September 15, 2014
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+    ----------------------------------------------------
+	Your MATLAB license will expire in 58 days.
+	Please contact your system administrator or
+	MathWorks to renew this license.
+    ----------------------------------------------------
+>> 
+------------------------- Epilogue ----------------------------
+        Finished: Sat Jun  2 22:05:37 EDT 2018
+          Job ID: 142926.knorr.hpcc.dartmouth.edu
+         User ID: f00287r
+        Group ID: rc-users
+        Job Name: DC_Master
+      Session ID: 41785
+ Resources Req'd: nodes=1:ppn=10,walltime=18:00:00,neednodes=1:ppn=10
+  Resources Used: cput=00:00:08,vmem=120676kb,walltime=00:00:16,mem=1580kb,energy_used=0
+      Queue Name: default
+    Account Name: BrainSci
+------------------------- Epilogue ----------------------------
+

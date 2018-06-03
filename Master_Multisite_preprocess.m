@@ -20,6 +20,9 @@ global PARAMS
 
 for iSub = 1:length(PARAMS.Subjects)
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
+	d_t = data;
+clear data
+data.(PARAMS.Subjects{iSub}) = d_t;
 %     if isunix
 %         cd([PARAMS.data_dir '/' PARAMS.Subjects{iSub}])
 %     else
