@@ -39,7 +39,7 @@ cfg_def.check_dir = [PARAMS.inter_dir 'phase_check']; %where to save the check f
 
 cfg_def.cfg_filter = [];
 cfg_def.cfg_filter.freq = [2 100];
-cfg_def.cfg_filter.freq_step = 1;
+cfg_def.cfg_filter.freq_step = 2;
 
 %cfgs for amp x-corr
 cfg_def.cfg_amp = [];
@@ -127,7 +127,7 @@ S = strsplit(pairs{iPair}, '_');
         fprintf('%d', this_F);
         
         cfg_filter= [];                    
-        cfg_filter.f = [this_F-1 this_F+1];
+        cfg_filter.f = [this_F-2 this_F+2];
         cfg_filter.verbose = 0;
         cfg_filter.order = 5;
 
@@ -238,5 +238,6 @@ amp_out.amp_ac = amp_ac;
 amp_out.amp_ac_t = amp_ac_t;
 amp_out.AMP = Amp; 
 amp_out.cfg = cfg;
+amp_out.freq = Freq_list;
 
 save([PARAMS.inter_dir 'R102_amp.mat'], 'amp_out','-v7.3') 
