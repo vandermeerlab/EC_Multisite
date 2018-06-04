@@ -38,8 +38,8 @@ cfg_def.check = 1; % used to create a plot for verification.
 cfg_def.check_dir = [PARAMS.inter_dir 'phase_check']; %where to save the check figure.
 
 cfg_def.cfg_filter = [];
-cfg_def.cfg_filter.freq = [2 100];
-cfg_def.cfg_filter.freq_step = 1;
+cfg_def.cfg_filter.freq = [3 100];
+cfg_def.cfg_filter.freq_step = 3;
 
 %cfgs for amp x-corr
 cfg_def.cfg_amp = [];
@@ -48,7 +48,7 @@ cfg_def.cfg_amp.nShuffle = 100;
 
 % cfgs for amp-corr-ogram
 cfg_def.cfg_amp_cor_ogram = [];
-cfg_def.cfg_amp_cor_ogram.dT = 0.5;
+cfg_def.cfg_amp_cor_ogram.dT = 5;
 
 cfg = ProcessConfig2(cfg_def, cfg_in);
 %% rename any "piri_x_..." data labels.
@@ -114,7 +114,7 @@ S = strsplit(pairs{iPair}, '_');
     Amp.ac.(pairs{iPair}).(PARAMS.Phases{iPhase}) = NaN(1,length(Freq_list));
     Amp.lag.(pairs{iPair}).(PARAMS.Phases{iPhase}) = NaN(1,length(Freq_list));
     
-    for iF = 2:length(Freq_list)
+    for iF = 1:length(Freq_list)
         
         this_F = Freq_list(iF);
         
@@ -127,14 +127,15 @@ S = strsplit(pairs{iPair}, '_');
         fprintf('%d', this_F);
         
         cfg_filter= [];                    
-        cfg_filter.f = [this_F-1 this_F+1];
+        cfg_filter.f = [this_F-2 this_F+2];
         cfg_filter.verbose = 0;
-        cfg_filter.order = 5;
+        cfg_filter.order = 3;
+            cfg_filter.type = 'cheby1';
 
         if  this_F < 10;
             cfg_filter.type = 'cheby1';
             cfg_filter.order = 3;
-            cfg_filter.f = [this_F-1 this_F+1];
+            cfg_filter.f = [this_F-2 this_F+2];
         end
         FILT_1 = FilterLFP(cfg_filter, data.(PARAMS.Phases{iPhase}).([S{1} '_pot']));
         FILT_2 = FilterLFP(cfg_filter, data.(PARAMS.Phases{iPhase}).([S{2} '_pot']));
@@ -168,10 +169,10 @@ S = strsplit(pairs{iPair}, '_');
             [ac, lag] = xcov(D_1_temp.data,D_2_temp.data,200,  'coeff');
             max_ac = ac(lag==0);
             amp_ac.(pairs{iPair}).(PARAMS.Phases{iPhase})(iF, iT) = max_ac;
-            amp_ac_t.(pairs{iPair}).(PARAMS.Phases{iPhase})(iF, iT) = times(iT);
+%             amp_ac_t.(pairs{iPair}).(PARAMS.Phases{iPhase})(iF, iT) = times(iT);
             
         end
-        
+        amp_ac_t.(pairs{iPair}).(PARAMS.Phases{iPhase}) = times
         
     end
     fprintf(['\n' S{1} '-' S{2} '...complete\n'])
@@ -228,12 +229,12 @@ axis xy
 
 %% append data
 
-all_sess = [amp_ac.NAc_PiriO.pre, amp_ac.NAc_PiriO.ipsi, amp_ac.NAc_PiriO.contra, amp_ac.NAc_PiriO.post];
+all_sess = [amp_ac.NAc_PiriO.pre];%, amp_ac.NAc_PiriO.ipsi, amp_ac.NAc_PiriO.contra, amp_ac.NAc_PiriO.post];
 
 imagesc(all_sess(1:end,1:end-1))
 axis xy
-set(gca, 'ytick',1:size(all_sess,1), 'yticklabel',Freq_list(1:end))%, 'xticklabel', amp_ac_t.NAc_PiriO.pre(:,1))
-
+set(gca, 'ytick',1:size(all_sess,1), 'yticklabel',Freq_list(1:end), 'xtick', 1:length(times), 'xticklabel', times(1):times(end))
+%% 
 amp_out.amp_ac = amp_ac;
 amp_out.amp_ac_t = amp_ac_t;
 amp_out.AMP = Amp; 
