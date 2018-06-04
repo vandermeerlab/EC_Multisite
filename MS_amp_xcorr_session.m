@@ -43,6 +43,7 @@ cfg_def.cfg_filter = [];
 cfg_def.cfg_filter.freq = [3 100];
 cfg_def.cfg_filter.freq_step = 1;
 
+
 %cfgs for amp x-corr
 cfg_def.cfg_amp = [];
 cfg_def.cfg_amp.count = 100;
@@ -99,7 +100,7 @@ end
 
 %% loop over pairs for each frequency band
 for iPhase = 1:length(PARAMS.Phases)
-%         iPair = 6;
+        iPair = 6;
 %    S = strsplit(pairs{iPair}, '_');
     completed_pairs = {};
 %     for  iPair = 1:length(pairs)
@@ -251,10 +252,10 @@ end
 % imagesc(all_sess(1:end,1:end-1))
 % axis xy
 % set(gca, 'ytick',[1 size(all_sess,1)], 'yticklabel',[Freq_list(1) Freq_list(end)])%, 'xtick', 1:length(times), 'xticklabel', times(1):times(end))
-h = vline([length(amp_ac.NAc_PiriO.pre), (length(amp_ac.NAc_PiriO.pre) +length(amp_ac.NAc_PiriO.ipsi)),...
-    (length(amp_ac.NAc_PiriO.pre) +length(amp_ac.NAc_PiriO.ipsi)+length(amp_ac.NAc_PiriO.contra))], {'k','k', 'k', 'k'}) 
-        set(h(:), 'linewidth', 3)
-        SetFigure([], gcf)
+% h = vline([length(amp_ac.NAc_PiriO.pre), (length(amp_ac.NAc_PiriO.pre) +length(amp_ac.NAc_PiriO.ipsi)),...
+%     (length(amp_ac.NAc_PiriO.pre) +length(amp_ac.NAc_PiriO.ipsi)+length(amp_ac.NAc_PiriO.contra))], {'k','k', 'k', 'k'}) 
+%         set(h(:), 'linewidth', 3)
+%         SetFigure([], gcf)
 %%
 amp_out.amp_ac = amp_ac;
 amp_out.amp_ac_t = amp_ac_t;
