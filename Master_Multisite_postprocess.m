@@ -27,14 +27,14 @@ clear d_t
 
 
 %% generate a Coherogram across each session for each site.
-for iSub = 1:length(PARAMS.Subjects)
+% for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
         fprintf(PARAMS.log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
         Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).amp = MS_amp_xcorr_session_2([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
         fprintf(PARAMS.log, '...complete');
     end
-end
+% end
 
 
 

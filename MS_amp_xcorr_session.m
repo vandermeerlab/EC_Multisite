@@ -40,8 +40,8 @@ cfg_def.check_dir = [PARAMS.inter_dir 'phase_check']; %where to save the check f
 cfg_def.cfg_filter = [];
 % cfg_def.cfg_filter.freq = [3 100];
 % cfg_def.cfg_filter.freq_step = 3;
-cfg_def.cfg_filter.freq = [2 100];
-cfg_def.cfg_filter.freq_step = 2;
+cfg_def.cfg_filter.freq = [3 100];
+cfg_def.cfg_filter.freq_step = 1;
 
 %cfgs for amp x-corr
 cfg_def.cfg_amp = [];
@@ -99,10 +99,10 @@ end
 
 %% loop over pairs for each frequency band
 for iPhase = 1:length(PARAMS.Phases)
-    %     iPair = 5;
-    S = strsplit(pairs{iPair}, '_');
+%         iPair = 6;
+%    S = strsplit(pairs{iPair}, '_');
     completed_pairs = {};
-    for  iPair = 1:length(pairs)
+%     for  iPair = 1:length(pairs)
         Same_flag = 0;
         %     iPair = 5;
         S = strsplit(pairs{iPair}, '_');
@@ -193,7 +193,7 @@ for iPhase = 1:length(PARAMS.Phases)
         else
             fprintf(['\n' 'Skipping ' S{1} '-' S{2} '  because that pair has already been processed\n'])
         end
-    end
+%     end
 end
 
 %% check plot
@@ -246,11 +246,15 @@ end
 
 %% append data
 % 
-% all_sess = [amp_ac.NAc_PiriO.pre];%, amp_ac.NAc_PiriO.ipsi, amp_ac.NAc_PiriO.contra, amp_ac.NAc_PiriO.post];
+% all_sess = [amp_ac.NAc_PiriO.pre, amp_ac.NAc_PiriO.ipsi, amp_ac.NAc_PiriO.contra, amp_ac.NAc_PiriO.post];
 % 
 % imagesc(all_sess(1:end,1:end-1))
 % axis xy
-% set(gca, 'ytick',1:size(all_sess,1), 'yticklabel',Freq_list(1:end), 'xtick', 1:length(times), 'xticklabel', times(1):times(end))
+% set(gca, 'ytick',[1 size(all_sess,1)], 'yticklabel',[Freq_list(1) Freq_list(end)])%, 'xtick', 1:length(times), 'xticklabel', times(1):times(end))
+h = vline([length(amp_ac.NAc_PiriO.pre), (length(amp_ac.NAc_PiriO.pre) +length(amp_ac.NAc_PiriO.ipsi)),...
+    (length(amp_ac.NAc_PiriO.pre) +length(amp_ac.NAc_PiriO.ipsi)+length(amp_ac.NAc_PiriO.contra))], {'k','k', 'k', 'k'}) 
+        set(h(:), 'linewidth', 3)
+        SetFigure([], gcf)
 %%
 amp_out.amp_ac = amp_ac;
 amp_out.amp_ac_t = amp_ac_t;
@@ -258,4 +262,4 @@ amp_out.AMP = Amp;
 amp_out.cfg = cfg;
 amp_out.freq = Freq_list;
 
-save([PARAMS.inter_dir 'R102_amp_1Hz.mat'], 'amp_out','-v7.3')
+save([PARAMS.inter_dir 'R102_amp_2Hz.mat'], 'amp_out','-v7.3')
