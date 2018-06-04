@@ -38,8 +38,10 @@ cfg_def.check = 1; % used to create a plot for verification.
 cfg_def.check_dir = [PARAMS.inter_dir 'phase_check']; %where to save the check figure.
 
 cfg_def.cfg_filter = [];
-cfg_def.cfg_filter.freq = [3 100];
-cfg_def.cfg_filter.freq_step = 3;
+% cfg_def.cfg_filter.freq = [3 100];
+% cfg_def.cfg_filter.freq_step = 3;
+cfg_def.cfg_filter.freq = [2 100];
+cfg_def.cfg_filter.freq_step = 2;
 
 %cfgs for amp x-corr
 cfg_def.cfg_amp = [];
@@ -239,5 +241,6 @@ amp_out.amp_ac = amp_ac;
 amp_out.amp_ac_t = amp_ac_t;
 amp_out.AMP = Amp; 
 amp_out.cfg = cfg;
+amp_out.freq = Freq_list;
 
-save([PARAMS.inter_dir 'R102_amp.mat'], 'amp_out','-v7.3') 
+save([PARAMS.inter_dir 'R102_amp_1Hz.mat'], 'amp_out','-v7.3') 
