@@ -40,7 +40,7 @@ cfg_def.check_dir = [PARAMS.inter_dir 'phase_check']; %where to save the check f
 cfg_def.cfg_filter = [];
 % cfg_def.cfg_filter.freq = [3 100];
 % cfg_def.cfg_filter.freq_step = 3;
-cfg_def.cfg_filter.freq = [2 100];
+cfg_def.cfg_filter.freq = [3 100];
 cfg_def.cfg_filter.freq_step = 2;
 
 %cfgs for amp x-corr
@@ -100,7 +100,7 @@ end
 %% loop over pairs for each frequency band
 for iPhase = 1:length(PARAMS.Phases)
     %     iPair = 5;
-    S = strsplit(pairs{iPair}, '_');
+%    S = strsplit(pairs{iPair}, '_');
     completed_pairs = {};
     for  iPair = 1:length(pairs)
         Same_flag = 0;
