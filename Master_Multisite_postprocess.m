@@ -18,14 +18,15 @@ global PARAMS
 fprintf(PARAMS.log, date);
 % Extract the data from each recroding phase within each session and separate pot vs track sections
 
-for iSub = 1%:length(PARAMS.Subjects)
+for iSub = 1:length(PARAMS.Subjects)
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
 	d_t = data;
 clear data
 data.(PARAMS.Subjects{iSub}) = d_t;
 clear d_t
-
+if exist([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat']) ==2
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
+end
 
 %% generate a Coherogram across each session for each site.
 % for iSub = 1:length(PARAMS.Subjects)
@@ -42,7 +43,7 @@ clear d_t
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
         fprintf(PARAMS.log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-        Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).coh2 = MS_coh_session([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+        Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).coh = MS_coh_session([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
         fprintf(PARAMS.log, '...complete');
     end
 % end
