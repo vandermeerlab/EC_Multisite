@@ -18,14 +18,15 @@ global PARAMS
 fprintf(PARAMS.log, date);
 % Extract the data from each recroding phase within each session and separate pot vs track sections
 
-for iSub = 1%:length(PARAMS.Subjects)
+for iSub = 1:length(PARAMS.Subjects)
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
 	d_t = data;
 clear data
 data.(PARAMS.Subjects{iSub}) = d_t;
 clear d_t
-
+if exist([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat']) ==2
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
+end
 
 %% generate a Coherogram across each session for each site.
 % for iSub = 1:length(PARAMS.Subjects)
