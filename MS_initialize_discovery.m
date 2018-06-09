@@ -38,6 +38,6 @@ set(groot, 'DefaultLegendInterpreter', 'none')
 set(groot,'defaulttextinterpreter','none');  
 
 % Master_Multisite
-MS_amp_xcorr_session
+%MS_amp_xcorr_session
 %Master_Multisite_preprocess
-%Master_Multisite_postprocess
+Master_Multisite_postprocess
