@@ -139,19 +139,19 @@ for iPhase = 1:length(PARAMS.Phases)
                     end
                 end
                 fprintf('%d', this_F);
-                
+                %%
                 cfg_filter= [];
-                cfg_filter.f = [this_F-2 this_F+2];
+                cfg_filter.display_filter = 1;
+                cfg_filter.f = [this_F-1 this_F+1];
+%                 cfg_filter.wp = cfg_filter.f*(2/data.(PARAMS.Phases{iPhase}).([S{1} '_pot']).cfg.hdr{1}.SamplingFrequency);
+%                 cfg_filter.ws = [cfg_filter.f(1)-2.5 cfg_filter.f(2)+2.5]*(2/data.(PARAMS.Phases{iPhase}).([S{1} '_pot']).cfg.hdr{1}.SamplingFrequency);
+%                 cfg_filter.R = 0.5;
+                cfg_filter.order = 4;%cheb2ord(cfg_filter.wp, cfg_filter.ws, cfg_filter.R,20);
                 cfg_filter.verbose = 0;
-                cfg_filter.order = 3;
-                cfg_filter.type = 'cheby1';
-                
-                if  this_F < 10;
-                    cfg_filter.type = 'cheby1';
-                    cfg_filter.order = 3;
-                    cfg_filter.f = [this_F-2 this_F+2];
-                end
+                cfg_filter.type = 'fdesign';%'cheby1';
+
                 FILT_1 = FilterLFP(cfg_filter, data.(PARAMS.Phases{iPhase}).([S{1} '_pot']));
+                %%
                 FILT_2 = FilterLFP(cfg_filter, data.(PARAMS.Phases{iPhase}).([S{2} '_pot']));
                 
                 AMP_1 = FILT_1;
