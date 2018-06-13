@@ -1,0 +1,122 @@
+------------------------- Prologue ----------------------------
+         Started: Mon Jun 11 15:30:02 EDT 2018
+          Job ID: 153499.knorr.hpcc.dartmouth.edu
+         User ID: f00287r
+        Group ID: rc-users
+        Job Name: DC_Master
+ Resources Req'd: nodes=1:ppn=10,walltime=22:00:00,neednodes=1:ppn=10
+      Queue Name: default
+    Account Name: BrainSci
+------------------------- Prologue ----------------------------
+
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2014 The MathWorks, Inc.
+                   R2014b (8.4.0.150421) 64-bit (glnxa64)
+                             September 15, 2014
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+    ----------------------------------------------------
+	Your MATLAB license will expire in 49 days.
+	Please contact your system administrator or
+	MathWorks to renew this license.
+    ----------------------------------------------------
+[Warning: Function plot has the same name as a MATLAB builtin. We suggest you
+rename the function to avoid a potential name conflict.] 
+[> In path at 109
+  In addpath at 86
+  In MS_initialize_discovery at 31] 
+Processing: Frequency (Hz)  3>> [Warning: Invalid uimenu position - not rendering] 
+[Warning: Objects of fdesign.abstracttype class exist - not clearing this class
+or any of its superclasses] 
+[Warning: Objects of fdesign.abstracttypewspecs class exist - not clearing this
+class or any of its superclasses] 
+[Warning: Objects of fdesign.bandpass class exist - not clearing this class or
+any of its superclasses] 
+[Warning: Objects of fspecs.abstractspec class exist - not clearing this class
+or any of its superclasses] 
+[Warning: Objects of fspecs.abstractspecwithfs class exist - not clearing this
+class or any of its superclasses] 
+[Warning: Objects of fspecs.bpmin class exist - not clearing this class or any
+of its superclasses] 
+[Warning: Objects of fspecs.abstractspecwithordnfs class exist - not clearing
+this class or any of its superclasses] 
+[Warning: Objects of fspecs.abstract3db2 class exist - not clearing this class
+or any of its superclasses] 
+[Warning: Objects of fspecs.bp3db class exist - not clearing this class or any
+of its superclasses] 
+[Warning: Objects of sigdatatypes.parameter class exist - not clearing this
+class or any of its superclasses] 
+[Warning: Objects of fmethod.abstractdesign class exist - not clearing this
+class or any of its superclasses] 
+[Warning: Objects of fmethod.abstractiir class exist - not clearing this class
+or any of its superclasses] 
+[Warning: Objects of fmethod.abstractiirwsos class exist - not clearing this
+class or any of its superclasses] 
+[Warning: Objects of fmethod.abstractclassiciir class exist - not clearing this
+class or any of its superclasses] 
+[Warning: Objects of fmethod.abstractbutter class exist - not clearing this
+class or any of its superclasses] 
+[Warning: Objects of fmethod.butterbp class exist - not clearing this class or
+any of its superclasses] 
+[Warning: Objects of fdopts.sosscaling class exist - not clearing this class or
+any of its superclasses] 
+[Warning: Objects of dfilt.basefilter class exist - not clearing this class or
+any of its superclasses] 
+[Warning: Objects of dfilt.abstractfilter class exist - not clearing this class
+or any of its superclasses] 
+[Warning: Objects of dfilt.filterquantizer class exist - not clearing this class
+or any of its superclasses] 
+[Warning: Objects of dfilt.singleton class exist - not clearing this class or
+any of its superclasses] 
+[Warning: Objects of dfilt.abstractsos class exist - not clearing this class or
+any of its superclasses] 
+[Warning: Objects of dfilt.df2sos class exist - not clearing this class or any
+of its superclasses] 
+[Warning: Objects of dfilt.dfiltwfs class exist - not clearing this class or any
+of its superclasses] 
+[Warning: Objects of sigtools.sigfig class exist - not clearing this class or
+any of its superclasses] 
+[Warning: Objects of sigtools.fvtool class exist - not clearing this class or
+any of its superclasses] 
+[Warning: Objects of siggui.siggui class exist - not clearing this class or any
+of its superclasses] 
+[Warning: Objects of siggui.sigcontainer class exist - not clearing this class
+or any of its superclasses] 
+[Warning: Objects of siggui.fvtool class exist - not clearing this class or any
+of its superclasses] 
+[Warning: Objects of sigresp.abstractanalysis class exist - not clearing this
+class or any of its superclasses] 
+[Warning: Objects of sigresp.analysisaxis class exist - not clearing this class
+or any of its superclasses] 
+[Warning: Objects of sigresp.freqaxis class exist - not clearing this class or
+any of its superclasses] 
+[Warning: Objects of sigresp.freqaxiswfreqrange class exist - not clearing this
+class or any of its superclasses] 
+[Warning: Objects of sigresp.freqaxiswnfft class exist - not clearing this class
+or any of its superclasses] 
+[Warning: Objects of sigresp.freqaxiswfreqvec class exist - not clearing this
+class or any of its superclasses] 
+[Warning: Objects of filtresp.frequencyresp class exist - not clearing this
+class or any of its superclasses] 
+[Warning: Objects of filtresp.filterutils class exist - not clearing this class
+or any of its superclasses] 
+[Warning: Objects of filtresp.magnitude class exist - not clearing this class or
+any of its superclasses] 
+
+------------------------- Epilogue ----------------------------
+        Finished: Mon Jun 11 15:31:14 EDT 2018
+          Job ID: 153499.knorr.hpcc.dartmouth.edu
+         User ID: f00287r
+        Group ID: rc-users
+        Job Name: DC_Master
+      Session ID: 42305
+ Resources Req'd: nodes=1:ppn=10,walltime=22:00:00,neednodes=1:ppn=10
+  Resources Used: cput=00:00:29,vmem=6542684kb,walltime=00:01:21,mem=2775852kb,energy_used=0
+      Queue Name: default
+    Account Name: BrainSci
+------------------------- Epilogue ----------------------------
+
