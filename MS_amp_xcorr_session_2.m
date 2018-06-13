@@ -137,7 +137,7 @@ for iPhase = 1:length(PARAMS.Phases)
                 fprintf('%d', this_F);
                 %%
                 cfg_filter= [];
-                cfg_filter.display_filter = 1;
+                cfg_filter.display_filter = 0;
                 cfg_filter.f = [this_F-1 this_F+1];
 %                 cfg_filter.wp = cfg_filter.f*(2/data.(PARAMS.Phases{iPhase}).([S{1} '_pot']).cfg.hdr{1}.SamplingFrequency);
 %                 cfg_filter.ws = [cfg_filter.f(1)-2.5 cfg_filter.f(2)+2.5]*(2/data.(PARAMS.Phases{iPhase}).([S{1} '_pot']).cfg.hdr{1}.SamplingFrequency);
