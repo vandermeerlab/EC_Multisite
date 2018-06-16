@@ -52,7 +52,7 @@ cfg_def.cfg_amp.nShuffle = 100;
 
 % cfgs for amp-corr-ogram
 cfg_def.cfg_amp_cor_ogram = [];
-cfg_def.cfg_amp_cor_ogram.dT = 0.1;
+cfg_def.cfg_amp_cor_ogram.dT = 2;
 
 cfg = ProcessConfig2(cfg_def, cfg_in);
 %% rename any "piri_x_..." data labels.
@@ -264,4 +264,4 @@ amp_out.AMP = Amp;
 amp_out.cfg = cfg;
 amp_out.freq = Freq_list;
 
-save([PARAMS.inter_dir 'R107_amp_01Hz.mat'], 'amp_out','-v7.3')
+save([PARAMS.inter_dir 'R102_amp_2Hz.mat'], 'amp_out','-v7.3')

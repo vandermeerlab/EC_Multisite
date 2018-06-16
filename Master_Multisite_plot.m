@@ -24,8 +24,13 @@ for iSub = 1:length(PARAMS.Subjects)
 
 %% generate a Coherogram across each session for each site.
 fprintf(PARAMS.log,['\nPlotting Coh Sess ' PARAMS.Subjects{iSub}]);
+mkdir(PARAMS.inter_dir, 'sess')
 cfg_coh = [];
 cfg_coh.measure = 'coh';
+cfg_coh.plot_type = 'no_piri';
+if iSub ==1
+    cfg_coh.legend = 'on';
+end
 MS_plot_session_phase(cfg_coh, Naris);
 fprintf(PARAMS.log, '...complete');
 
@@ -37,6 +42,13 @@ close all
 % cfg_coh.measure = 'amp';
 % MS_plot_session_phase(cfg_coh, Naris);
 % fprintf(PARAMS.log, '...complete');
+
+%% plot example events
+
+
+
+
+
 
 clearvars -except iSub PARAMS
 end

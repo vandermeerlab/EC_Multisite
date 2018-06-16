@@ -34,6 +34,12 @@ addpath(genpath(PARAMS.code_base_dir));
 addpath(genpath(PARAMS.code_MS_dir));
 cd(PARAMS.data_dir) % move to the data folder
 
+% Set of colours for consistency between plots
+PARAMS.all_pairs = {'IL_PL' 'IL_OFC', 'IL_NAc', 'IL_CG', 'IL_PiriO', 'IL_PiriN','PL_OFC', 'PL_NAc', 'PL_CG', 'PL_PiriO', 'PL_PiriN', ...
+    'OFC_NAc', 'OFC_CG', 'OFC_PiriO', 'OFC_PiriN', 'NAc_CG', 'NAc_PiriO', 'NAc_PiriN','CG_PiriO', 'CG_PiriN', 'PiriO_PiriN'};
+PARAMS.pair_c_ord = linspecer(length(PARAMS.all_pairs));
+
+
 % formatting
 set(groot, 'DefaultAxesTickLabelInterpreter', 'none')
 set(groot, 'DefaultLegendInterpreter', 'none')
