@@ -6,7 +6,7 @@ global PARAMS
 
 load([PARAMS.inter_dir 'R107_Data.mat'])
 % data = data.R102_2016_09_24;
-data = data.R107_2017_07_31;
+data = data.R107_2017_08_04;
 
 % load([PARAMS.inter_dir 'R102_Events.mat'])
 
@@ -52,7 +52,7 @@ cfg_def.cfg_amp.nShuffle = 100;
 
 % cfgs for amp-corr-ogram
 cfg_def.cfg_amp_cor_ogram = [];
-cfg_def.cfg_amp_cor_ogram.dT = 0.1;
+cfg_def.cfg_amp_cor_ogram.dT = .1;
 
 cfg = ProcessConfig2(cfg_def, cfg_in);
 %% rename any "piri_x_..." data labels.
@@ -100,8 +100,10 @@ end
 
 
 %% loop over pairs for each frequency band
+            Freq_list = cfg.cfg_filter.freq(1): cfg.cfg_filter.freq_step:cfg.cfg_filter.freq(end);
+
 for iPhase = 1:length(PARAMS.Phases)
-        iPair = 5;
+        iPair = 6;
 %    S = strsplit(pairs{iPair}, '_');
     completed_pairs = {};
 %     for  iPair = 1:length(pairs)
@@ -117,7 +119,6 @@ for iPhase = 1:length(PARAMS.Phases)
         
         if Same_flag ~=1
             % set up an NaN array
-            Freq_list = cfg.cfg_filter.freq(1): cfg.cfg_filter.freq_step:cfg.cfg_filter.freq(end);
             
             times = data.(PARAMS.Phases{iPhase}).([S{1} '_pot']).tvec(1):cfg.cfg_amp_cor_ogram.dT:data.(PARAMS.Phases{iPhase}).([S{1} '_pot']).tvec(end);
             
@@ -183,6 +184,10 @@ for iPhase = 1:length(PARAMS.Phases)
                     
                     [ac, lag] = xcov(D_1_temp.data,D_2_temp.data,200,  'coeff');
                     max_ac = ac(lag==0);
+                    lag = lag * 1/AMP_1.cfg.hdr{1}.SamplingFrequency;
+                    [~,idx] = max(ac);
+                    lag_max = lag(idx);
+                    amp_lag.(pairs{iPair}).(PARAMS.Phases{iPhase})(iF, iT) = lag_max;
                     amp_ac.(pairs{iPair}).(PARAMS.Phases{iPhase})(iF, iT) = max_ac;
                     %             amp_ac_t.(pairs{iPair}).(PARAMS.Phases{iPhase})(iF, iT) = times(iT);
                     
@@ -246,22 +251,91 @@ end
 % set(gca, 'yticklabel', Freq_list(2:end), 'xticklabel', amp_ac_t.NAc_PiriO.pre)
 % axis xy
 
-%% append data
+% %% append data
+% amp_ac = amp_out.amp_ac;
+% Freq_list = amp_out.freq;
+% cfg.c_ord = linspecer(4);
+% this_pair = 'OFC_NAc';
+% all_sess = [amp_ac.(this_pair).pre, amp_ac.(this_pair).ipsi, amp_ac.(this_pair).contra, amp_ac.(this_pair).post];
 % 
-% all_sess = [amp_ac.NAc_PiriO.pre, amp_ac.NAc_PiriO.ipsi, amp_ac.NAc_PiriO.contra, amp_ac.NAc_PiriO.post];
 % 
-% imagesc(all_sess(1:end,1:end-1))
+% if cfg.moving_avg
+%     if strcmp(cfg.moving_avg, '1D')
+%         
+%         for ii = size(all_sess, 1):-1:1
+%             all_sess(ii,:) = conv(all_sess(ii,:), ones(cfg.m_avg_nSample,1)/cfg.m_avg_nSample, 'same');
+%         end
+%     end
+%     if strcmp(cfg.moving_avg, '2D')
+%         
+%         all_sess = conv2(all_sess, ones(cfg.m_avg_nSample,1)/cfg.m_avg_nSample, 'same');
+%     end
+% end
+% 
+% 
+% 
+% 
+% ax1 = imagesc(all_sess);
 % axis xy
 % set(gca, 'ytick',[1 size(all_sess,1)], 'yticklabel',[Freq_list(1) Freq_list(end)])%, 'xtick', 1:length(times), 'xticklabel', times(1):times(end))
-% h = vline([length(amp_ac.NAc_PiriO.pre), (length(amp_ac.NAc_PiriO.pre) +length(amp_ac.NAc_PiriO.ipsi)),...
-%     (length(amp_ac.NAc_PiriO.pre) +length(amp_ac.NAc_PiriO.ipsi)+length(amp_ac.NAc_PiriO.contra))], {'k','k', 'k', 'k'}) 
+% 
+% 
+% 
+% set(ax1, 'AlphaData', ~isnan(all_sess))
+%     %     title(['Coherogram: ' S{1} ' ' S{2}] )
+%     xlabel('time (s)')
+%     ylabel('frequency')
+%     %         caxis([0.2 1])
+%     
+%     set(gca,'FontSize',20);
+%     xlabel('time (s)'); ylabel('Frequency (Hz)');
+%     yL = get(gca, 'ylim');
+%     % add lines to distinguish phases
+%     ylim([-4.5 yL(2)]);
+%     hold on
+%     h(1) =rectangle('position', [0 -4.5 length(amp_ac.(this_pair).pre)  5.5], 'facecolor',cfg.c_ord(1,:), 'edgecolor', cfg.c_ord(1,:));
+%     h(2) =rectangle('position', [length(amp_ac.(this_pair).pre) -4.5 length(amp_ac.(this_pair).ipsi) 5.5], 'facecolor',cfg.c_ord(2,:), 'edgecolor', cfg.c_ord(2,:));
+%     h(3) =rectangle('position', [(length(amp_ac.(this_pair).pre)+length(amp_ac.(this_pair).ipsi)) -4.5 length(amp_ac.(this_pair).contra) 5.5], 'facecolor',cfg.c_ord(3,:), 'edgecolor', cfg.c_ord(3,:));
+%     h(4) = rectangle('position', [(length(amp_ac.(this_pair).pre)+length(amp_ac.(this_pair).ipsi)+length(amp_ac.(this_pair).contra)) -4.5 length(amp_ac.(this_pair).post) 5.5], 'facecolor',cfg.c_ord(4,:), 'edgecolor', cfg.c_ord(4,:));
+% 
+%     text(length(amp_ac.(this_pair).pre)/2, -1.5, 'pre', 'fontsize', 20, 'horizontalAlignment', 'center')
+%     text((length(amp_ac.(this_pair).pre)+(length(amp_ac.(this_pair).ipsi)/2)), -1.5, 'ipsi', 'fontsize', 20, 'horizontalAlignment', 'center')
+%     text((length(amp_ac.(this_pair).pre)+length(amp_ac.(this_pair).ipsi)+(length(amp_ac.(this_pair).contra)/2)), -1.5, 'contra', 'fontsize', 20, 'horizontalAlignment', 'center')
+%     text((length(amp_ac.(this_pair).pre)+length(amp_ac.(this_pair).ipsi)+length(amp_ac.(this_pair).ipsi)+(length(amp_ac.(this_pair).post)/2)), -1.5, 'post', 'fontsize', 20, 'horizontalAlignment', 'center')
+% 
+%     
+% %     plot(Tp(1):Tp(end), zeros(length(Tp(1):Tp(end)),1)-off_set,'color', cfg.c_ord(1,:), 'linewidth', 1); % pre
+% % %     plot(Tp(end):(Tp(end)+Ti(end)), zeros(length(Tp(end):(Tp(end)+Ti(end))),1)-off_set,'color', cfg.c_ord(2,:), 'linewidth', 10); % ipsi
+% %     plot((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end)), zeros(length((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end))),1)-off_set,'color', cfg.c_ord(3,:), 'linewidth', 10); % contra
+% %     plot((Tp(end)+Ti(end)+Tc(end)):(Tp(end)+Ti(end)+Tc(end)+Tpo(end)), zeros(length((Tp(end)+Ti(end)+Tc(end)):(Tp(end)+Ti(end)+Tc(end)+Tpo(end))),1)-off_set,'color', cfg.c_ord(4,:), 'linewidth', 10); % post
+% %     h = vline([length(amp_ac.(this_pair).pre),(length(amp_ac.(this_pair).pre)+length(amp_ac.(this_pair).ipsi)),(length(amp_ac.(this_pair).pre)+length(amp_ac.(this_pair).ipsi)+length(amp_ac.(this_pair).post))], {'k', 'k', 'k'} );
+%     %     if cfg.lfp_on
+%     %        plot(D1.tvec_norm,(D1.data*10000)+20, 'color', [1 1 1])
+%     %        plot(D2.tvec_norm, (D2.data*10000)+20, 'color', [0.5 1 1])
+%     %     end
+%     ax =gca;
+%     ax.Clipping = 'off';
+%     set(h(:), 'linewidth', cfg.linewidth);
+%     colormap('PARULA');
+% 
+% 
+% 
+% 
+% 
+% h = vline([length(amp_ac.(this_pair).pre), (length(amp_ac.(this_pair).pre) +length(amp_ac.(this_pair).ipsi)),...
+%     (length(amp_ac.(this_pair).pre) +length(amp_ac.(this_pair).ipsi)+length(amp_ac.(this_pair).contra))], {'k','k', 'k', 'k'}) ;
 %         set(h(:), 'linewidth', 3)
 %         SetFigure([], gcf)
+%         
+        
+        
+        
 %%
 amp_out.amp_ac = amp_ac;
+amp_out.amp_lag = amp_lag;
 amp_out.amp_ac_t = amp_ac_t;
 amp_out.AMP = Amp;
 amp_out.cfg = cfg;
 amp_out.freq = Freq_list;
 
-save([PARAMS.inter_dir 'R107_amp_01Hz.mat'], 'amp_out','-v7.3')
+save([PARAMS.inter_dir 'R107_amp_p1Hz.mat'], 'amp_out','-v7.3')

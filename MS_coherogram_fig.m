@@ -20,13 +20,15 @@ cfg_def = [];
 cfg_def.linewidth = 3;
 cfg_def.c_ord = linspecer(4);
 cfg_def.Fs=2000; % sampling frequency
-cfg_def.fpass=[0 120]; % frequencies of interest
+cfg_def.fpass=[0 100]; % frequencies of interest
 cfg_def.tapers=[5 9]; % tapers
 cfg_def.trialave=0; % average over trials
 cfg_def.err=0; % no error computation
 cfg_def.pad = -1;
+cfg_def.pre_x_lim = [338 339];
+cfg_def.ipsi_x_lim = [854 855];
 
-movingwin=[5 1]; % set the moving window dimensions
+movingwin=[1 .05]; % set the moving window dimensions
 
 cfg = ProcessConfig2(cfg_def, cfg_in);
 c_ord = linspecer(4);
@@ -55,14 +57,14 @@ for iSite =1:length(sites)
             
             cfg_artif_det = [];
             cfg_artif_det.method = 'raw';
-            cfg_artif_det.threshold = std(csc_artif.data)*6;
+            cfg_artif_det.threshold = std(csc_artif.data)*7;
             cfg_artif_det.minlen = 0;
             evt_artif = TSDtoIV(cfg_artif_det,csc_artif);
             
-            cfg_temp = []; cfg_temp.d = [-0.5 0.5];
+            cfg_temp = []; cfg_temp.d = [-0.05 0.05];
             evt_artif = ResizeIV(cfg_temp,evt_artif);
             artif_idx = TSD_getidx2(data.(PARAMS.Phases{ii}).(sites{iSite}),evt_artif); % if error, try TSD_getidx (slower)
-            data.(PARAMS.Phases{ii}).(sites{iSite}).data(artif_idx) = 0;
+            data.(PARAMS.Phases{ii}).(sites{iSite}).data(artif_idx) = NaN;
         end
         %%
         all_data.hdr.Fs = data.pre.(sites{iSite}).cfg.hdr{1}.SamplingFrequency;
@@ -77,7 +79,7 @@ for iSite =1:length(sites)
         ipsi_norm = ((data.ipsi.(sites{iSite}).tvec - data.ipsi.(sites{iSite}).tvec(1))+(pre_norm(end)+(pre_norm(end)-pre_norm(end-1))))';
         contra_norm = ((data.contra.(sites{iSite}).tvec - data.contra.(sites{iSite}).tvec(1))+(ipsi_norm(end)+(ipsi_norm(end)-ipsi_norm(end-1))))';
         post_norm = ((data.post.(sites{iSite}).tvec - data.post.(sites{iSite}).tvec(1))+(contra_norm(end)+(contra_norm(end)-contra_norm(end-1))))';
-
+        
         all_data.tvec_norm = [pre_norm, ipsi_norm, contra_norm, post_norm];
         all_data.type = 'AMPX';
         all_data.labels = sites{iSite};
@@ -126,136 +128,164 @@ for iPair  =1:length(data.pre.ExpKeys.GoodPairs)
     figure(1)
     ax1 =imagesc(t,f,C'); axis xy
     
-    title(['Coherogram: ' S{1} ' ' S{2}] )
+    set(ax1, 'AlphaData', ~isnan(C'))
+    %     title(['Coherogram: ' S{1} ' ' S{2}] )
     xlabel('time (s)')
     ylabel('frequency')
     %         caxis([0.2 1])
     
     set(gca,'FontSize',20);
-    xlabel('time (s)'); ylabel('Frequency (Hz)');
+    xlabel('Time (s)'); ylabel('Frequency (Hz)');
     % add lines to distinguish phases
-    ylim([0 120]);
+    ylim([-6 100]);
     hold on
-    plot(Tp(1):Tp(end), zeros(length(Tp(1):Tp(end)),1),'color', cfg.c_ord(1,:), 'linewidth', 5); % pre
-    plot(Tp(end):(Tp(end)+Ti(end)), zeros(length(Tp(end):(Tp(end)+Ti(end))),1),'color', cfg.c_ord(2,:), 'linewidth', 5); % ipsi
-    plot((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end)), zeros(length((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end))),1),'color', cfg.c_ord(3,:), 'linewidth', 5); % contra
-    plot((Tp(end)+Ti(end)+Tc(end)):(Tp(end)+Ti(end)+Tc(end)+Tpo(end)), zeros(length((Tp(end)+Ti(end)+Tc(end)):(Tp(end)+Ti(end)+Tc(end)+Tpo(end))),1),'color', cfg.c_ord(4,:), 'linewidth', 5); % post
-        h = vline([Tp(end),(Tp(end)+Ti(end)),(Tp(end)+Ti(end)+Tc(end))], {'k', 'k', 'k'} );
-%     if cfg.lfp_on
-%        plot(D1.tvec_norm,(D1.data*10000)+20, 'color', [1 1 1]) 
-%        plot(D2.tvec_norm, (D2.data*10000)+20, 'color', [0.5 1 1])
-%     end
+    rectangle('position', [Tp(1) -6 (Tp(end)-Tp(1))  5.5], 'facecolor',cfg.c_ord(1,:), 'edgecolor', cfg.c_ord(1,:))
+    rectangle('position', [Tp(end) -6 ((Tp(end)+Ti(end))-Tp(end))  5.5], 'facecolor',cfg.c_ord(2,:), 'edgecolor', cfg.c_ord(2,:))
+    rectangle('position', [(Tp(end)+Ti(end)) -6 ((Tp(end)+Ti(end)+Tc(end))-(Tp(end)+Ti(end)))  5.5], 'facecolor',cfg.c_ord(3,:), 'edgecolor', cfg.c_ord(3,:))
+    rectangle('position', [(Tp(end)+Ti(end)+Tc(end)) -6 ((Tp(end)+Ti(end)+Tc(end)+Tpo(end))-(Tp(end)+Ti(end)+Tc(end)))  5.5], 'facecolor',cfg.c_ord(4,:), 'edgecolor', cfg.c_ord(4,:))
+
+    text((Tp(end)-Tp(1))/2, -3.5, 'pre', 'fontsize', 20, 'horizontalAlignment', 'center')
+    text(median(Tp(end):(Tp(end)+Ti(end))), -3.5, 'ipsi', 'fontsize', 20, 'horizontalAlignment', 'center')
+    text(median((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end))), -3.5, 'contra', 'fontsize', 20, 'horizontalAlignment', 'center')
+    text(median((Tp(end)+Ti(end)+Tc(end)):(Tp(end)+Ti(end)+Tc(end)+Tpo(end))), -3.5, 'post', 'fontsize', 20, 'horizontalAlignment', 'center')
+
     
+%     plot(Tp(1):Tp(end), zeros(length(Tp(1):Tp(end)),1)-off_set,'color', cfg.c_ord(1,:), 'linewidth', 1); % pre
+% %     plot(Tp(end):(Tp(end)+Ti(end)), zeros(length(Tp(end):(Tp(end)+Ti(end))),1)-off_set,'color', cfg.c_ord(2,:), 'linewidth', 10); % ipsi
+%     plot((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end)), zeros(length((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end))),1)-off_set,'color', cfg.c_ord(3,:), 'linewidth', 10); % contra
+%     plot((Tp(end)+Ti(end)+Tc(end)):(Tp(end)+Ti(end)+Tc(end)+Tpo(end)), zeros(length((Tp(end)+Ti(end)+Tc(end)):(Tp(end)+Ti(end)+Tc(end)+Tpo(end))),1)-off_set,'color', cfg.c_ord(4,:), 'linewidth', 10); % post
+    h = vline([Tp(end),(Tp(end)+Ti(end)),(Tp(end)+Ti(end)+Tc(end))], {'k', 'k', 'k'} );
+    %     if cfg.lfp_on
+    %        plot(D1.tvec_norm,(D1.data*10000)+20, 'color', [1 1 1])
+    %        plot(D2.tvec_norm, (D2.data*10000)+20, 'color', [0.5 1 1])
+    %     end
+
     set(h(:), 'linewidth', cfg.linewidth);
     colormap('PARULA');
-%     drawArrow = @(x,y,L) quiver( x(1),y(1),x(2)-x(1),y(2)-y(1),0, 'LineWidth', L);  % make an arrow.  Matlab builtin function is just terrible.  
-%     drawArrow([250 254], [0 10], 5)
-    text(254.5, 121, 'V', 'fontsize', 18, 'color', c_ord(1,:))
-    text(854.5, 121, 'V', 'fontsize', 18, 'Color', c_ord(2,:))
-
-    SetFigure([],gcf);
-    set(gcf, 'position', [0 50 1600*.9 480*.9]);
-    tightfig;
-    hc = colorbar;
-    caxis([0 1])
-    set(hc,'YTick',[0 1])
+    %     drawArrow = @(x,y,L) quiver( x(1),y(1),x(2)-x(1),y(2)-y(1),0, 'LineWidth', L);  % make an arrow.  Matlab builtin function is just terrible.
+    %     drawArrow([250 254], [0 10], 5)
+    text(median(cfg.pre_x_lim), 102, 'V', 'fontsize', 28, 'color', c_ord(1,:))
+    text(median(cfg.ipsi_x_lim), 102, 'V', 'fontsize', 28, 'Color', c_ord(2,:))
+%     tightfig
+    cfg_fig = [];
+    cfg_fig.ft_size =30;
+    SetFigure(cfg_fig,gcf);
+        hc = colorbar;
+%     caxis(hc, [0 1])
+%     set(hc,'Ticks',[0 1], 'Tickslabels', [0 1])
+    set(hc, 'Limits', [0 1], 'Ticks', [0 1])
+    set(gcf, 'position', [0 50 1800*.9 480*.9]);
+%     tightfig;
+%     ax =gca;
+%     ax.Clipping = 'off';
+    %     sess = strrep(data.pre.ExpKeys.date, '-', '_');
+    if isfield(data.pre.ExpKeys, 'Subject')
+        sess = [data.contra.ExpKeys.Subject '_' strrep(data.contra.ExpKeys.date, '-', '-')];
+        subject = data.contra.ExpKeys.Subject;
+    else
+        sess = [data.contra.ExpKeys.ratID '_' strrep(data.contra.ExpKeys.date, '-', '-')];
+        subject = data.contra.ExpKeys.ratID;
+    end
+    sess = strrep(sess, '-', '_');
     
-%     sess = strrep(data.pre.ExpKeys.date, '-', '_');
-if isfield(data.pre.ExpKeys, 'Subject')
-    sess = [data.contra.ExpKeys.Subject '_' strrep(data.contra.ExpKeys.date, '-', '-')];
-    subject = data.contra.ExpKeys.Subject;
-else
-    sess = [data.contra.ExpKeys.ratID '_' strrep(data.contra.ExpKeys.date, '-', '-')];
-    subject = data.contra.ExpKeys.ratID;
-end
-sess = strrep(sess, '-', '_');
-
-saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'png')
-% saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'fig')
-h1 = get(gcf);
-D = h1.PaperPosition; % Returns 1x4 vector [left right width height]
-set(gcf, 'PaperSize', [D(3) D(4)]); %default PaperSize is [8.5 11]
-%         saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'epsc')
-fname = [sess '_' S{1} '_' S{2} '_Coherogram'];
-pushdir(save_dir)
-eval(sprintf('print -depsc2 -tiff -r300 -painters %s',fname));
-popdir
-close all
-
-
-
-%% get a zoom in 
-movingwin = [1 0.1];
-[C,~,~,~,~,t,f]=cohgramc(D1.data',D2.data',movingwin, cfg);
-
-
-figure(111)
-subplot(2,1,1)
-ax1 =imagesc(t,f,C'); axis xy
-xlim([254 255])
-
-subplot(2,1,2)
-hold on
-plot(D1.tvec_norm,(D1.data)+0.00050, 'color', [0.4 0.4 0.4],'Linewidth', 2) 
-plot(D2.tvec_norm, D2.data, 'color', [0.6 0.6 0.6], 'Linewidth', 2)
-xlim([254 255])
-[axL, icons] = legend(S);
-axL.FontSize = 12; 
-set(icons, 'LineWidth', 2)
-SetFigure([], gcf)
-
-saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_pre_sample'], 'png')
-% saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'fig')
-h1 = get(gcf);
-D = h1.PaperPosition; % Returns 1x4 vector [left right width height]
-set(gcf, 'PaperSize', [D(3) D(4)]); %default PaperSize is [8.5 11]
-%         saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'epsc')
-fname = [sess '_' S{1} '_' S{2} '_pre_sample'];
-pushdir(save_dir)
-eval(sprintf('print -depsc2 -tiff -r300 -painters %s',fname));
-popdir
-close all
-
-
-figure(112)
-subplot(2,1,1)
-ax1 =imagesc(t,f,C'); axis xy
-xlim([854 855])
-
-subplot(2,1,2)
-hold on
-plot(D1.tvec_norm,(D1.data)+0.00050, 'color', [0.4 0.4 0.4],'Linewidth', 2) 
-plot(D2.tvec_norm, D2.data, 'color', [0.6 0.6 0.6], 'Linewidth', 2)
-xlim([854 855])
-[axL, icons] = legend(S);
-axL.FontSize = 12; 
-set(icons, 'LineWidth', 2)
-
-SetFigure([], gcf)
-
-saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_ipsi_sample'], 'png')
-% saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'fig')
-h1 = get(gcf);
-D = h1.PaperPosition; % Returns 1x4 vector [left right width height]
-set(gcf, 'PaperSize', [D(3) D(4)]); %default PaperSize is [8.5 11]
-%         saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'epsc')
-fname = [sess '_' S{1} '_' S{2} '_ipsi_sample'];
-pushdir(save_dir)
-eval(sprintf('print -depsc2 -tiff -r300 -painters %s',fname));
-popdir
-close all
-
-% figure(111)
-% subplot(1,2,2)
-% ax1 =imagesc(t,f,C'); axis xy
-% xlim([254 255])
-% 
-% subplot(3,2,4:5)
-% hold on
-% plot(D1.tvec_norm,(D1.data)+0.00020, 'color', [0.4 0.4 0.4]) 
-% plot(D2.tvec_norm, D2.data, 'color', [0.6 0.6 0.6])
-% xlim([254 255])
-clearvars('C', 'D1', 'D2');
+    saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'png')
+    saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'fig')
+    h1 = get(gcf);
+    D = h1.PaperPosition; % Returns 1x4 vector [left right width height]
+    set(gcf, 'PaperSize', [D(3) D(4)]); %default PaperSize is [8.5 11]
+    %         saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'epsc')
+    fname = [sess '_' S{1} '_' S{2} '_Coherogram'];
+    pushdir(save_dir)
+    eval(sprintf('print -depsc2 -tiff -r300 -painters %s',fname));
+    popdir
+    close all
+    
+    
+    
+    %% get a zoom in
+    movingwin = [0.5 0.05];
+    [C,~,~,~,~,t,f]=cohgramc(D1.data(1:floor(.5*length(D1.data)))',D2.data(1:floor(.5*length(D2.data)))',movingwin, cfg);
+    
+    
+    figure(111)
+    subplot(2,1,1)
+    ax1 =imagesc(t,f,C'); axis xy
+    set(ax1, 'AlphaData', ~isnan(C'))
+    xlim(cfg.pre_x_lim)
+    set(gca, 'xtick', [cfg.pre_x_lim(1):0.5:cfg.pre_x_lim(2)], 'xticklabel', [])
+    
+    
+    subplot(2,1,2)
+    hold on
+    plot(D1.tvec_norm(1:floor(.5*length(D1.tvec_norm))),D1.data(1:floor(.5*length(D1.data)))+0.00050, 'color', [0.4 0.4 0.4],'Linewidth', 2)
+    plot(D2.tvec_norm(1:floor(.5*length(D2.tvec_norm))), D2.data(1:floor(.5*length(D2.data))), 'color', [0.6 0.6 0.6], 'Linewidth', 2)
+%     [axL, icons] = legend(S, 'box', 'off', 'fontsize', 18, 'location');
+%     axL.FontSize = 30;
+%     set(icons, 'LineWidth', 2)
+    cfg_fig = [];
+    cfg_fig.ft_size =36;
+    xlim(cfg.pre_x_lim)
+    set(gca, 'xtick', [cfg.pre_x_lim(1):0.5:cfg.pre_x_lim(2)], 'ytick', [])
+    SetFigure(cfg_fig,gcf);
+    tightfig
+    saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_pre_sample'], 'png')
+    % saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'fig')
+    h1 = get(gcf);
+    D = h1.PaperPosition; % Returns 1x4 vector [left right width height]
+    set(gcf, 'PaperSize', [D(3) D(4)]); %default PaperSize is [8.5 11]
+    %         saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'epsc')
+    fname = [sess '_' S{1} '_' S{2} '_pre_sample'];
+    pushdir(save_dir);
+    eval(sprintf('print -depsc2 -tiff -r300 -painters %s',fname));
+    popdir;
+    close all
+    
+    figure(112)
+    subplot(2,1,1)
+    ax1 =imagesc(t,f,C'); axis xy
+    set(ax1, 'AlphaData', ~isnan(C'))
+    xlim(cfg.ipsi_x_lim)
+    set(gca, 'xtick', [cfg.ipsi_x_lim(1):0.5:cfg.ipsi_x_lim(2)], 'xticklabel', [])
+    
+    subplot(2,1,2)
+    hold on
+    plot(D1.tvec_norm,(D1.data)+0.00050, 'color', [0.4 0.4 0.4],'Linewidth', 2)
+    plot(D2.tvec_norm, D2.data, 'color', [0.6 0.6 0.6], 'Linewidth', 2)
+    xlim(cfg.ipsi_x_lim)
+    set(gca, 'xtick', [cfg.ipsi_x_lim(1):0.5:cfg.ipsi_x_lim(2)], 'ytick', [])
+%     [axL, icons] = legend(S, 'box', 'off', 'fontsize', 12);
+%     axL.FontSize = 30;
+%     set(icons, 'LineWidth', 2)
+    line([cfg.ipsi_x_lim(1)-0.01 cfg.ipsi_x_lim(1)-0.01],[0 0.0002],'color',  'k', 'linewidth', 0.5)
+    box off
+    cfg_fig = [];
+    cfg_fig.ft_size =36;
+    SetFigure(cfg_fig,gcf);
+    tightfig
+    
+    saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_ipsi_sample'], 'png');
+    % saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'fig')
+    h1 = get(gcf);
+    D = h1.PaperPosition; % Returns 1x4 vector [left right width height]
+    set(gcf, 'PaperSize', [D(3) D(4)]); %default PaperSize is [8.5 11]
+    %         saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'epsc')
+    fname = [sess '_' S{1} '_' S{2} '_ipsi_sample'];
+    pushdir(save_dir);
+    eval(sprintf('print -depsc2 -tiff -r300 -painters %s',fname));
+    popdir;
+    close all
+    
+    % figure(111)
+    % subplot(1,2,2)
+    % ax1 =imagesc(t,f,C'); axis xy
+    % xlim([254 255])
+    %
+    % subplot(3,2,4:5)
+    % hold on
+    % plot(D1.tvec_norm,(D1.data)+0.00020, 'color', [0.4 0.4 0.4])
+    % plot(D2.tvec_norm, D2.data, 'color', [0.6 0.6 0.6])
+    % xlim([254 255])
+    clearvars('C', 'D1', 'D2');
 end
 
 %%
@@ -270,14 +300,14 @@ end
 % [~,Fi,Ti,Pi] = spectrogram(data.ipsi.(sites{iSite}).data,rectwin(cfg.win),cfg.noverlap,1:120,all_data.hdr.Fs);
 % [~,Fc,Tc,Pc] = spectrogram(data.contra.(sites{iSite}).data,rectwin(cfg.win),cfg.noverlap,1:120,all_data.hdr.Fs);
 % [~,Fpo,Tpo,Ppo] = spectrogram(data.post.(sites{iSite}).data,rectwin(cfg.win),cfg.noverlap,1:120,all_data.hdr.Fs);
-% 
-% 
-% 
+%
+%
+%
 % [~,F,T,P] = spectrogram(all_data.data,rectwin(cfg.win),cfg.noverlap,1:120,all_data.hdr.Fs);
 % figure(100);
 % P(P==inf) = NaN;
 % imagesc(T,F,10*log10(P)); % converting to dB as usual
-% 
+%
 % caxis([-150 -80])
 % h = vline([Tp(end),(Tp(end)+Ti(end)),(Tp(end)+Ti(end)+Tc(end))], {'k', 'k', 'k'} );
 % % add lines to distinguish phases
@@ -287,10 +317,10 @@ end
 % plot(Tp(end):(Tp(end)+Ti(end)), zeros(length(Tp(end):(Tp(end)+Ti(end))),1),'color', cfg.c_ord(2,:), 'linewidth', 5); % ipsi
 % plot((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end)), zeros(length((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end))),1),'color', cfg.c_ord(3,:), 'linewidth', 5); % contra
 % plot((Tp(end)+Ti(end)+Tc(end)):(Tp(end)+Ti(end)+Tc(end)+Tpo(end)), zeros(length((Tp(end)+Ti(end)+Tc(end)):(Tp(end)+Ti(end)+Tc(end)+Tpo(end))),1),'color', cfg.c_ord(4,:), 'linewidth', 5); % post
-% 
+%
 % set(h(:), 'linewidth', cfg.linewidth);
 % colormap('PARULA');
-% 
+%
 % SetFigure([],gcf);
 % set(gcf, 'position', [0 50 1600*.9 420*.9]);
 % tightfig;
@@ -314,8 +344,8 @@ end
 % eval(sprintf('print -depsc2 -tiff -r300 -painters %s',fname));
 % popdir
 % %         print -depsc2 -tiff -r300 -painters test.eps
-% 
-% 
+%
+%
 % end
 % close all
 % end

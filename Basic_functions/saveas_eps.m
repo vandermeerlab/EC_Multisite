@@ -1,4 +1,4 @@
-function saveas_eps(h, fname)
+function saveas_eps(fname, save_dir)
 %% saveas_eps: this is a workaround to make sure that matlab saves an eps
 %file that is trimmed to the correct size
 %
@@ -12,6 +12,8 @@ function saveas_eps(h, fname)
 h = get(gcf);
 D = h.PaperPosition; % Returns 1x4 vector [left right width height]
 h.PaperSize = [D(3) D(4)]; %default PaperSize is [8.5 11]
-saveas(h, fname, 'epsc')
+    pushdir(save_dir)
+    eval(sprintf('print -depsc2 -tiff  -r300 -painters %s',fname));
+    popdir
 
 end

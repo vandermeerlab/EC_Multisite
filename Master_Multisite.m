@@ -150,7 +150,7 @@ end
 % end
 
 %% generate a Coherogram across each session for each site.
-for iSub = 3:length(PARAMS.Subjects)
+for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
         fprintf(PARAMS.log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
