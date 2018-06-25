@@ -18,7 +18,7 @@ global PARAMS
 fprintf(PARAMS.log, date);
 % Extract the data from each recroding phase within each session and separate pot vs track sections
 cd(PARAMS.inter_dir)
-for iSub = 6%:length(PARAMS.Subjects)
+for iSub = 1:4%:length(PARAMS.Subjects)
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
 	d_t = data;
 clear data

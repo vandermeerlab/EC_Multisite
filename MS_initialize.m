@@ -13,9 +13,9 @@ if isunix
     PARAMS.code_MS_dir = '/Users/jericcarmichael/Documents/GitHub/EC_Multisite'; % where the multisite repo can be found
     PARAMS.Chronux_dir = '/Users/jericcarmichael/Documents/chronux_2_11'; 
 else
-    PARAMS.data_dir = 'G:\JK_recordings\Naris\'; % where to find the raw data
-    PARAMS.inter_dir = 'G:\JK_recordings\Naris\Multisite\temp\'; % where to put intermediate files
-    PARAMS.stats_dir = 'G:\JK_recordings\Naris\Multisite\temp\Stats\'; % where to put the statistical output .txt
+    PARAMS.data_dir = 'G:\Multisite\'; % where to find the raw data
+    PARAMS.inter_dir = 'G:\Multisite\temp\'; % where to put intermediate files
+    PARAMS.stats_dir = 'G:\Multisite\temp\Stats\'; % where to put the statistical output .txt
     PARAMS.code_base_dir = 'D:\Users\mvdmlab\My_Documents\GitHub\vandermeerlab\code-matlab\shared'; % where the codebase repo can be found
     PARAMS.code_MS_dir = 'D:\Users\mvdmlab\My_Documents\GitHub\EC_Multisite'; % where the multisite repo can be found
 end
@@ -44,3 +44,5 @@ PARAMS.pair_c_ord = linspecer(length(PARAMS.all_pairs));
 set(groot, 'DefaultAxesTickLabelInterpreter', 'none')
 set(groot, 'DefaultLegendInterpreter', 'none')
 set(groot,'defaulttextinterpreter','none');  
+
+Master_Multisite_postprocess;
