@@ -1,8 +1,0 @@
-{Reference to non-existent field 'R104'.
-
-Error in Master_Multisite_postprocess (line 33)
-    sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
-
-Error in MS_initialize_discovery (line 43)
-Master_Multisite_postprocess
-} 
