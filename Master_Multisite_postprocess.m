@@ -18,15 +18,35 @@ global PARAMS
 fprintf(PARAMS.log, date);
 % Extract the data from each recroding phase within each session and separate pot vs track sections
 cd(PARAMS.inter_dir)
-for iSub = 6%:length(PARAMS.Subjects)
+
+
+for iSub = 1%:length(PARAMS.Subjects)
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
-	d_t = data;
-clear data
-data.(PARAMS.Subjects{iSub}) = d_t;
-clear d_t
-if exist([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat']) ==2
-    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
-end
+
+%%%%%%%%%%%%%%%% Power Measures %%%%%%%%%%%%%%%%%
+
+
+    %% generate the PSD for each session for each site
+    fprintf(PARAMS.log,'\n\nExtracting Power Metrics');
+        sess_list = fieldnames(data);
+        for iSess  = 1:length(sess_list)
+            fprintf(['Session ' sess_list{iSess} '\n'])
+            fprintf(PARAMS.log,['\nGetting Power ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+            Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_collect_psd([],data.(strrep(sess_list{iSess}, '-', '_')));
+            fprintf(PARAMS.log, '...complete');
+        end
+
+
+%%%%%%%%%%%%%%%% Phase Measures %%%%%%%%%%%%%%%%%
+
+
+    d_t = data;
+    clear data
+    data.(PARAMS.Subjects{iSub}) = d_t;
+    clear d_t
+    if exist([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat']) ==2
+        load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
+    end
 
 %% generate a Coherogram across each session for each site.
 %for iSub = length(PARAMS.Subjects):-1:5

@@ -73,21 +73,36 @@ for iSite =1:length(sites)
         [~,Fpo,Tpo,Ppo] = spectrogram(data.post.(sites{iSite}).data,rectwin(cfg.win),cfg.noverlap,1:120,all_data.hdr.Fs);
         
         [~,F,T,P] = spectrogram(all_data.data,rectwin(cfg.win),cfg.noverlap,1:120,all_data.hdr.Fs);
-        figure(100);
-        P(P==inf) = NaN; 
-        imagesc(T,F,10*log10(P)); % converting to dB as usual
+        figure(200);
+
+%         P(P==inf) = NaN; 
+        ax1 = imagesc(T,F,10*log10(P)); % converting to dB as usual
+        set(ax1, 'AlphaData', ~isinf(10*log10(P)))
         set(gca,'FontSize',20);
         axis xy; xlabel('time (s)'); ylabel('Frequency (Hz)');
         caxis([-150 -80])
         h = vline([Tp(end),(Tp(end)+Ti(end)),(Tp(end)+Ti(end)+Tc(end))], {'k', 'k', 'k'} );
         % add lines to distinguish phases
-        ylim([0 120]);
-        hold on
+    yL = get(gca, 'ylim');
+    % add lines to distinguish phases
+    ylim([-4.5 yL(2)]);        hold on
         plot(0:Tp(end), zeros(length(0:Tp(end)),1),'color', cfg.c_ord(1,:), 'linewidth', 5); % pre
         plot(Tp(end):(Tp(end)+Ti(end)), zeros(length(Tp(end):(Tp(end)+Ti(end))),1),'color', cfg.c_ord(2,:), 'linewidth', 5); % ipsi
         plot((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end)), zeros(length((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end))),1),'color', cfg.c_ord(3,:), 'linewidth', 5); % contra
         plot((Tp(end)+Ti(end)+Tc(end)):(Tp(end)+Ti(end)+Tc(end)+Tpo(end)), zeros(length((Tp(end)+Ti(end)+Tc(end)):(Tp(end)+Ti(end)+Tc(end)+Tpo(end))),1),'color', cfg.c_ord(4,:), 'linewidth', 5); % post
 
+    h(1) =rectangle('position', [0 -4.5 length(0:Tp(end)) 5.5], 'facecolor',cfg.c_ord(1,:), 'edgecolor', cfg.c_ord(1,:));
+    h(2) =rectangle('position', [length(0:Tp(end)) -4.5 length(Tp(end):(Tp(end)+Ti(end))) 5.5], 'facecolor',cfg.c_ord(2,:), 'edgecolor', cfg.c_ord(2,:));
+    h(3) =rectangle('position', [length(Tp(end):Ti(end)) -4.5 length(Tp(end))+length(Ti(end)) +length(Tc(end) 5.5], 'facecolor',cfg.c_ord(3,:), 'edgecolor', cfg.c_ord(3,:));
+    h(4) = rectangle('position', [(length(amp_ac.(this_pair).pre)+length(amp_ac.(this_pair).ipsi)+length(amp_ac.(this_pair).contra)) -4.5 length(amp_ac.(this_pair).post) 5.5], 'facecolor',cfg.c_ord(4,:), 'edgecolor', cfg.c_ord(4,:));
+    
+    text(length(amp_ac.(this_pair).pre)/2, -1.5, 'pre', 'fontsize', 20, 'horizontalAlignment', 'center')
+    text((length(amp_ac.(this_pair).pre)+(length(amp_ac.(this_pair).ipsi)/2)), -1.5, 'ipsi', 'fontsize', 20, 'horizontalAlignment', 'center')
+    text((length(amp_ac.(this_pair).pre)+length(amp_ac.(this_pair).ipsi)+(length(amp_ac.(this_pair).contra)/2)), -1.5, 'contra', 'fontsize', 20, 'horizontalAlignment', 'center')
+    text((length(amp_ac.(this_pair).pre)+length(amp_ac.(this_pair).ipsi)+length(amp_ac.(this_pair).ipsi)+(length(amp_ac.(this_pair).post)/2)), -1.5, 'post', 'fontsize', 20, 'horizontalAlignment', 'center')
+    
+        
+        
         set(h(:), 'linewidth', cfg.linewidth);
         colormap('PARULA');
         
@@ -127,7 +142,7 @@ for iSite =1:length(sites)
                 Px = Ppo; Fx = Fpo; label = 'post';
             end
             figure(200)
-            x_cor = corrcoef(Px');
+            [x_cor,p_cor] = corrcoef(Px');
             imagesc(Fx,Fx,x_cor)
             axis xy;
             SetFigure([], gcf);
@@ -141,6 +156,21 @@ for iSite =1:length(sites)
             popdir
             %             saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_xcorr' label], 'epsc')
             close(200)
+            %% try it with correlation
+            
+            figure(201)
+            imagesc(Fx,Fx,p_cor)
+            axis xy;
+            colormap(flipud(parula))
+            caxis([0 0.06])
+            SetFigure([], gcf);
+            pbaspect([1 1 1])
+            set(gcf, 'position', [358   167   642   631]);
+            tightfig
+
+            
+            
+            
             % make a combined figure as a png for quick inspection.
             figure(400)
             subplot(2,4,ii)
