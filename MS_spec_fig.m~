@@ -82,14 +82,10 @@ for iSite =1:length(sites)
         axis xy; xlabel('time (s)'); ylabel('Frequency (Hz)');
         caxis([-150 -80])
         h = vline([Tp(end),(Tp(end)+Ti(end)),(Tp(end)+Ti(end)+Tc(end))], {'k', 'k', 'k'} );
-        for jj = 1:length(h)
-            h(jj).LineWidth = cfg.linewidth;
-        end
         % add lines to distinguish phases
         yL = get(gca, 'ylim');
         % add lines to distinguish phases
-        ylim([-4.5 yL(2)]);        
-        hold on
+        ylim([-4.5 yL(2)]);        hold on
         %         plot(0:Tp(end), zeros(length(0:Tp(end)),1),'color', cfg.c_ord(1,:), 'linewidth', 5); % pre
         %         plot(Tp(end):(Tp(end)+Ti(end)), zeros(length(Tp(end):(Tp(end)+Ti(end))),1),'color', cfg.c_ord(2,:), 'linewidth', 5); % ipsi
         %         plot((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end)), zeros(length((Tp(end)+Ti(end)):(Tp(end)+Ti(end)+Tc(end))),1),'color', cfg.c_ord(3,:), 'linewidth', 5); % contra
@@ -129,7 +125,7 @@ for iSite =1:length(sites)
         set(gcf, 'PaperSize', [D(3) D(4)]); %default PaperSize is [8.5 11]
         
         saveas_eps([subject '_' sess '_' sites{iSite} '_Spectrogram'], save_dir);
-        close(200)
+        
         %% make the cross-spectral correlation matrix
         for ii  =1:4
             if ii == 1
@@ -147,14 +143,17 @@ for iSite =1:length(sites)
             end
             figure(200)
             [x_cor,p_cor] = corrcoef(Px');
-            imagesc(Fx,Fx,x_cor)
+            ax = imagesc(Fx,Fx,x_cor)
             axis xy;
             SetFigure([], gcf);
             pbaspect([1 1 1])
             set(gcf, 'position', [358   167   642   631])
-            set(gca, 'xtick', [], 'ytick', [], 'xColor', Color, 'yColor', Color, 'linewidth', 6);
-            
-            rectangle('position', [0.5, 0.5, length(Fx), length(Fx)], 'EdgeColor', Color, 'linewidth', 6)
+            set(gca, 'xtick', [], 'ytick', []);
+            rectangle('position', [0.5, 0.5, length(Fx), length(Fx)], 'EdgeColor', Phase_c(iPhase,:), 'linewidth', 4)
+
+            ah = gca;
+            ah.box = 'on'; ah.LineWidth = 6;
+            ah.XColor =  Color; ah.YColor = Color;
             tightfig
             saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_xcorr' label], 'fig')
             

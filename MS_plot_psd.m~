@@ -26,9 +26,9 @@ mkdir(PARAMS.inter_dir, 'PSD')
 %  overview figure (raster) and individual PSDs (vector)
 switch cfg.type
     case {'standard'} % make use the standard PSD
-        %         sub_list = fieldnames(Naris);
-        %                 sub_list = fieldnames(Naris);
-        %                 for iSub = 1:length(fieldnames(Naris))
+%         sub_list = fieldnames(Naris);
+%                 sub_list = fieldnames(Naris);
+%                 for iSub = 1:length(fieldnames(Naris))
         sess_list = fieldnames(Naris);
         for iSess = 1:length(sess_list);
             site_list = fieldnames(Naris.(sess_list{iSess}).(PARAMS.Phases{1}));
@@ -44,7 +44,7 @@ switch cfg.type
                 end
                 
                 xlim([0 100])
-                set(gca, 'xtick', [0 100], 'ytick', [], 'ylim', [-115 -85])
+                set(gca, 'xtick', [0 100], 'ytick', [], 'ylim', [-135 -110])
                 %                     xlabel('Frequency (Hz)')
                 %                     ylabel('Power')
                 %                     title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
@@ -55,7 +55,7 @@ switch cfg.type
                 set(gca, 'Children', [H(3), H(4), H(5), H(6), H(2), H(1)])
                 clear H
                 %% move site text
-                text(10, -110, site_list{iSite}(1:end-4), 'fontsize', 48)
+                text(10, -115, site_list{iSite}(1:end-4), 'fontsize', 48)
                 %                     legend(PARAMS.Phases)
                 cfg_f.ft_size = 24;
                 SetFigure(cfg_f, h_site.(['n' num2str(iSite)]))
@@ -71,7 +71,7 @@ switch cfg.type
                 end
                 close(h_site.(['n' num2str(iSite)]));
                 
-                % hold all plots for the summary
+                % hold all plots for the summary 
                 h_all = figure(iSess);
                 subplot(2,S1,iSite)
                 for iPhase = 1:length(PARAMS.Phases)
@@ -82,7 +82,7 @@ switch cfg.type
                 end
                 
                 xlim([0 100])
-                set(gca, 'xtick', [0 100], 'ytick', [], 'ylim', [-115 -85])
+                set(gca, 'xtick', [0 100], 'ytick', [], 'ylim', [-135 -110])
                 %                     xlabel('Frequency (Hz)')
                 %                     ylabel('Power')
                 %                     title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
@@ -92,7 +92,7 @@ switch cfg.type
                 H = get(gca, 'Children');
                 set(gca, 'Children', [H(3), H(4), H(5), H(6), H(2), H(1)])
                 %% move site text
-                text(10, -110, site_list{iSite}(1:end-4), 'fontsize', 12)
+                text(10, -115, site_list{iSite}(1:end-4), 'fontsize', 12)
                 %                     legend(PARAMS.Phases, 'location', 'SouthEast')
                 
             end
@@ -154,7 +154,7 @@ switch cfg.type
                 end
                 close(h_site.(['n' num2str(iSite)]));
                 
-                % hold all plots for the summary
+                % hold all plots for the summary 
                 h_all = figure(iSess);
                 subplot(2,S1,iSite)
                 for iPhase = 1:length(PARAMS.Phases)
@@ -195,7 +195,7 @@ switch cfg.type
         
         
     otherwise % b/c Matlab can't deal with "or" in a case switch...
-        sess_list = fieldnames(Naris);
+                sess_list = fieldnames(Naris);
         for iSess = 1:length(sess_list);
             site_list = fieldnames(Naris.(sess_list{iSess}).(PARAMS.Phases{1}));
             S1 = ceil(length(site_list)/2.5);
@@ -210,7 +210,7 @@ switch cfg.type
                 end
                 
                 xlim([0 100])
-                set(gca, 'xtick', [0 100], 'ytick', [], 'ylim', [-115 -85])
+                set(gca, 'xtick', [0 100], 'ytick', [], 'ylim', [-135 -110])
                 %                     xlabel('Frequency (Hz)')
                 %                     ylabel('Power')
                 %                     title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
@@ -221,7 +221,7 @@ switch cfg.type
                 set(gca, 'Children', [H(3), H(4), H(5), H(6), H(2), H(1)])
                 clear H
                 %% move site text
-                text(10, -110, site_list{iSite}(1:end-4), 'fontsize', 48)
+                text(10, -115, site_list{iSite}(1:end-4), 'fontsize', 48)
                 %                     legend(PARAMS.Phases)
                 cfg_f.ft_size = 24;
                 SetFigure(cfg_f, h_site.(['n' num2str(iSite)]))
@@ -237,7 +237,7 @@ switch cfg.type
                 end
                 close(h_site.(['n' num2str(iSite)]));
                 
-                % hold all plots for the summary
+                % hold all plots for the summary 
                 h_all = figure(iSess);
                 subplot(2,S1,iSite)
                 for iPhase = 1:length(PARAMS.Phases)
@@ -248,7 +248,7 @@ switch cfg.type
                 end
                 
                 xlim([0 100])
-                set(gca, 'xtick', [0 100], 'ytick', [], 'ylim', [-115 -85])
+                set(gca, 'xtick', [0 100], 'ytick', [], 'ylim', [-135 -110])
                 %                     xlabel('Frequency (Hz)')
                 %                     ylabel('Power')
                 %                     title(strrep([sess_list{iSess} '  ' site_list{iSite}], '_', '-'))
@@ -258,7 +258,7 @@ switch cfg.type
                 H = get(gca, 'Children');
                 set(gca, 'Children', [H(3), H(4), H(5), H(6), H(2), H(1)])
                 %% move site text
-                text(10, -110, site_list{iSite}(1:end-4), 'fontsize', 12)
+                text(10, -115, site_list{iSite}(1:end-4), 'fontsize', 12)
                 %                     legend(PARAMS.Phases, 'location', 'SouthEast')
                 
             end
@@ -275,7 +275,7 @@ switch cfg.type
             end
             close all
         end
-        %         sub_list = fieldnames(Naris);
+         %         sub_list = fieldnames(Naris);
         %         for iSub = 1:length(fieldnames(Naris))
         sess_list = fieldnames(Naris);
         for iSess = 1:length(sess_list);
@@ -290,6 +290,7 @@ switch cfg.type
                         10*log10(Naris.(sess_list{iSess}).(PARAMS.Phases{iPhase}).(site_list{iSite}).psd.White_Pxx),...
                         'color', c_ord(iPhase,:), 'linewidth', cfg.linewidth);
                 end
+                
                 xlim([0 100])
                 set(gca, 'xtick', [0 100], 'ytick', [], 'ylim', [-135 -110])
                 %                     xlabel('Frequency (Hz)')
@@ -318,7 +319,7 @@ switch cfg.type
                 end
                 close(h_site.(['n' num2str(iSite)]));
                 
-                % hold all plots for the summary
+                % hold all plots for the summary 
                 h_all = figure(iSess);
                 subplot(2,S1,iSite)
                 for iPhase = 1:length(PARAMS.Phases)
@@ -327,6 +328,7 @@ switch cfg.type
                         10*log10(Naris.(sess_list{iSess}).(PARAMS.Phases{iPhase}).(site_list{iSite}).psd.White_Pxx),...
                         'color', c_ord(iPhase,:), 'linewidth', cfg.linewidth/2)
                 end
+                
                 xlim([0 100])
                 set(gca, 'xtick', [0 100], 'ytick', [], 'ylim', [-135 -110])
                 %                     xlabel('Frequency (Hz)')
@@ -340,6 +342,7 @@ switch cfg.type
                 %% move site text
                 text(10, -115, site_list{iSite}(1:end-4), 'fontsize', 12)
                 %                     legend(PARAMS.Phases, 'location', 'SouthEast')
+                
             end
             
             %Square_subplots();
@@ -353,5 +356,7 @@ switch cfg.type
                 saveas_eps([ sess_list{iSess} '_' site_list{iSite} '_all_white'],[PARAMS.inter_dir 'PSD/'])
             end
             close all
-        end        
+        end
+        
+        
 end
