@@ -32,7 +32,7 @@ switch cfg.type
         sess_list = fieldnames(Naris);
         for iSess = 1:length(sess_list);
             site_list = fieldnames(Naris.(sess_list{iSess}).(PARAMS.Phases{1}));
-            S1 = ceil(length(site_list)/2.5);
+            S1 = ceil(length(site_list)/2);
             h.(['n' num2str(iSess)]) = figure((iSess));
             for iSite = 1:length(site_list)
                 h_site.(['n' num2str(iSite)]) = figure((iSess)*10 +(iSite));
@@ -115,7 +115,7 @@ switch cfg.type
         sess_list = fieldnames(Naris);
         for iSess = 1:length(sess_list);
             site_list = fieldnames(Naris.(sess_list{iSess}).(PARAMS.Phases{1}));
-            S1 = ceil(length(site_list)/2.5);
+            S1 = ceil(length(site_list)/2);
             h.(['n' num2str(iSess)]) = figure((iSess));
             for iSite = 1:length(site_list)
                 h_site.(['n' num2str(iSite)]) = figure((iSess)*10 +(iSite));
@@ -198,7 +198,7 @@ switch cfg.type
         sess_list = fieldnames(Naris);
         for iSess = 1:length(sess_list);
             site_list = fieldnames(Naris.(sess_list{iSess}).(PARAMS.Phases{1}));
-            S1 = ceil(length(site_list)/2.5);
+            S1 = ceil(length(site_list)/2);
             h.(['n' num2str(iSess)]) = figure((iSess));
             for iSite = 1:length(site_list)
                 h_site.(['n' num2str(iSite)]) = figure((iSess)*10 +(iSite));
@@ -280,7 +280,7 @@ switch cfg.type
         sess_list = fieldnames(Naris);
         for iSess = 1:length(sess_list);
             site_list = fieldnames(Naris.(sess_list{iSess}).(PARAMS.Phases{1}));
-            S1 = ceil(length(site_list)/2.5);
+            S1 = ceil(length(site_list)/2);
             h.(['n' num2str(iSess)]) = figure((iSess));
             for iSite = 1:length(site_list)
                 h_site.(['n' num2str(iSite)]) = figure((iSess)*10 +(iSite));

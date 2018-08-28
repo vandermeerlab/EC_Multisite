@@ -44,11 +44,11 @@ for iSite =1:length(sites)
             
             cfg_artif_det = [];
             cfg_artif_det.method = 'raw';
-            cfg_artif_det.threshold = std(csc_artif.data)*6;
+            cfg_artif_det.threshold = std(csc_artif.data)*5;
             cfg_artif_det.minlen = 0;
             evt_artif = TSDtoIV(cfg_artif_det,csc_artif);
             
-            cfg_temp = []; cfg_temp.d = [-0.5 0.5];
+            cfg_temp = []; cfg_temp.d = [-0.25 0.25];
             evt_artif = ResizeIV(cfg_temp,evt_artif);
             artif_idx = TSD_getidx2(data.(PARAMS.Phases{ii}).(sites{iSite}),evt_artif); % if error, try TSD_getidx (slower)
             data.(PARAMS.Phases{ii}).(sites{iSite}).data(artif_idx) = 0;
@@ -73,6 +73,10 @@ for iSite =1:length(sites)
         [~,Fpo,Tpo,Ppo] = spectrogram(data.post.(sites{iSite}).data,rectwin(cfg.win),cfg.noverlap,1:120,all_data.hdr.Fs);
         
         [~,F,T,P] = spectrogram(all_data.data,rectwin(cfg.win),cfg.noverlap,1:120,all_data.hdr.Fs);
+%         t_data = data.post.(sites{iSite}).data;
+%         t_data(t_data==0) =NaN;
+%         [~,Fp_c,Tp_c,Pp_c] = spectrogram(t_data,rectwin(cfg.win),cfg.noverlap,1:120,all_data.hdr.Fs);
+
         figure(200);
         
         %         P(P==inf) = NaN;

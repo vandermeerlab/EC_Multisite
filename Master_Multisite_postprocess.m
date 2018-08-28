@@ -20,24 +20,40 @@ fprintf(PARAMS.log, date);
 cd(PARAMS.inter_dir)
 
 
-for iSub = 1%:length(PARAMS.Subjects)
+for iSub = length(PARAMS.Subjects):-1:1
 
-    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
+%     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
 
 %%%%%%%%%%%%%%%% Power Measures %%%%%%%%%%%%%%%%%
 
 
     %% generate the PSD for each session for each site
-    fprintf(PARAMS.log,'\n\nExtracting Power Metrics');
-        sess_list = fieldnames(data);
+%     fprintf(PARAMS.log,'\n\nExtracting Power Metrics');
+%         sess_list = fieldnames(data);
+%         for iSess  = 1:length(sess_list)
+%             fprintf(['Session ' sess_list{iSess} '\n'])
+%             fprintf(PARAMS.log,['\nGetting Power ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+%             Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_collect_psd([],data.(strrep(sess_list{iSess}, '-', '_')));
+%             fprintf(PARAMS.log, '...complete');
+%         end
+
+    %% get the ratio of the power in multiple bands relative to the exponential f curve
+    fprintf(PARAMS.log,'\n\nExtracting Power Ratio');
+        sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
         for iSess  = 1:length(sess_list)
-            fprintf(['Session ' sess_list{iSess} '\n'])
-            fprintf(PARAMS.log,['\nGetting Power ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-            Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_collect_psd([],data.(strrep(sess_list{iSess}, '-', '_')));
+            fprintf(PARAMS.log,['\nGetting ratio ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+            cfg_pow_ratio = [];
+            if iSub == 6 || iSub == 7
+                cfg_pow_ratio.Fs = 1875;
+            else
+                cfg_pow_ratio.Fs = 2000;
+            end
+            cfg_pow_ratio.id = sess_list{iSess};
+            [Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_p_ratio] = MS_get_power_ratio(cfg_pow_ratio,Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+            %         Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio(cfg_pow_ratio,Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
             fprintf(PARAMS.log, '...complete');
         end
-
-    
+end
 %%%%%%%%%%%%%%%% Phase Measures %%%%%%%%%%%%%%%%%
 
 

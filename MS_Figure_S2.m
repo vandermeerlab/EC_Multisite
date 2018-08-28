@@ -88,12 +88,10 @@ end
 %% get the mean values per site pair
 for iPair = 1:length(PARAMS.all_pairs)
     for iPhase = 1:length(PARAMS.Phases)
-        
         mean_cxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}) = mean(all_cxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}),2);
         std_cxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}) = std(all_cxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}),0,2);
         sem_cxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}) = std_cxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase})./sqrt(size(all_cxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}),2));
         mean_fxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}) = mean(all_fxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}),2);
-        
     end
 end
 

@@ -40,6 +40,9 @@ for iSub = 1:length(PARAMS.Subjects)
     
 end
 
+%% generate the average PSD for each site across sessions
+
+MS_plot_psd_avg([], Naris)
 
 
 %% get the session wide coherence and amplitude plots
