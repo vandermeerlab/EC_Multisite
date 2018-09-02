@@ -102,69 +102,77 @@ for iComp = {'Pink', 'Exp2'}
     
     
     %% stats
-    types = {'Pxx', 'White_Pxx'};
-    for iType = 1:length(types);   % low gamma median using MS sites
-        cfg_stats = [];
-        cfg_stats.title = strcat({'AOC low gamma'},{' '},types{iType},{' '},iComp);
-        cfg_stats.title = cfg_stats.title{1};
-        cfg_stats.method= 'median';
-        cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri_O'  'NAc'  'Piri_N'  'CG'};
-        cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
-        cfg_stats.s_idx= [1 2 3 5 7];
-        cfg_stats.ft_size= 20;
-        cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
-        cfg_stats.stats_dir = stats_file;
-        MS_stats(cfg_stats, all_AOC_low.(types{iType}));
-        
-        close all
-        
-        % high gamma median using MS sites
-        cfg_stats = [];
-        cfg_stats.title = strcat({'AOC high gamma'},{' '},types{iType},{' '},iComp);
-        cfg_stats.title = cfg_stats.title{1};
-        cfg_stats.method= 'median';
-        cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri_O'  'NAc'  'Piri_N'  'CG'};
-        cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
-        cfg_stats.s_idx= [1 2 3 5 7];
-        cfg_stats.ft_size= 20;
-        cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
-        cfg_stats.stats_dir = stats_file;
-        
-        MS_stats(cfg_stats, all_AOC_high.(types{iType}));
-        close all
-        
-        % same but using normalized
-        
-        cfg_stats = [];
-        cfg_stats.title = strcat({'Norm AOC low gamma'},{' '},types{iType},{' '},iComp);
-        cfg_stats.title = cfg_stats.title{1};
-        cfg_stats.method= 'median';
-        cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri_O'  'NAc'  'Piri_N'  'CG'};
-        cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
-        cfg_stats.s_idx= [1 2 3 5 7];
-        cfg_stats.ft_size= 20;
-        cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
-        cfg_stats.stats_dir = stats_file;
-        
-        MS_stats(cfg_stats, norm_all_AOC_low.(types{iType}));
-        
-        close all
-        
-        % high gamma median using MS sites
-        cfg_stats = [];
-        cfg_stats.title = strcat({'Norm AOC high gamma'},{' '},types{iType},{' '},iComp);
-        cfg_stats.title = cfg_stats.title{1};
-        cfg_stats.method= 'median';
-        cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri_O'  'NAc'  'Piri_N'  'CG'};
-        cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
-        cfg_stats.s_idx= [1 2 3 5 7];
-        cfg_stats.ft_size= 20;
-        cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
-        cfg_stats.stats_dir = stats_file;
-        
-        MS_stats(cfg_stats, norm_all_AOC_high.(types{iType}));
-        close all
-        
+    Exp= {'Four', 'Piri'};
+    for iExp = 1:length(Exp)
+        if strcmp(Exp{iExp}, 'Four')
+            s_idx = [1 2 3 5 7];
+        else strcmp(Exp{iExp}, 'Piri')
+            s_idx = [3 4 5 6];
+        end
+        types = {'Pxx', 'White_Pxx'};
+        for iType = 1:length(types);   % low gamma median using MS sites
+            cfg_stats = [];
+            cfg_stats.title = strcat({'AOC low gamma'},{' '}, Exp{iExp},{' '},types{iType},{' '},iComp);
+            cfg_stats.title = cfg_stats.title{1};
+            cfg_stats.method= 'median';
+            cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
+            cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
+            cfg_stats.s_idx= s_idx;
+            cfg_stats.ft_size= 20;
+            cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
+            cfg_stats.stats_dir = stats_file;
+            MS_stats(cfg_stats, all_AOC_low.(types{iType}));
+            
+            close all
+            
+            % high gamma median using MS sites
+            cfg_stats = [];
+            cfg_stats.title = strcat({'AOC high gamma'},{' '},Exp{iExp},{' '},types{iType},{' '},iComp);
+            cfg_stats.title = cfg_stats.title{1};
+            cfg_stats.method= 'median';
+            cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
+            cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
+            cfg_stats.s_idx= s_idx;
+            cfg_stats.ft_size= 20;
+            cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
+            cfg_stats.stats_dir = stats_file;
+            
+            MS_stats(cfg_stats, all_AOC_high.(types{iType}));
+            close all
+            
+            % same but using normalized
+            
+            cfg_stats = [];
+            cfg_stats.title = strcat({'Norm AOC low gamma'},{' '}, Exp{iExp},{' '},types{iType},{' '},iComp);
+            cfg_stats.title = cfg_stats.title{1};
+            cfg_stats.method= 'median';
+            cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
+            cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
+            cfg_stats.s_idx= s_idx;
+            cfg_stats.ft_size= 20;
+            cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
+            cfg_stats.stats_dir = stats_file;
+            
+            MS_stats(cfg_stats, norm_all_AOC_low.(types{iType}));
+            
+            close all
+            
+            % high gamma median using MS sites
+            cfg_stats = [];
+            cfg_stats.title = strcat({'Norm AOC high gamma'},{' '}, Exp{iExp},{' '},types{iType},{' '},iComp);
+            cfg_stats.title = cfg_stats.title{1};
+            cfg_stats.method= 'median';
+            cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
+            cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
+            cfg_stats.s_idx= s_idx;
+            cfg_stats.ft_size= 20;
+            cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
+            cfg_stats.stats_dir = stats_file;
+            
+            MS_stats(cfg_stats, norm_all_AOC_high.(types{iType}));
+            close all
+            
+        end
     end
 end
 %% make a legend for all the plots.
@@ -193,7 +201,7 @@ else
     saveas_eps('legend',[PARAMS.inter_dir '\AOC_fit\'])
 end
 end
-%% this is all old stuff before 
+%% this is all old stuff before
 % %% get the stats
 % for iType = 1:length(types)
 %     mean_AOC_low.(types{iType}) = nanmedian(all_AOC_low.(types{iType}), 3)';

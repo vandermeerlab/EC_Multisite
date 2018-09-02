@@ -80,9 +80,9 @@ for iR = 1:length(cfg.row_names)
     
     if sum(ks)>=1 || sum(ksh)>=1
         disp('Using Sign-Rank')
-        [p_ip_con(iR), h_ip_con(iR)] = signrank(this_ipsi, this_con);
-        [p_ip_ctr(iR), h_ip_ctr(iR)] = signrank(this_ipsi, this_ctr);
-        [p_con_ctr(iR), h_con_ctr(iR)] = signrank(this_con, this_ctr);
+        [p_ip_con(iR), h_ip_con(iR)] = ranksum(this_ipsi, this_con);
+        [p_ip_ctr(iR), h_ip_ctr(iR)] = ranksum(this_ipsi, this_ctr);
+        [p_con_ctr(iR), h_con_ctr(iR)] = ranksum(this_con, this_ctr);
         
     else
         disp('Using T-Test')

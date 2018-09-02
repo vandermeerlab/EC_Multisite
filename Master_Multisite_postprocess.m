@@ -38,21 +38,21 @@ for iSub = length(PARAMS.Subjects):-1:1
 %         end
 
     %% get the ratio of the power in multiple bands relative to the exponential f curve
-    fprintf(PARAMS.log,'\n\nExtracting Power Ratio');
-        sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
-        for iSess  = 1:length(sess_list)
-            fprintf(PARAMS.log,['\nGetting ratio ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-            cfg_pow_ratio = [];
-            if iSub == 6 || iSub == 7
-                cfg_pow_ratio.Fs = 1875;
-            else
-                cfg_pow_ratio.Fs = 2000;
-            end
-            cfg_pow_ratio.id = sess_list{iSess};
-            [Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_p_ratio] = MS_get_power_ratio(cfg_pow_ratio,Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-            %         Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio(cfg_pow_ratio,Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-            fprintf(PARAMS.log, '...complete');
-        end
+%     fprintf(PARAMS.log,'\n\nExtracting Power Ratio');
+%         sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
+%         for iSess  = 1:length(sess_list)
+%             fprintf(PARAMS.log,['\nGetting ratio ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+%             cfg_pow_ratio = [];
+%             if iSub == 6 || iSub == 7
+%                 cfg_pow_ratio.Fs = 1875;
+%             else
+%                 cfg_pow_ratio.Fs = 2000;
+%             end
+%             cfg_pow_ratio.id = sess_list{iSess};
+%             [Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_p_ratio] = MS_get_power_ratio(cfg_pow_ratio,Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+%             %         Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio(cfg_pow_ratio,Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+%             fprintf(PARAMS.log, '...complete');
+%         end
 end
 %%%%%%%%%%%%%%%% Phase Measures %%%%%%%%%%%%%%%%%
 
@@ -92,5 +92,21 @@ fprintf(PARAMS.log,'\n\nSaving intermediates');
 save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'], 'Naris', '-v7.3')
 
 clearvars -except iSub PARAMS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%% Event Measures %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+for iSub = length(PARAMS.Subjects):-1:1
+    
+    %% load the events file for the subjects
+    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'])
+    
+    all_Events.(PARAMS.Subjects{iSub}) = Events.(PARAMS.Subjects{iSub});
+    
 end
+    stats = MS_gamma_stats([], all_Events)
+
+
+
+% end
 
