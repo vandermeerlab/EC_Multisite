@@ -44,5 +44,5 @@ PARAMS.pair_c_ord = linspecer(length(PARAMS.all_pairs));
 set(groot, 'DefaultAxesTickLabelInterpreter', 'none')
 set(groot, 'DefaultLegendInterpreter', 'none')
 set(groot,'defaulttextinterpreter','none');  
-
-Master_Multisite_postprocess;
+%MS_amp_xcorr_session
+Master_Multisite_preprocess;

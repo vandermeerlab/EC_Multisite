@@ -103,7 +103,7 @@ end
             Freq_list = cfg.cfg_filter.freq(1): cfg.cfg_filter.freq_step:cfg.cfg_filter.freq(end);
 
 for iPhase = 1:length(PARAMS.Phases)
-        iPair = 6;
+        iPair = 5;
 %    S = strsplit(pairs{iPair}, '_');
     completed_pairs = {};
 %     for  iPair = 1:length(pairs)
@@ -185,10 +185,12 @@ for iPhase = 1:length(PARAMS.Phases)
                     [ac, lag] = xcov(D_1_temp.data,D_2_temp.data,200,  'coeff');
                     max_ac = ac(lag==0);
                     lag = lag * 1/AMP_1.cfg.hdr{1}.SamplingFrequency;
-                    [~,idx] = max(ac);
+                    [m_ac,idx] = max(ac);
                     lag_max = lag(idx);
                     amp_lag.(pairs{iPair}).(PARAMS.Phases{iPhase})(iF, iT) = lag_max;
                     amp_ac.(pairs{iPair}).(PARAMS.Phases{iPhase})(iF, iT) = max_ac;
+					                    amp_m_ac.(pairs{iPair}).(PARAMS.Phases{iPhase})(iF, iT) = m_ac;
+
                     %             amp_ac_t.(pairs{iPair}).(PARAMS.Phases{iPhase})(iF, iT) = times(iT);
                     
                 end
@@ -334,6 +336,7 @@ end
 amp_out.amp_ac = amp_ac;
 amp_out.amp_lag = amp_lag;
 amp_out.amp_ac_t = amp_ac_t;
+amp_out.amp_m_ac = amp_m_ac;
 amp_out.AMP = Amp;
 amp_out.cfg = cfg;
 amp_out.freq = Freq_list;
