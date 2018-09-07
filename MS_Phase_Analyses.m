@@ -317,7 +317,7 @@ for iPhase = 1:length(PARAMS.Phases)
                 figure(111)
                 
                 % plot the raw event
-                subplot(2,3,1)
+                subplot(2,4,1:2)
                 hold on
                 plot(this_RAW1.tvec, this_RAW1.data, 'b')
                 plot(this_RAW2.tvec, this_RAW2.data, 'r')
@@ -326,7 +326,7 @@ for iPhase = 1:length(PARAMS.Phases)
                 xlabel('Time (s)')
                 
                 % plot the PSD
-                subplot(2,3,2)
+                subplot(2,4,3)
                 hold on
                 plot(this_PSD1.f, 10*log10(this_PSD1.pxx), 'b');
                 plot(this_PSD2.f, 10*log10(this_PSD2.pxx), 'r');
@@ -338,7 +338,7 @@ for iPhase = 1:length(PARAMS.Phases)
                 xlabel('Frequency')
                 
                 % plot the phase and amp
-                subplot(2,3,3)
+                subplot(2,4,5:6)
                 hold on
                 plot(this_FILT1.tvec, this_FILT1.data, 'b')
                 plot(this_AMP1.tvec, this_AMP1.data, 'b')
@@ -354,14 +354,14 @@ for iPhase = 1:length(PARAMS.Phases)
                 xlabel('Frequency')
                 
                 % coherence between
-                subplot(2,3,4)
+                subplot(2,4,7)
                 plot(fxx, cxx)
                 xlim([0 100])
                 vline([cfg.cfg_filter1.f,cfg.cfg_filter2.f], {'--b', '--b', '--g', '--g'})
                 ylabel('Coherence')
                 xlabel('Frequency')
                 % get the phase offset value and plot in the corner
-                subplot(2,3,5)
+                subplot(2,4,4)
                 hold on
                 plot(F, rad2deg(coh_spec_phase), 'b');
                 vline([cfg.cfg_filter1.f,cfg.cfg_filter2.f], {'--b', '--b', '--g', '--g'})
@@ -372,7 +372,7 @@ for iPhase = 1:length(PARAMS.Phases)
                 ylabel('Phase offset (deg)')
                 
                 % plot the phase slope
-                subplot(2,3,6)
+                subplot(2,4,8)
                 plot(F_PS, phase_slopes)
                 xlim(cfg.cfg_phase.freq)
                 vline([cfg.cfg_filter1.f,cfg.cfg_filter2.f], {'--b', '--b', '--g', '--g'})
