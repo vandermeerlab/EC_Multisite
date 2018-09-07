@@ -21,6 +21,7 @@ cfg_def.signalType = 'amplitude'; % {'amplitude','power'}
 cfg_def.threshold = 3; % threshold for detecting events
 cfg_def.method = 'zscore'; % what threshold means
 cfg_def.minlen = 0.05; % minimum event length
+cfg_def.dcn = '>'; 
 cfg_def.verbose = 0; 
 cfg = ProcessConfig(cfg_def,cfg_in);
 
@@ -101,7 +102,7 @@ end
 
 % z-score and threshold
 cfg_det = [];
-cfg_det.dcn = '>';
+cfg_det.dcn = cfg.dcn;
 cfg_det.method = cfg.method;
 cfg_det.threshold = cfg.threshold;
 cfg_det.minlen = cfg.minlen;
@@ -110,7 +111,7 @@ cfg_det.minlen = cfg.minlen;
 
 % now apply to all data
 cfg_sel = [];
-cfg_sel.dcn = '>';
+cfg_sel.dcn = cfg.dcn;
 cfg_sel.method = 'raw';
 cfg_sel.threshold = evt_thr;
 cfg_sel.minlen = cfg.minlen;

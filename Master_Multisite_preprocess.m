@@ -54,19 +54,53 @@ data.(PARAMS.Subjects{iSub}) = d_t;
 %     end
 % 
 % % 
-%% get the gamma event counts per recording phase
+%% get the gamma events per recording phase
 fprintf(PARAMS.log,'\n\nCollecting Events');
 
-% for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess  = 1:length(sess_list)
         fprintf(PARAMS.log,['\nEvents ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
         [Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))] = MS_extract_gamma([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
         fprintf(PARAMS.log, '...complete');
     end
-% end
+    
+    
+end % subjects
 
 
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%% EVENT PROCESSING   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Event Processing
+for iSub = 1:length(PARAMS.Subjects)
+    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'])
+     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
+% 	d_t = data;
+    
+    sess_list = fieldnames(data);
+    for iSess = 1:length(sess_list)
+        fprintf(['\nRunning Phases Analyses on ' sess_list{iSess} '....\n']);
+        
+        cfg_in = [];
+        cfg_in.Subject_id = sess_list{iSess};
+        %	cfg.check = 1;
+        
+        Phase_mat.(sess_list{iSess}) =  MS_Phase_Analyses(cfg_in, data.(sess_list{iSess}), Events.(PARAMS.Subjects{iSub}).(sess_list{iSess}));
+        
+        fprintf('...Complete\n');
+    end
+    
+    fprintf('/nSaving Phase_mat output...');
+    save([PARAMS.inter_dir '/Phase_outputs/' (PARAMS.Subjects{iSub}) '_phase_out.mat'], 'Phase_mat', '-v7.3')
+    fprintf('...Complete');
+
+
+clear Events Phase_mat data
+
+
+
+    
+end
 %% save the intermediate files
 fprintf(PARAMS.log,'\n\nSaving intermediates');
 % mkdir(PARAMS.data_dir, 'temp');

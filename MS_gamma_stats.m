@@ -57,13 +57,13 @@ for iBand = 1:length(bands)
                                temp(iPhase,site_idx,iSess) = length(Events.(sub_list{iSub}).(sess_list{iSess}).(these_sites{site_field}).(phases{iPhase}).(bands{iBand}).tstart);
                                single_subject.rate(iPhase,site_idx , iSess) = Events.(sub_list{iSub}).(sess_list{iSess}).(these_sites{site_field}).(phases{iPhase}).(bands{iBand}).rate;
                                 
-                               evt_lens = Events.(Subjects{iSub}).(sess_list{iSess}).(these_sites{site_field}).(phases{iPhase}).(bands{iBand}).tend - Events.(Subjects{iSub}).(sess_list{iSess}).(these_sites{site_field}).(phases{iPhase}).(bands{iBand}).tstart;
-                               all_events_len.(bands{iBand}).(these_sites{site_field}).(phases{iPhase}) = cat(1,all_events_len.(bands{iBand}).(these_sites{site_field}).(phases{iPhase}),evt_lens);
+                               evt_lens = Events.(sub_list{iSub}).(sess_list{iSess}).(these_sites{site_field}).(phases{iPhase}).(bands{iBand}).tend - Events.(sub_list{iSub}).(sess_list{iSess}).(these_sites{site_field}).(phases{iPhase}).(bands{iBand}).tstart;
+                               all_events_len.(bands{iBand}).(sites{site_idx}).(phases{iPhase}) = cat(1,all_events_len.(bands{iBand}).(sites{site_idx}).(phases{iPhase}),evt_lens);
                            end
                            temp(5, site_idx, iSess) = nanmean([temp(1,site_idx,iSess),temp(4,site_idx,iSess)]); 
                            single_subject.rate(5,site_idx , iSess) = Events.(sub_list{iSub}).(sess_list{iSess}).(these_sites{site_field}).(phases{5}).(bands{iBand}).rate;
-                           evt_lens = Events.(Subjects{iSub}).(sess_list{iSess}).(these_sites{site_field}).(phases{5}).(bands{iBand}).tend - Events.(Subjects{iSub}).(sess_list{iSess}).(these_sites{site_field}).(phases{5}).(bands{iBand}).tstart;
-                           all_events_len.(bands{iBand}).(these_sites{site_field}).(phases{5}) = cat(1,all_events_len.(bands{iBand}).(these_sites{site_field}).(phases{5}),evt_lens);
+                           evt_lens = Events.(sub_list{iSub}).(sess_list{iSess}).(these_sites{site_field}).(phases{5}).(bands{iBand}).tend - Events.(sub_list{iSub}).(sess_list{iSess}).(these_sites{site_field}).(phases{5}).(bands{iBand}).tstart;
+                           all_events_len.(bands{iBand}).(sites{site_idx}).(phases{5}) = cat(1,all_events_len.(bands{iBand}).(sites{site_idx}).(phases{5}),evt_lens);
                         
                            temp_norm(:,site_idx,iSess) = temp(:,site_idx,iSess)./temp(5,site_idx,iSess);
                           
@@ -82,7 +82,7 @@ for iBand = 1:length(bands)
             end
 %             temp = []; temp_norm;
         end
-        all_subs.(Subjects{iSub}).(bands{iBand}) = single_subject;
+        all_subs.(sub_list{iSub}).(bands{iBand}) = single_subject;
 
         out.(bands{iBand}) = cat(3,out.(bands{iBand}), temp);
         out_norm.(bands{iBand}) = cat(3,out_norm.(bands{iBand}), temp_norm);
@@ -158,7 +158,203 @@ MS_stats(cfg_stats,out_norm.high)
 close all
 end
 
+%% Get the length and rate 
+all_len.low = []; all_rate.low = [];
+all_len.high = []; all_rate.high = [];
+fprintf('\nNumer of events\n')
+for iBand= 1:length(bands)
+    fprintf(['\n-------- ' bands{iBand} '---------\n'])
+    for iSite = 1:length(sites)
+        fprintf([sites{iSite} ':       '])
+        fprintf(repmat('\b', 1, length(sites{iSite})))
+        for iPhase = 1:length(phases)
+            all_len.(bands{iBand})(iSite, iPhase) = median(all_events_len.(bands{iBand}).(sites{iSite}).(phases{iPhase}));
+            all_len_std.(bands{iBand})(iSite, iPhase) = nanstd(all_events_len.(bands{iBand}).(sites{iSite}).(phases{iPhase}))./sqrt(size(all_events_len.(bands{iBand}).(sites{iSite}).(phases{iPhase}),1));
+            fprintf([phases{iPhase} ' mean= %.2f +/- %.2f   '], all_len.(bands{iBand})(iSite, iPhase)*1000, all_len_std.(bands{iBand})(iSite, iPhase)*1000)
+        end
+        fprintf('\n')
+    end
+end
 
+% make a box plot
+this_data = [all_events_len.low.PL.pre; all_events_len.low.PL.contra, ]
+this_group = 
+box([all_events_len.low.PL.pre; all_events_len.low.OFC.pre])
+
+data = rand(20,24);
+month = repmat({'jan' 'feb' 'mar' 'apr' 'may' 'jun' 'jul' 'aug' 'sep' 'oct' 'nov' 'dec'},1,2);
+simobs = [repmat({'sim'},1,12),repmat({'obs'},1,12)];
+boxplot(data,{month,simobs},'colors',repmat('rb',1,12),'factorgap',[5 2],'labelverbosity','minor');
+
+%% all sites
+x = [all_events_len.(bands{iBand}).(sites{1}).(phases{1})', all_events_len.(bands{iBand}).(sites{1}).(phases{2})', all_events_len.(bands{iBand}).(sites{1}).(phases{3})', all_events_len.(bands{iBand}).(sites{1}).(phases{4})',...
+    all_events_len.(bands{iBand}).(sites{2}).(phases{1})', all_events_len.(bands{iBand}).(sites{2}).(phases{2})', all_events_len.(bands{iBand}).(sites{2}).(phases{3})', all_events_len.(bands{iBand}).(sites{2}).(phases{4})',...
+    all_events_len.(bands{iBand}).(sites{3}).(phases{1})', all_events_len.(bands{iBand}).(sites{3}).(phases{2})', all_events_len.(bands{iBand}).(sites{3}).(phases{3})', all_events_len.(bands{iBand}).(sites{3}).(phases{4})',...
+    all_events_len.(bands{iBand}).(sites{4}).(phases{1})', all_events_len.(bands{iBand}).(sites{4}).(phases{2})', all_events_len.(bands{iBand}).(sites{4}).(phases{3})', all_events_len.(bands{iBand}).(sites{4}).(phases{4})',...
+    all_events_len.(bands{iBand}).(sites{5}).(phases{1})', all_events_len.(bands{iBand}).(sites{5}).(phases{2})', all_events_len.(bands{iBand}).(sites{5}).(phases{3})', all_events_len.(bands{iBand}).(sites{5}).(phases{4})',...
+    all_events_len.(bands{iBand}).(sites{6}).(phases{1})', all_events_len.(bands{iBand}).(sites{6}).(phases{2})', all_events_len.(bands{iBand}).(sites{6}).(phases{3})', all_events_len.(bands{iBand}).(sites{6}).(phases{4})',...
+    all_events_len.(bands{iBand}).(sites{7}).(phases{1})', all_events_len.(bands{iBand}).(sites{7}).(phases{2})', all_events_len.(bands{iBand}).(sites{7}).(phases{3})', all_events_len.(bands{iBand}).(sites{7}).(phases{4})',...
+    ];
+x = x.*1000;
+group = [repmat(1,1,length(all_events_len.(bands{iBand}).(sites{1}).(phases{1}))), repmat(2,1,length(all_events_len.(bands{iBand}).(sites{1}).(phases{2}))), repmat(3,1,length(all_events_len.(bands{iBand}).(sites{1}).(phases{3}))), repmat(4,1,length(all_events_len.(bands{iBand}).(sites{1}).(phases{4}))),...
+    repmat(5,1,length(all_events_len.(bands{iBand}).(sites{2}).(phases{1}))), repmat(6,1,length(all_events_len.(bands{iBand}).(sites{2}).(phases{2}))), repmat(7,1,length(all_events_len.(bands{iBand}).(sites{2}).(phases{3}))), repmat(8,1,length(all_events_len.(bands{iBand}).(sites{2}).(phases{4}))),...
+    repmat(9,1,length(all_events_len.(bands{iBand}).(sites{3}).(phases{1}))), repmat(10,1,length(all_events_len.(bands{iBand}).(sites{3}).(phases{2}))), repmat(11,1,length(all_events_len.(bands{iBand}).(sites{3}).(phases{3}))), repmat(12,1,length(all_events_len.(bands{iBand}).(sites{3}).(phases{4}))),...
+    repmat(13,1,length(all_events_len.(bands{iBand}).(sites{4}).(phases{1}))), repmat(14,1,length(all_events_len.(bands{iBand}).(sites{4}).(phases{2}))), repmat(15,1,length(all_events_len.(bands{iBand}).(sites{4}).(phases{3}))), repmat(16,1,length(all_events_len.(bands{iBand}).(sites{4}).(phases{4}))),...
+    repmat(17,1,length(all_events_len.(bands{iBand}).(sites{5}).(phases{1}))), repmat(18,1,length(all_events_len.(bands{iBand}).(sites{5}).(phases{2}))), repmat(19,1,length(all_events_len.(bands{iBand}).(sites{5}).(phases{3}))), repmat(20,1,length(all_events_len.(bands{iBand}).(sites{5}).(phases{4}))),...
+    repmat(21,1,length(all_events_len.(bands{iBand}).(sites{6}).(phases{1}))), repmat(22,1,length(all_events_len.(bands{iBand}).(sites{6}).(phases{2}))), repmat(23,1,length(all_events_len.(bands{iBand}).(sites{6}).(phases{3}))), repmat(24,1,length(all_events_len.(bands{iBand}).(sites{6}).(phases{4}))),...
+    repmat(25,1,length(all_events_len.(bands{iBand}).(sites{7}).(phases{1}))), repmat(26,1,length(all_events_len.(bands{iBand}).(sites{7}).(phases{2}))), repmat(27,1,length(all_events_len.(bands{iBand}).(sites{7}).(phases{3}))), repmat(28,1,length(all_events_len.(bands{iBand}).(sites{7}).(phases{4}))),... 
+];
+p_1 = 1:7;
+p_2 = p_1+.20;
+p_3 = p_2+.20;
+p_4 = p_3+.20;
+positions = zeros(1,length([p_1, p_2, p_3, p_4]));
+positions(1:4:end) = p_1;
+positions(2:4:end) = p_2;
+positions(3:4:end) = p_3;
+positions(4:4:end) = p_4;
+
+boxplot(x,group, 'positions', positions, 'symbol', '');
+ylim([0 250])
+set(gca,'xtick',[mean(positions(1:4)) mean(positions(5:8)) mean(positions(9:12)) mean(positions(13:16)) mean(positions(17:20)) mean(positions(21:24)) mean(positions(25:28))])
+set(gca,'xticklabel',cfg_stats.row_names)
+c_ord = linspecer(4); 
+color = repmat(flipud(c_ord), 7, 1);
+h = findobj(gca,'Tag','Box');
+for j=1:length(h)
+   patch(get(h(j),'XData'),get(h(j),'YData'),color(j,:),'FaceAlpha',.5);
+end
+
+c = get(gca, 'Children');
+
+legend(c(1:4), 'pre', 'ipsi', 'contra', 'post' );
+ylabel('Event length (ms)')
+SetFigure([], gcf)
+cfg.save_dir = [PARAMS.inter_dir 'Count']; 
+save_name = 'all_site_length'; 
+if isunix
+    %           fprintf(cfg.stats_dir,['\n\nSaving output in:      '  cfg.save_dir '/' save_name '\n\n'])
+    saveas(gcf, [ cfg.save_dir '/' save_name])
+    saveas(gcf, [cfg.save_dir '/' save_name], 'png')
+    saveas_eps(save_name,[cfg.save_dir '/'])
+    %             saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_Summary_' F_id '_' cfg.pot_trk '_' types{iType}  '_' cfg.plot_type], 'epsc')
+else
+    %           fprintf(cfg.stats_dir,['\n\nSaving output in:      '  cfg.save_dir '\' save_name '\n\n'])
+    saveas(gcf, [cfg.save_dir '\' save_name])
+    saveas(gcf, [cfg.save_dir '\' save_name], 'png')
+    saveas_eps(save_name,[cfg.save_dir '\'])
+end
+close all
+%% four sites only
+x = [all_events_len.(bands{iBand}).(sites{1}).(phases{1})', all_events_len.(bands{iBand}).(sites{1}).(phases{2})', all_events_len.(bands{iBand}).(sites{1}).(phases{3})', all_events_len.(bands{iBand}).(sites{1}).(phases{4})',...
+    all_events_len.(bands{iBand}).(sites{2}).(phases{1})', all_events_len.(bands{iBand}).(sites{2}).(phases{2})', all_events_len.(bands{iBand}).(sites{2}).(phases{3})', all_events_len.(bands{iBand}).(sites{2}).(phases{4})',...
+    all_events_len.(bands{iBand}).(sites{3}).(phases{1})', all_events_len.(bands{iBand}).(sites{3}).(phases{2})', all_events_len.(bands{iBand}).(sites{3}).(phases{3})', all_events_len.(bands{iBand}).(sites{3}).(phases{4})',...
+    all_events_len.(bands{iBand}).(sites{5}).(phases{1})', all_events_len.(bands{iBand}).(sites{5}).(phases{2})', all_events_len.(bands{iBand}).(sites{5}).(phases{3})', all_events_len.(bands{iBand}).(sites{5}).(phases{4})',...
+    all_events_len.(bands{iBand}).(sites{7}).(phases{1})', all_events_len.(bands{iBand}).(sites{7}).(phases{2})', all_events_len.(bands{iBand}).(sites{7}).(phases{3})', all_events_len.(bands{iBand}).(sites{7}).(phases{4})',...
+     ];
+x = x.*1000;
+group = [repmat(1,1,length(all_events_len.(bands{iBand}).(sites{1}).(phases{1}))), repmat(2,1,length(all_events_len.(bands{iBand}).(sites{1}).(phases{2}))), repmat(3,1,length(all_events_len.(bands{iBand}).(sites{1}).(phases{3}))), repmat(4,1,length(all_events_len.(bands{iBand}).(sites{1}).(phases{4}))),...
+    repmat(5,1,length(all_events_len.(bands{iBand}).(sites{2}).(phases{1}))), repmat(6,1,length(all_events_len.(bands{iBand}).(sites{2}).(phases{2}))), repmat(7,1,length(all_events_len.(bands{iBand}).(sites{2}).(phases{3}))), repmat(8,1,length(all_events_len.(bands{iBand}).(sites{2}).(phases{4}))),...
+    repmat(9,1,length(all_events_len.(bands{iBand}).(sites{3}).(phases{1}))), repmat(10,1,length(all_events_len.(bands{iBand}).(sites{3}).(phases{2}))), repmat(11,1,length(all_events_len.(bands{iBand}).(sites{3}).(phases{3}))), repmat(12,1,length(all_events_len.(bands{iBand}).(sites{3}).(phases{4}))),...
+    repmat(13,1,length(all_events_len.(bands{iBand}).(sites{5}).(phases{1}))), repmat(14,1,length(all_events_len.(bands{iBand}).(sites{5}).(phases{2}))), repmat(15,1,length(all_events_len.(bands{iBand}).(sites{5}).(phases{3}))), repmat(16,1,length(all_events_len.(bands{iBand}).(sites{5}).(phases{4}))),...
+    repmat(17,1,length(all_events_len.(bands{iBand}).(sites{7}).(phases{1}))), repmat(18,1,length(all_events_len.(bands{iBand}).(sites{7}).(phases{2}))), repmat(19,1,length(all_events_len.(bands{iBand}).(sites{7}).(phases{3}))), repmat(20,1,length(all_events_len.(bands{iBand}).(sites{7}).(phases{4}))),...
+ ];
+p_1 = 1:5;
+p_2 = p_1+.20;
+p_3 = p_2+.20;
+p_4 = p_3+.20;
+positions = zeros(1,length([p_1, p_2, p_3, p_4]));
+positions(1:4:end) = p_1;
+positions(2:4:end) = p_2;
+positions(3:4:end) = p_3;
+positions(4:4:end) = p_4;
+
+boxplot(x,group, 'positions', positions, 'symbol', '');
+ylim([0 250])
+set(gca,'xtick',[mean(positions(1:4)) mean(positions(5:8)) mean(positions(9:12)) mean(positions(13:16)) mean(positions(17:20)) ])
+set(gca,'xticklabel',{'PL'  'IL'  'OFC'   'NAc'   'CG'})
+c_ord = linspecer(4); 
+color = repmat(flipud(c_ord), 5, 1);
+h = findobj(gca,'Tag','Box');
+for j=1:length(h)
+   patch(get(h(j),'XData'),get(h(j),'YData'),color(j,:),'FaceAlpha',.5);
+end
+
+c = get(gca, 'Children');
+
+legend(c(1:4), 'pre', 'ipsi', 'contra', 'post' );
+ylabel('Event length (ms)')
+SetFigure([], gcf)
+
+cfg.save_dir = [PARAMS.inter_dir 'Count']; 
+save_name = 'four_site_length'; 
+if isunix
+    %           fprintf(cfg.stats_dir,['\n\nSaving output in:      '  cfg.save_dir '/' save_name '\n\n'])
+    saveas(gcf, [ cfg.save_dir '/' save_name])
+    saveas(gcf, [cfg.save_dir '/' save_name], 'png')
+    saveas_eps(save_name,[cfg.save_dir '/'])
+    %             saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_Summary_' F_id '_' cfg.pot_trk '_' types{iType}  '_' cfg.plot_type], 'epsc')
+else
+    %           fprintf(cfg.stats_dir,['\n\nSaving output in:      '  cfg.save_dir '\' save_name '\n\n'])
+    saveas(gcf, [cfg.save_dir '\' save_name])
+    saveas(gcf, [cfg.save_dir '\' save_name], 'png')
+    saveas_eps(save_name,[cfg.save_dir '\'])
+end
+close all
+%% Piri sites only
+x = [all_events_len.(bands{iBand}).(sites{3}).(phases{1})', all_events_len.(bands{iBand}).(sites{3}).(phases{2})', all_events_len.(bands{iBand}).(sites{3}).(phases{3})', all_events_len.(bands{iBand}).(sites{3}).(phases{4})',...
+    all_events_len.(bands{iBand}).(sites{4}).(phases{1})', all_events_len.(bands{iBand}).(sites{4}).(phases{2})', all_events_len.(bands{iBand}).(sites{4}).(phases{3})', all_events_len.(bands{iBand}).(sites{4}).(phases{4})',...
+    all_events_len.(bands{iBand}).(sites{5}).(phases{1})', all_events_len.(bands{iBand}).(sites{5}).(phases{2})', all_events_len.(bands{iBand}).(sites{5}).(phases{3})', all_events_len.(bands{iBand}).(sites{5}).(phases{4})',...
+    all_events_len.(bands{iBand}).(sites{6}).(phases{1})', all_events_len.(bands{iBand}).(sites{6}).(phases{2})', all_events_len.(bands{iBand}).(sites{6}).(phases{3})', all_events_len.(bands{iBand}).(sites{6}).(phases{4})',...
+     ];
+x = x.*1000;
+group = [repmat(1,1,length(all_events_len.(bands{iBand}).(sites{3}).(phases{1}))), repmat(2,1,length(all_events_len.(bands{iBand}).(sites{3}).(phases{2}))), repmat(3,1,length(all_events_len.(bands{iBand}).(sites{3}).(phases{3}))), repmat(4,1,length(all_events_len.(bands{iBand}).(sites{3}).(phases{4}))),...
+    repmat(5,1,length(all_events_len.(bands{iBand}).(sites{4}).(phases{1}))), repmat(6,1,length(all_events_len.(bands{iBand}).(sites{4}).(phases{2}))), repmat(7,1,length(all_events_len.(bands{iBand}).(sites{4}).(phases{3}))), repmat(8,1,length(all_events_len.(bands{iBand}).(sites{4}).(phases{4}))),...
+    repmat(9,1,length(all_events_len.(bands{iBand}).(sites{5}).(phases{1}))), repmat(10,1,length(all_events_len.(bands{iBand}).(sites{5}).(phases{2}))), repmat(11,1,length(all_events_len.(bands{iBand}).(sites{5}).(phases{3}))), repmat(12,1,length(all_events_len.(bands{iBand}).(sites{5}).(phases{4}))),...
+    repmat(13,1,length(all_events_len.(bands{iBand}).(sites{6}).(phases{1}))), repmat(14,1,length(all_events_len.(bands{iBand}).(sites{6}).(phases{2}))), repmat(15,1,length(all_events_len.(bands{iBand}).(sites{6}).(phases{3}))), repmat(16,1,length(all_events_len.(bands{iBand}).(sites{6}).(phases{4}))),...
+ ];
+p_1 = 1:4;
+p_2 = p_1+.20;
+p_3 = p_2+.20;
+p_4 = p_3+.20;
+positions = zeros(1,length([p_1, p_2, p_3, p_4]));
+positions(1:4:end) = p_1;
+positions(2:4:end) = p_2;
+positions(3:4:end) = p_3;
+positions(4:4:end) = p_4;
+
+boxplot(x,group, 'positions', positions, 'symbol', '');
+ylim([0 250])
+set(gca,'xtick',[mean(positions(1:4)) mean(positions(5:8)) mean(positions(9:12)) mean(positions(13:16)) ])
+set(gca,'xticklabel',{'OFC'  'Piri OFC'  'NAc'  'Piri NAc'})
+c_ord = linspecer(4); 
+color = repmat(flipud(c_ord), 4, 1);
+h = findobj(gca,'Tag','Box');
+for j=1:length(h)
+   patch(get(h(j),'XData'),get(h(j),'YData'),color(j,:),'FaceAlpha',.5);
+end
+
+c = get(gca, 'Children');
+
+legend(c(1:4), 'pre', 'ipsi', 'contra', 'post' );
+ylabel('Event length (ms)')
+SetFigure([], gcf)
+
+cfg.save_dir = [PARAMS.inter_dir 'Count']; 
+save_name = 'piri_site_length'; 
+if isunix
+    %           fprintf(cfg.stats_dir,['\n\nSaving output in:      '  cfg.save_dir '/' save_name '\n\n'])
+    saveas(gcf, [ cfg.save_dir '/' save_name])
+    saveas(gcf, [cfg.save_dir '/' save_name], 'png')
+    saveas_eps(save_name,[cfg.save_dir '/'])
+    %             saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_Summary_' F_id '_' cfg.pot_trk '_' types{iType}  '_' cfg.plot_type], 'epsc')
+else
+    %           fprintf(cfg.stats_dir,['\n\nSaving output in:      '  cfg.save_dir '\' save_name '\n\n'])
+    saveas(gcf, [cfg.save_dir '\' save_name])
+    saveas(gcf, [cfg.save_dir '\' save_name], 'png')
+    saveas_eps(save_name,[cfg.save_dir '\'])
+end
+close all
 %% print all the stats
 fprintf('\n\n\nGamma Event Stats\n')
 fileID = fopen(cat(2,PARAMS.stats_dir,'\Naris_stats_events.txt'),'w');
