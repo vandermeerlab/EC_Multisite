@@ -31,7 +31,7 @@ for iBand = 1:2
         end
     end
 end
-                    
+
 for iBand = 1:2
     all_out.(bands{iBand}).rate = []; all_out.(bands{iBand}).num = [];
     for iSub = 1:length(Subjects)
@@ -46,7 +46,7 @@ for iBand = 1:2
                         single_subject.rate(iSite, iPhase, iSess) = Events.(Subjects{iSub}).(sess_list{iSess}).(cfg.sites{iSite}).(phases{iPhase}).(bands{iBand}).rate;
                         single_subject.num(iSite, iPhase, iSess) = length(Events.(Subjects{iSub}).(sess_list{iSess}).(cfg.sites{iSite}).(phases{iPhase}).(bands{iBand}).tstart);
                         
-                        % get the length of every event 
+                        % get the length of every event
                         evt_lens = Events.(Subjects{iSub}).(sess_list{iSess}).(cfg.sites{iSite}).(phases{iPhase}).(bands{iBand}).tend - Events.(Subjects{iSub}).(sess_list{iSess}).(cfg.sites{iSite}).(phases{iPhase}).(bands{iBand}).tstart;
                         all_events_len.(bands{iBand}).(cfg.sites{iSite}).(phases{iPhase}) = cat(1,all_events_len.(bands{iBand}).(cfg.sites{iSite}).(phases{iPhase}),evt_lens);
                         if sum(evt_lens>1) >=1
@@ -85,17 +85,19 @@ fprintf(fileID, ['_________________________________________\n'])
 fprintf(fileID, [date '\n'])
 
 for iband = 1:length(bands)
-    for iSite = 
-    all_stats.(bands{iband}).avg_len = nanmean(all_stats.(bands{iband}).length);
-    all_stats.(bands{iband}).std_len = nanstd(all_stats.(bands{iband}).length);
-    all_stats.(bands{iband}).total = length(all_stats.(bands{iband}).length);
-    all_stats.(bands{iband}).avg_rate = nanmean(all_stats.(bands{iband}).rate); % divide by the number of minutes in the session.
-    all_stats.(bands{iband}).avg_nCycle = nanmean(all_stats.(bands{iband}).nCycles);
-    fprintf(fileID, [bands{iband}  ':       mean length: ' num2str(all_stats.(bands{iband}).avg_len*1000)...
-        ' std: ' num2str(all_stats.(bands{iband}).std_len*1000) ...
-        ' nCycle: ' num2str(all_stats.(bands{iband}).avg_nCycle)...
-        ' rate: ' num2str(all_stats.(bands{iband}).avg_rate)...
-        ' total: ' num2str(all_stats.(bands{iband}).total) '\n']);
-end
+%     for iSite =
+        all_stats.(bands{iband}).avg_len = nanmean(all_stats.(bands{iband}).length);
+        all_stats.(bands{iband}).std_len = nanstd(all_stats.(bands{iband}).length);
+        all_stats.(bands{iband}).total = length(all_stats.(bands{iband}).length);
+        all_stats.(bands{iband}).avg_rate = nanmean(all_stats.(bands{iband}).rate); % divide by the number of minutes in the session.
+        all_stats.(bands{iband}).avg_nCycle = nanmean(all_stats.(bands{iband}).nCycles);
+        fprintf(fileID, [bands{iband}  ':       mean length: ' num2str(all_stats.(bands{iband}).avg_len*1000)...
+            ' std: ' num2str(all_stats.(bands{iband}).std_len*1000) ...
+            ' nCycle: ' num2str(all_stats.(bands{iband}).avg_nCycle)...
+            ' rate: ' num2str(all_stats.(bands{iband}).avg_rate)...
+            ' total: ' num2str(all_stats.(bands{iband}).total) '\n']);
+%     end
+    end
 
-fclose(fileID);
+    fclose(fileID);
+end

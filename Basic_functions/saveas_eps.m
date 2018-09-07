@@ -12,8 +12,8 @@ function saveas_eps(fname, save_dir)
 h = get(gcf);
 D = h.PaperPosition; % Returns 1x4 vector [left right width height]
 h.PaperSize = [D(3) D(4)]; %default PaperSize is [8.5 11]
-    pushdir(save_dir)
+    pushdir(save_dir);
     eval(sprintf('print -depsc2 -tiff  -r300 -painters %s',fname));
-    popdir
+    popdir;
 
 end

@@ -37,12 +37,18 @@ cd(PARAMS.data_dir) % move to the data folder
 % Set of colours for consistency between plots
 PARAMS.all_pairs = {'IL_PL' 'IL_OFC', 'IL_NAc', 'IL_CG', 'IL_PiriO', 'IL_PiriN','PL_OFC', 'PL_NAc', 'PL_CG', 'PL_PiriO', 'PL_PiriN', ...
     'OFC_NAc', 'OFC_CG', 'OFC_PiriO', 'OFC_PiriN', 'NAc_CG', 'NAc_PiriO', 'NAc_PiriN','CG_PiriO', 'CG_PiriN', 'PiriO_PiriN'};
-PARAMS.pair_c_ord = linspecer(length(PARAMS.all_pairs));
+PARAMS.pair_c_ord = linspecer(length(PARAMS.all_pairs)+1);
+PARAMS.pair_c_ord(5,:) = [];
 
+PARAMS.fig_blue = [0,173,216]./255;
+PARAMS.fig_green = [123,225,160]./255;
+PARAMS.fig_pink  = [255,168,213]./255;
 
 % formatting
 set(groot, 'DefaultAxesTickLabelInterpreter', 'none')
 set(groot, 'DefaultLegendInterpreter', 'none')
 set(groot,'defaulttextinterpreter','none');  
+
 %MS_amp_xcorr_session
-Master_Multisite_preprocess;
+%Master_Multisite_preprocess;
+

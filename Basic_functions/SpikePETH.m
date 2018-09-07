@@ -1,4 +1,4 @@
-function [outputS, outputT, outputG, outputGau] = SpikePETH(cfg_in, S,t,varargin)
+function [outputS, outputT, outputGau, pre_stim_mean, post_stim_mean] = SpikePETH(cfg_in, S,t,varargin)
 %% SpikePETH: computes the perievent histogram for spike data "S" at events
 %             "t".  Outputs
 %
@@ -25,6 +25,8 @@ cfg_def.binsize = cfg_def.dt; % used for gaussian kernal.  select a small bin si
 cfg_def.waves = [];
 cfg_def.contrast_waves = [];
 cfg_def.c_ord = linspecer(4);
+cfg_def.gauss_window = .001; 
+cfg_def.gauss_sd = 0.0002;
 cfg = ProcessConfig2(cfg_def, cfg_in);
 
 extract_varargin;
@@ -50,7 +52,7 @@ end
 for iT = 1:nT
     S0 = restrict(S, t(iT)+cfg.window(1)-cfg.excessBounds, t(iT)+cfg.window(2)+cfg.excessBounds);
     if length(S0.t{1}) > 0
-        S0 = restrict(S0, t(iT)+cfg.window(1), t(iT)*+cfg.window(2));
+        S0 = restrict(S0, t(iT)+cfg.window(1), t(iT)+cfg.window(2));
         
         outputT = [outputT; repmat(iT, length(S0.t{1}),1)];
         outputS = [outputS; S0.t{1}-t(iT)];
@@ -61,8 +63,8 @@ for iT = 1:nT
         spk_count = histc(S0.t{1},tbin_edges);
         spk_count = spk_count(1:end-1);
         
-        gauss_window = 1./cfg.binsize; % 1 second window
-        gauss_SD = 0.02./cfg.binsize; % 0.02 seconds (20ms) SD
+        gauss_window = cfg.gauss_window./cfg.binsize; % 1 second window
+        gauss_SD = cfg.gauss_sd./cfg.binsize; % 0.02 seconds (20ms) SD
         gk = gausskernel(gauss_window,gauss_SD); gk = gk./cfg.binsize; % normalize by binsize
         S_gau_sdf = conv2(spk_count,gk,'same'); % convolve with gaussian window
         if size(S_gau_sdf,1) >1
@@ -101,8 +103,11 @@ ylabel('Event #');
 ylim([1 nT])
 xlim(cfg.window);
 hold on
-rectangle('position', [0 1 mode(t(:,2)-t(:,1))  nT], 'facecolor', [cfg.evt_color 0.5], 'edgecolor', [cfg.evt_color 0.5])
-
+if size(t,2) > 1
+rectangle('position', [0 1 abs(mode(t(:,2)-t(:,1)))  nT], 'facecolor', [cfg.evt_color 0.5], 'edgecolor', [cfg.evt_color 0.5])
+else
+rectangle('position', [0 1 0.001  nT], 'facecolor', [cfg.evt_color 0.5], 'edgecolor', [cfg.evt_color 0.5])
+end
 %% add in the wave forms
 if ~isempty(cfg.waves)
     for ii = 1:4
@@ -131,8 +136,20 @@ mean_S_gau = nanmean(outputGau,1);
 % se_S_gau = nanstd(outputGau,2)/sqrt(nT+1);
 % plot(outputIT(1:end-1),mean_S_gau, 'b',outputIT(1:end-1),mean_S_gau+se_S_gau, 'b:',outputIT(1:end-1),mean_S_gau-se_S_gau, 'b:' )
 plot(outputIT(1:end-1), mean_S_gau)
-rectangle('position', [0 1 mode(t(:,2)-t(:,1))  nT], 'facecolor', [cfg.evt_color 0.5], 'edgecolor', [cfg.evt_color 0.5])
+
+idx = nearest_idx3(outputIT(1:end-1), 0);
+idx = nearest_idx3(outputIT(1:end-1), 0);
+
+pre_stim_mean = mean(outputGau(1:idx)); 
+post_stim_mean = mean(outputGau(idx:end)); 
+
+
 if ~(max(mean_S_gau)) ==0
     ylim([0 max(mean_S_gau)])
+    if size(t,2) > 1
+        rectangle('position', [0 1 abs(mode(t(:,2)-t(:,1)))  max(mean_S_gau)], 'facecolor', [cfg.evt_color 0.5], 'edgecolor', [cfg.evt_color 0.5])
+    else
+        rectangle('position', [0 1 0.001  max(mean_S_gau)], 'facecolor', [cfg.evt_color 0.5], 'edgecolor', [cfg.evt_color 0.5])
+    end
 end
 

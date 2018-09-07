@@ -17,9 +17,9 @@ cfg_in.dataset = {'CSC12.ncs'};
 cfg_in.data_dir = '/Users/jericcarmichael/Documents/Multisite/R112-2017-08-01_post';
 cfg_in.inter_dir = '/Users/jericcarmichael/Documents/Multisite/R112-2017-08-01_post';
 cfg_in.phase = 1; % corresponds to the first recording phase ('pre').  2 = 'task', 3 = 'post'.
-cfg_in.shuffle = 4; 
+cfg_in.shuffle = 100; 
 cfg_in.plot = 1;
-cfg_in.min_nSpikes = 100; 
+cfg_in.min_nSpikes = 500; 
 cfg_in.spike_id = 'ST6_cut'; 
 
 PPC_comparison_CG(cfg_in); 
@@ -31,7 +31,7 @@ cfg_in.dataset = {'CSC5.ncs'};
 cfg_in.data_dir = '/Users/jericcarmichael/Documents/Multisite/R108-2017-08-04_pre';
 cfg_in.inter_dir = '/Users/jericcarmichael/Documents/MultisiteR108-2017-08-04_pre';
 cfg_in.phase = 1; % corresponds to the first recording phase ('pre').  2 = 'task', 3 = 'post'.
-cfg_in.shuffle = 10; 
+cfg_in.shuffle = 100; 
 cfg_in.plot = 1;
 cfg_in.min_nSpikes = 500; 
 cfg_in.spike_id = 'ST3_cut'; 

@@ -18,15 +18,52 @@ global PARAMS
 fprintf(PARAMS.log, date);
 % Extract the data from each recroding phase within each session and separate pot vs track sections
 cd(PARAMS.inter_dir)
-for iSub = 1:4%:length(PARAMS.Subjects)
-    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
-	d_t = data;
-clear data
-data.(PARAMS.Subjects{iSub}) = d_t;
-clear d_t
-if exist([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat']) ==2
-    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
+
+
+for iSub = length(PARAMS.Subjects):-1:1
+
+%     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
+
+%%%%%%%%%%%%%%%% Power Measures %%%%%%%%%%%%%%%%%
+
+
+    %% generate the PSD for each session for each site
+%     fprintf(PARAMS.log,'\n\nExtracting Power Metrics');
+%         sess_list = fieldnames(data);
+%         for iSess  = 1:length(sess_list)
+%             fprintf(['Session ' sess_list{iSess} '\n'])
+%             fprintf(PARAMS.log,['\nGetting Power ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+%             Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_collect_psd([],data.(strrep(sess_list{iSess}, '-', '_')));
+%             fprintf(PARAMS.log, '...complete');
+%         end
+
+    %% get the ratio of the power in multiple bands relative to the exponential f curve
+%     fprintf(PARAMS.log,'\n\nExtracting Power Ratio');
+%         sess_list = fieldnames(Naris.(PARAMS.Subjects{iSub}));
+%         for iSess  = 1:length(sess_list)
+%             fprintf(PARAMS.log,['\nGetting ratio ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+%             cfg_pow_ratio = [];
+%             if iSub == 6 || iSub == 7
+%                 cfg_pow_ratio.Fs = 1875;
+%             else
+%                 cfg_pow_ratio.Fs = 2000;
+%             end
+%             cfg_pow_ratio.id = sess_list{iSess};
+%             [Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_p_ratio] = MS_get_power_ratio(cfg_pow_ratio,Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+%             %         Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio(cfg_pow_ratio,Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+%             fprintf(PARAMS.log, '...complete');
+%         end
 end
+%%%%%%%%%%%%%%%% Phase Measures %%%%%%%%%%%%%%%%%
+
+
+    d_t = data;
+    clear data
+    data.(PARAMS.Subjects{iSub}) = d_t;
+    clear d_t
+    if exist([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat']) ==2
+        load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
+    end
 
 %% generate a Coherogram across each session for each site.
 %for iSub = length(PARAMS.Subjects):-1:5
@@ -55,5 +92,21 @@ fprintf(PARAMS.log,'\n\nSaving intermediates');
 save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'], 'Naris', '-v7.3')
 
 clearvars -except iSub PARAMS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%% Event Measures %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+for iSub = length(PARAMS.Subjects):-1:1
+    
+    %% load the events file for the subjects
+    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'])
+    
+    all_Events.(PARAMS.Subjects{iSub}) = Events.(PARAMS.Subjects{iSub});
+    
 end
+    stats = MS_gamma_stats([], all_Events)
+
+
+
+% end
 

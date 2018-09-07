@@ -65,6 +65,20 @@ for iSub = 1:length(Subjects)
                     
                     all_low_xx.(sub_pairs{iPair}).(PARAMS.Phases{iPhase}) = cat(2,all_low_xx.(sub_pairs{iPair}).(PARAMS.Phases{iPhase}), mean(m_low));
                     all_high_xx.(sub_pairs{iPair}).(PARAMS.Phases{iPhase}) = cat(2,all_high_xx.(sub_pairs{iPair}).(PARAMS.Phases{iPhase}), mean(m_high));
+                elseif strcmp(cfg.measure, 'lag')
+                    % these need to be transposed
+                    all_cxx.(sub_pairs{iPair}).(PARAMS.Phases{iPhase}) = cat(2,all_cxx.(sub_pairs{iPair}).(PARAMS.Phases{iPhase}),   all_Naris.(Subjects{iSub}).(sess_list{iSess}).amp.lag.(sub_pairs{iPair}).(PARAMS.Phases{iPhase})');
+                    
+                    all_fxx.(sub_pairs{iPair}).(PARAMS.Phases{iPhase}) = cat(2,all_fxx.(sub_pairs{iPair}).(PARAMS.Phases{iPhase}),   all_Naris.(Subjects{iSub}).(sess_list{iSess}).amp.f.(sub_pairs{iPair}).(PARAMS.Phases{iPhase})');
+                    
+                    % get the mean within the gamma bands
+                    F = all_Naris.(Subjects{iSub}).(sess_list{iSess}).amp.f.(sub_pairs{iPair}).(PARAMS.Phases{iPhase});
+                    
+                    m_low = all_Naris.(Subjects{iSub}).(sess_list{iSess}).amp.lag.(sub_pairs{iPair}).(PARAMS.Phases{iPhase})(nearest_idx(cfg.filter(1,1), F):nearest_idx(cfg.filter(1,2), F));
+                    m_high = all_Naris.(Subjects{iSub}).(sess_list{iSess}).amp.lag.(sub_pairs{iPair}).(PARAMS.Phases{iPhase})(nearest_idx(cfg.filter(2,1), F):nearest_idx(cfg.filter(2,2), F));
+                    
+                    all_low_xx.(sub_pairs{iPair}).(PARAMS.Phases{iPhase}) = cat(2,all_low_xx.(sub_pairs{iPair}).(PARAMS.Phases{iPhase}), mean(m_low));
+                    all_high_xx.(sub_pairs{iPair}).(PARAMS.Phases{iPhase}) = cat(2,all_high_xx.(sub_pairs{iPair}).(PARAMS.Phases{iPhase}), mean(m_high));
                     
                 end
             end
@@ -74,12 +88,10 @@ end
 %% get the mean values per site pair
 for iPair = 1:length(PARAMS.all_pairs)
     for iPhase = 1:length(PARAMS.Phases)
-        
         mean_cxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}) = mean(all_cxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}),2);
         std_cxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}) = std(all_cxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}),0,2);
         sem_cxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}) = std_cxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase})./sqrt(size(all_cxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}),2));
         mean_fxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}) = mean(all_fxx.(PARAMS.all_pairs{iPair}).(PARAMS.Phases{iPhase}),2);
-        
     end
 end
 
@@ -90,17 +102,11 @@ for iPair = 1:length(PARAMS.all_pairs)
     
     figure(iPair)
     hold on
-    rectangle('position', [45, 0.001, 20, 1], 'facecolor', [cfg.color.blue 0.3], 'edgecolor', [cfg.color.blue 0.5])
-    rectangle('position', [70, 0.001, 20, 1], 'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
+    rectangle('position', [45, -0.005, 20.5, 1.005], 'facecolor', [cfg.color.blue 0.3], 'edgecolor', [cfg.color.blue 0.5])
+    rectangle('position', [70, -0.005, 20.5, 1.005], 'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
     c_idx = find(strcmp(PARAMS.all_pairs,PARAMS.all_pairs{iPair}));
     
-    h1 = shadedErrorBar(mean_fxx.(PARAMS.all_pairs{iPair}).contra, mean_cxx.(PARAMS.all_pairs{iPair}).contra, sem_cxx.(PARAMS.all_pairs{iPair}).contra);
-    h1.mainLine.Color = PARAMS.pair_c_ord(c_idx, :);
-    h1.mainLine.LineWidth = cfg.linewidth;
-    h1.patch.FaceColor = PARAMS.pair_c_ord(c_idx, :);
-    h1.patch.EdgeColor = PARAMS.pair_c_ord(c_idx, :);
-    h1.patch.FaceAlpha = .5;
-    
+    %plot ipsi first so that it is behind
     h2 = shadedErrorBar(mean_fxx.(PARAMS.all_pairs{iPair}).ipsi, mean_cxx.(PARAMS.all_pairs{iPair}).ipsi, sem_cxx.(PARAMS.all_pairs{iPair}).ipsi);
     h2.mainLine.LineWidth = cfg.linewidth;
     h2.mainLine.Color = [.6 .6 .6];
@@ -108,6 +114,16 @@ for iPair = 1:length(PARAMS.all_pairs)
     h2.patch.EdgeColor = [.6 .6 .6];
     h2.patch.FaceAlpha = .5;
     xlim([0 100])
+    
+    %plot the contra in front
+    h1 = shadedErrorBar(mean_fxx.(PARAMS.all_pairs{iPair}).contra, mean_cxx.(PARAMS.all_pairs{iPair}).contra, sem_cxx.(PARAMS.all_pairs{iPair}).contra);
+    h1.mainLine.Color = PARAMS.pair_c_ord(c_idx, :);
+    h1.mainLine.LineWidth = cfg.linewidth;
+    h1.patch.FaceColor = PARAMS.pair_c_ord(c_idx, :);
+    h1.patch.EdgeColor = PARAMS.pair_c_ord(c_idx, :);
+    h1.patch.FaceAlpha = .5;
+    
+    
     
     set(findall(gca, 'Type', 'Line'),'LineWidth',2)
     set(gca, 'ytick', [0 1], 'xtick',[0 100])
@@ -127,24 +143,31 @@ for iPair = 1:length(PARAMS.all_pairs)
         saveas(gcf, [PARAMS.inter_dir 'sess/all/all_' PARAMS.all_pairs{iPair} '_amp'], 'fig')
         saveas_eps(['all_' PARAMS.all_pairs{iPair} '_amp'], [PARAMS.inter_dir 'sess/all/'])
         %         saveas(gcf, [PARAMS.inter_dir 'sess/all/all_' PARAMS.all_pairs{iPair} '_amp'], 'epsc')
+    elseif strcmp(cfg.measure, 'lag')
+        ylim('auto'); set(gca, 'YTickMode', 'auto', 'YTickLabelMode', 'auto')
+        saveas(gcf, [PARAMS.inter_dir 'sess/all/all_' PARAMS.all_pairs{iPair} '_amp_lag'], 'png')
+        saveas(gcf, [PARAMS.inter_dir 'sess/all/all_' PARAMS.all_pairs{iPair} '_amp_lag'], 'fig')
+        saveas_eps(['all_' PARAMS.all_pairs{iPair} '_amp_lag'], [PARAMS.inter_dir 'sess/all/'])
+        
     end
     close all
     
     if strcmp(PARAMS.all_pairs{iPair}, 'OFC_NAc')
         figure(333)
         hold on
-        rectangle('position', [45, 0.001, 20, 1], 'facecolor', [cfg.color.blue 0.3], 'edgecolor', [cfg.color.blue 0.5])
-        rectangle('position', [70, 0.001, 20, 1], 'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
+        rectangle('position', [45, -0.005, 20.5, 1.005], 'facecolor', [cfg.color.blue 0.3], 'edgecolor', [cfg.color.blue 0.5])
+        rectangle('position', [70, -0.005, 20.5, 1.005], 'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
         c_idx = find(strcmp(PARAMS.all_pairs,PARAMS.all_pairs{iPair}));
         
+        
         h1 = shadedErrorBar(mean_fxx.(PARAMS.all_pairs{iPair}).post, mean_cxx.(PARAMS.all_pairs{iPair}).post, sem_cxx.(PARAMS.all_pairs{iPair}).post);
-        h1.mainLine.Color = PARAMS.pair_c_ord(c_idx, :);
+        h1.mainLine.Color = PARAMS.fig_blue;
         h1.mainLine.LineWidth = cfg.linewidth+4;
-        h1.patch.FaceColor = PARAMS.pair_c_ord(c_idx, :);
-        h1.patch.EdgeColor = PARAMS.pair_c_ord(c_idx, :);
+        h1.patch.FaceColor = h1.mainLine.Color;
+        h1.patch.EdgeColor = h1.mainLine.Color;
         h1.patch.FaceAlpha = .5;
-        h1.edge(1).Color = PARAMS.pair_c_ord(c_idx, :);
-        h1.edge(2).Color = PARAMS.pair_c_ord(c_idx, :);
+        h1.edge(1).Color = h1.mainLine.Color;
+        h1.edge(2).Color = h1.mainLine.Color;
         
         set(findall(gca, 'Type', 'Line'),'LineWidth',2)
         h1.mainLine.LineWidth = cfg.linewidth+4;
@@ -166,6 +189,12 @@ for iPair = 1:length(PARAMS.all_pairs)
             saveas(gcf, [PARAMS.inter_dir 'sess/' 'all_sess_mean_amp_OFC_NAc'], 'fig')
             %                 saveas(gcf, [PARAMS.inter_dir '/sess/' Subjects{iSub} '_sess_amp_OFC_NAc'], 'epsc')
             saveas_eps(['all_sess_amp_OFC_NAc']',[PARAMS.inter_dir 'sess/'])
+        elseif strcmp(cfg.measure, 'lag')
+            ylim('auto'); set(gca, 'YTickMode', 'auto', 'YTickLabelMode', 'auto')
+            saveas(gcf, [PARAMS.inter_dir 'sess/' 'all_sess_mean_amp_lag_OFC_NAc'], 'png')
+            saveas(gcf, [PARAMS.inter_dir 'sess/' 'all_sess_mean_amp_lag_OFC_NAc'], 'fig')
+            %                 saveas(gcf, [PARAMS.inter_dir '/sess/' Subjects{iSub} '_sess_amp_OFC_NAc'], 'epsc')
+            saveas_eps(['all_sess_amp_lag_OFC_NAc']',[PARAMS.inter_dir 'sess/'])
         end
         
         set(findall(gca, 'Type', 'Line'),'LineWidth',6)
@@ -179,23 +208,26 @@ for iPair = 1:length(PARAMS.all_pairs)
             saveas_eps(['all_sess_coh_OFC_NAc_small']',[PARAMS.inter_dir 'sess/'])
         elseif strcmp(cfg.measure, 'amp')
             saveas_eps(['all_sess_amp_OFC_NAc_small']',[PARAMS.inter_dir 'sess/'])
+        elseif strcmp(cfg.measure, 'lag')            ylim([-0.015 0.015])
+            ylim('auto'); set(gca, 'YTickMode', 'auto', 'YTickLabelMode', 'auto')
+            saveas_eps(['all_sess_amp_lag_OFC_NAc_small']',[PARAMS.inter_dir 'sess/'])
         end
         close all
     elseif strcmp(PARAMS.all_pairs{iPair}, 'OFC_CG')
         figure(333)
         hold on
-        rectangle('position', [45, 0.001, 20, 1], 'facecolor', [cfg.color.blue 0.3], 'edgecolor', [cfg.color.blue 0.5])
-        rectangle('position', [70, 0.001, 20, 1], 'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
-        c_idx = find(strcmp(PARAMS.all_pairs,PARAMS.all_pairs{iPair}));
+        rectangle('position', [45, -0.5, 20.5, 1.5], 'facecolor', [cfg.color.blue 0.3], 'edgecolor', [cfg.color.blue 0.5])
+        rectangle('position', [70, -0.5, 20.5, 1.5], 'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
+%         c_idx = find(strcmp(PARAMS.all_pairs,PARAMS.all_pairs{iPair}));
         
         h1 = shadedErrorBar(mean_fxx.(PARAMS.all_pairs{iPair}).post, mean_cxx.(PARAMS.all_pairs{iPair}).post, sem_cxx.(PARAMS.all_pairs{iPair}).post);
-        h1.mainLine.Color = PARAMS.pair_c_ord(c_idx, :);
+        h1.mainLine.Color = PARAMS.fig_pink;
         h1.mainLine.LineWidth = cfg.linewidth+4;
-        h1.patch.FaceColor = PARAMS.pair_c_ord(c_idx, :);
-        h1.patch.EdgeColor = PARAMS.pair_c_ord(c_idx, :);
+        h1.patch.FaceColor = h1.mainLine.Color;
+        h1.patch.EdgeColor = h1.mainLine.Color;
         h1.patch.FaceAlpha = .5;
-        h1.edge(1).Color = PARAMS.pair_c_ord(c_idx, :);
-        h1.edge(2).Color = PARAMS.pair_c_ord(c_idx, :);
+        h1.edge(1).Color = h1.mainLine.Color;
+        h1.edge(2).Color = h1.mainLine.Color;
         
         set(findall(gca, 'Type', 'Line'),'LineWidth',2)
         h1.mainLine.LineWidth = cfg.linewidth+4;
@@ -217,6 +249,12 @@ for iPair = 1:length(PARAMS.all_pairs)
             saveas(gcf, [PARAMS.inter_dir 'sess/' 'all_sess_mean_amp_OFC_CG'], 'fig')
             %                 saveas(gcf, [PARAMS.inter_dir '/sess/' Subjects{iSub} '_sess_amp_OFC_NAc'], 'epsc')
             saveas_eps(['all_sess_amp_OFC_CG']',[PARAMS.inter_dir 'sess/'])
+        elseif strcmp(cfg.measure, 'lag')
+            ylim('auto'); set(gca, 'YTickMode', 'auto', 'YTickLabelMode', 'auto')
+            saveas(gcf, [PARAMS.inter_dir 'sess/' 'all_sess_mean_amp_lag_OFC_CG'], 'png')
+            saveas(gcf, [PARAMS.inter_dir 'sess/' 'all_sess_mean_amp_lag_OFC_CG'], 'fig')
+            %                 saveas(gcf, [PARAMS.inter_dir '/sess/' Subjects{iSub} '_sess_amp_OFC_NAc'], 'epsc')
+            saveas_eps(['all_sess_amp_lag_OFC_CG']',[PARAMS.inter_dir 'sess/'])
         end
         set(findall(gca, 'Type', 'Line'),'LineWidth',6)
         ylabel([]); xlabel([]);
@@ -229,6 +267,9 @@ for iPair = 1:length(PARAMS.all_pairs)
             saveas_eps(['all_sess_coh_OFC_CG_small']',[PARAMS.inter_dir 'sess/'])
         elseif strcmp(cfg.measure, 'amp')
             saveas_eps(['all_sess_amp_OFC_CG_small']',[PARAMS.inter_dir 'sess/'])
+        elseif strcmp(cfg.measure, 'lag')
+            ylim('auto'); set(gca, 'YTickMode', 'auto', 'YTickLabelMode', 'auto')
+            saveas_eps(['all_sess_amp_lag_OFC_CG_small']',[PARAMS.inter_dir 'sess/'])
         end
         close all
     end
@@ -238,9 +279,10 @@ end
 
 labels = PARAMS.all_sites;
 if strcmp(cfg.plot_type, 'no_piri')
-    isempty(strfind(labels, 'Piri'))
+    isempty(strfind(labels, 'Piri'));
     labels(strcmp('PiriO', labels)) = [];
     labels(strcmp('PiriN', labels)) = [];
+    
 end
 
 
@@ -292,8 +334,10 @@ for iPhase = 1:length(PARAMS.Phases)
     subplot(1,4,iPhase)
     nan_imagesc_ec(mat_out.(PARAMS.Phases{iPhase}), 'nan_colour', 'w')
     
+    %         nan_imagesc_ec(mat_out.(PARAMS.Phases{iPhase})./(squeeze(mean(cat(3,mat_out.pre,mat_out.post),3))), 'nan_colour', 'w')
     
     [~, hStrings] =add_num_imagesc(gca,mat_out.(PARAMS.Phases{iPhase}), 2,  12); % adds numerics to imagesc
+    %         [~, hStrings] =add_num_imagesc(gca,mat_out.(PARAMS.Phases{iPhase})./(squeeze(mean(cat(3,mat_out.pre,mat_out.post),3))), 4,  12); % adds numerics to imagesc
     
     colormap('parula')
     
@@ -301,7 +345,11 @@ for iPhase = 1:length(PARAMS.Phases)
     set(gca,'xtick', 1:length(labels), 'ytick', 1:length(labels), 'xaxisLocation','top', 'xticklabel', labels, 'yticklabel', labels, 'XTickLabelRotation', 65)
     
     rectangle('position', [0.5, 0.5, length(labels), length(labels)], 'EdgeColor', Phase_c(iPhase,:), 'linewidth', 4)
-    caxis([0 .6]);
+    if strcmp(cfg.measure, 'lag')
+        caxis([-0.0015 0.0015]);
+    else
+        %     caxis([0 .6]);
+    end
 end
 %
 Square_subplots
@@ -312,7 +360,7 @@ cfg_count_fig.ft_size = 14;
 SetFigure(cfg_count_fig, gcf)
 
 
-
+%%
 if strcmp(cfg.measure, 'coh')
     saveas(gcf, [PARAMS.inter_dir 'sess/all/all_coh_mat'], 'png')
     saveas(gcf, [PARAMS.inter_dir 'sess/all/all_coh_mat'], 'fig')
@@ -331,7 +379,12 @@ elseif strcmp(cfg.measure, 'amp')
     %     pushdir([PARAMS.inter_dir 'sess/all/'])
     %     eval(sprintf('print -depsc2 -tiff  -r300 -painters %s','all_amp_mat'));
     %     popdir
+elseif strcmp(cfg.measure, 'lag')
+    saveas(gcf, [PARAMS.inter_dir 'sess/all/all_amp_lag_mat'], 'png')
+    saveas(gcf, [PARAMS.inter_dir 'sess/all/all_amp_lag_mat'], 'fig')
+    %     saveas(gcf, [PARAMS.inter_dir 'sess/all/all_amp_mat'], 'epsc')
     
+    saveas_eps('all_amp_lag_mat',[PARAMS.inter_dir 'sess/all/'])
 end
 close all
 
@@ -385,6 +438,22 @@ for iSub = 1:length(Subjects)
                     
                     all_sub_low_xx.(Subjects{iSub}).(sub_pairs{iPair}).(PARAMS.Phases{iPhase}) = cat(2,all_sub_low_xx.(Subjects{iSub}).(sub_pairs{iPair}).(PARAMS.Phases{iPhase}), mean(m_low));
                     all_sub_high_xx.(Subjects{iSub}).(sub_pairs{iPair}).(PARAMS.Phases{iPhase}) = cat(2,all_sub_high_xx.(Subjects{iSub}).(sub_pairs{iPair}).(PARAMS.Phases{iPhase}), mean(m_high));
+                elseif strcmp(cfg.measure, 'lag')
+                    % these need to be transposed
+                    all_sub_cxx.(Subjects{iSub}).(sub_pairs{iPair}).(PARAMS.Phases{iPhase}) = cat(2,all_sub_cxx.(Subjects{iSub}).(sub_pairs{iPair}).(PARAMS.Phases{iPhase}),   all_Naris.(Subjects{iSub}).(sess_list{iSess}).amp.ac.(sub_pairs{iPair}).(PARAMS.Phases{iPhase})');
+                    
+                    all_sub_fxx.(Subjects{iSub}).(sub_pairs{iPair}).(PARAMS.Phases{iPhase}) = cat(2,all_sub_fxx.(Subjects{iSub}).(sub_pairs{iPair}).(PARAMS.Phases{iPhase}),   all_Naris.(Subjects{iSub}).(sess_list{iSess}).amp.f.(sub_pairs{iPair}).(PARAMS.Phases{iPhase})');
+                    
+                    % get the mean within the gamma bands
+                    F = all_Naris.(Subjects{iSub}).(sess_list{iSess}).amp.f.(sub_pairs{iPair}).(PARAMS.Phases{iPhase});
+                    
+                    m_low = all_Naris.(Subjects{iSub}).(sess_list{iSess}).amp.ac.(sub_pairs{iPair}).(PARAMS.Phases{iPhase})(nearest_idx(cfg.filter(1,1), F):nearest_idx(cfg.filter(1,2), F));
+                    m_high = all_Naris.(Subjects{iSub}).(sess_list{iSess}).amp.ac.(sub_pairs{iPair}).(PARAMS.Phases{iPhase})(nearest_idx(cfg.filter(2,1), F):nearest_idx(cfg.filter(2,2), F));
+                    
+                    all_sub_low_xx.(Subjects{iSub}).(sub_pairs{iPair}).(PARAMS.Phases{iPhase}) = cat(2,all_sub_low_xx.(Subjects{iSub}).(sub_pairs{iPair}).(PARAMS.Phases{iPhase}), mean(m_low));
+                    all_sub_high_xx.(Subjects{iSub}).(sub_pairs{iPair}).(PARAMS.Phases{iPhase}) = cat(2,all_sub_high_xx.(Subjects{iSub}).(sub_pairs{iPair}).(PARAMS.Phases{iPhase}), mean(m_high));
+                    
+                    
                 end
             end
         end
@@ -453,6 +522,12 @@ for iSub =1:length(Subjects)
             saveas(gcf, [PARAMS.inter_dir 'sess/amp/' (Subjects{iSub}) '_' sub_pairs{iPair} '_amp'], 'fig')
             saveas_eps([(Subjects{iSub}) '_' PARAMS.all_pairs{iPair} '_amp'], [PARAMS.inter_dir 'sess/amp/'])
             %         saveas(gcf, [PARAMS.inter_dir 'sess/all/all_' PARAMS.all_pairs{iPair} '_amp'], 'epsc')
+        elseif strcmp(cfg.measure, 'lag')
+            ylim('auto'); set(gca, 'YTickMode', 'auto', 'YTickLabelMode', 'auto')
+            saveas(gcf, [PARAMS.inter_dir 'sess/amp/' (Subjects{iSub}) '_' sub_pairs{iPair} '_amp_lag'], 'png')
+            saveas(gcf, [PARAMS.inter_dir 'sess/amp/' (Subjects{iSub}) '_' sub_pairs{iPair} '_amp_lag'], 'fig')
+            saveas_eps([(Subjects{iSub}) '_' PARAMS.all_pairs{iPair} '_amp_lag'], [PARAMS.inter_dir 'sess/amp/'])
+            %
         end
         close all
         
@@ -464,12 +539,12 @@ for iSub =1:length(Subjects)
             c_idx = find(strcmp(PARAMS.all_pairs,sub_pairs{iPair}));
             
             h1 = shadedErrorBar(all_sub_fxx.(Subjects{iSub}).(sub_pairs{iPair}).post, all_sub_mean_cxx.(Subjects{iSub}).(sub_pairs{iPair}).post, all_sub_sem_cxx.(Subjects{iSub}).(sub_pairs{iPair}).post);
-            h1.mainLine.Color = PARAMS.pair_c_ord(c_idx, :);
-            h1.patch.FaceColor = PARAMS.pair_c_ord(c_idx, :);
-            h1.patch.EdgeColor = PARAMS.pair_c_ord(c_idx, :);
+            h1.mainLine.Color = PARAMS.fig_blue;
+            h1.patch.FaceColor = h1.mainLine.Color;
+            h1.patch.EdgeColor = h1.mainLine.Color;
             h1.patch.FaceAlpha = .5;
-            h1.edge(1).Color = PARAMS.pair_c_ord(c_idx, :);
-            h1.edge(2).Color = PARAMS.pair_c_ord(c_idx, :);
+            h1.edge(1).Color = h1.mainLine.Color;
+            h1.edge(2).Color = h1.mainLine.Color;
             
             set(findall(gca, 'Type', 'Line'),'LineWidth',2)
             h1.mainLine.LineWidth = cfg.linewidth+4;
@@ -491,6 +566,13 @@ for iSub =1:length(Subjects)
                 saveas(gcf, [PARAMS.inter_dir 'sess/amp/' (Subjects{iSub}) 'mean_amp_OFC_NAc'], 'fig')
                 %                 saveas(gcf, [PARAMS.inter_dir '/sess/' Subjects{iSub} '_sess_amp_OFC_NAc'], 'epsc')
                 saveas_eps([(Subjects{iSub}) 'amp_OFC_NAc'],[PARAMS.inter_dir 'sess/amp/'])
+                
+            elseif strcmp(cfg.measure, 'amp')
+                ylim('auto'); set(gca, 'YTickMode', 'auto', 'YTickLabelMode', 'auto')
+                saveas(gcf, [PARAMS.inter_dir 'sess/amp/' (Subjects{iSub}) 'mean_amp_lag_OFC_NAc'], 'png')
+                saveas(gcf, [PARAMS.inter_dir 'sess/amp/' (Subjects{iSub}) 'mean_amp_lag_OFC_NAc'], 'fig')
+                %                 saveas(gcf, [PARAMS.inter_dir '/sess/' Subjects{iSub} '_sess_amp_OFC_NAc'], 'epsc')
+                saveas_eps([(Subjects{iSub}) 'amp_lag_OFC_NAc'],[PARAMS.inter_dir 'sess/amp/'])
             end
             
             set(findall(gca, 'Type', 'Line'),'LineWidth',6)
@@ -504,6 +586,9 @@ for iSub =1:length(Subjects)
                 saveas_eps([(Subjects{iSub}) 'coh_OFC_NAc_small'],[PARAMS.inter_dir 'sess/coh/'])
             elseif strcmp(cfg.measure, 'amp')
                 saveas_eps([(Subjects{iSub}) 'amp_OFC_NAc_small'],[PARAMS.inter_dir 'sess/amp/'])
+            elseif strcmp(cfg.measure, 'lag')
+                ylim('auto'); set(gca, 'YTickMode', 'auto', 'YTickLabelMode', 'auto')
+                saveas_eps([(Subjects{iSub}) 'amp_lag_OFC_NAc_small'],[PARAMS.inter_dir 'sess/amp/'])
             end
             close all
         end
@@ -515,12 +600,12 @@ for iSub =1:length(Subjects)
             c_idx = find(strcmp(PARAMS.all_pairs,sub_pairs{iPair}));
             
             h1 = shadedErrorBar(all_sub_fxx.(Subjects{iSub}).(sub_pairs{iPair}).post, all_sub_mean_cxx.(Subjects{iSub}).(sub_pairs{iPair}).post, all_sub_sem_cxx.(Subjects{iSub}).(sub_pairs{iPair}).post);
-            h1.mainLine.Color = PARAMS.pair_c_ord(c_idx, :);
-            h1.patch.FaceColor = PARAMS.pair_c_ord(c_idx, :);
-            h1.patch.EdgeColor = PARAMS.pair_c_ord(c_idx, :);
+            h1.mainLine.Color = PARAMS.fig_blue;
+            h1.patch.FaceColor = PARAMS.fig_blue;
+            h1.patch.EdgeColor = PARAMS.fig_blue;
             h1.patch.FaceAlpha = .5;
-            h1.edge(1).Color = PARAMS.pair_c_ord(c_idx, :);
-            h1.edge(2).Color = PARAMS.pair_c_ord(c_idx, :);
+            h1.edge(1).Color = PARAMS.fig_blue;
+            h1.edge(2).Color = PARAMS.fig_blue;
             
             set(findall(gca, 'Type', 'Line'),'LineWidth',2)
             h1.mainLine.LineWidth = cfg.linewidth+4;
@@ -542,6 +627,11 @@ for iSub =1:length(Subjects)
                 saveas(gcf, [PARAMS.inter_dir 'sess/amp/' (Subjects{iSub}) 'mean_amp_OFC_CG'], 'fig')
                 %                 saveas(gcf, [PARAMS.inter_dir '/sess/' Subjects{iSub} '_sess_amp_OFC_NAc'], 'epsc')
                 saveas_eps([(Subjects{iSub}) 'amp_OFC_CG'],[PARAMS.inter_dir 'sess/amp/'])
+            elseif strcmp(cfg.measure, 'lag')
+                saveas(gcf, [PARAMS.inter_dir 'sess/amp/' (Subjects{iSub}) 'mean_amp_lag_OFC_CG'], 'png')
+                saveas(gcf, [PARAMS.inter_dir 'sess/amp/' (Subjects{iSub}) 'mean_amp_lag_OFC_CG'], 'fig')
+                %                 saveas(gcf, [PARAMS.inter_dir '/sess/' Subjects{iSub} '_sess_amp_OFC_NAc'], 'epsc')
+                saveas_eps([(Subjects{iSub}) 'amp_lag_OFC_CG'],[PARAMS.inter_dir 'sess/amp/'])
             end
             
             set(findall(gca, 'Type', 'Line'),'LineWidth',6)
