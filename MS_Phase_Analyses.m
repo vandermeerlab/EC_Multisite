@@ -300,14 +300,13 @@ for iPhase = 1:length(PARAMS.Phases)
                     mat_out.(PARAMS.Phases{iPhase}).Phase_lag_mean.(bands{iBand}){x_idx, y_idx, iEvt} = NaN;
                 end
                 %% get the phase slope index.
-                if max(ac) >= std(shuf_max_xcov)
                     cfg.cfg_phase.Fs = this_RAW1.cfg.hdr{1}.SamplingFrequency;
                     [phase_slopes, F_PS] = MS_phase_slope(cfg.cfg_phase,this_RAW1.data,this_RAW2.data);
-                    
+               if max(ac) >= std(shuf_max_xcov)
                     mat_out.(PARAMS.Phases{iPhase}).PS_slope.(bands{iBand}){x_idx, y_idx, iEvt} = phase_slopes;
                     mat_out.(PARAMS.Phases{iPhase}).PS_F.(bands{iBand}){x_idx, y_idx, iEvt} = F_PS';
                     
-                else
+               else               
                     mat_out.(PARAMS.Phases{iPhase}).PS_slope.(bands{iBand}){x_idx, y_idx, iEvt} = NaN(size(phase_slopes));
                     mat_out.(PARAMS.Phases{iPhase}).PS_F.(bands{iBand}){x_idx, y_idx, iEvt} = NaN(size(F_PS'));
                 end

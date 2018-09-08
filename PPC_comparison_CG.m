@@ -32,8 +32,8 @@ t_id = FindFile_str(cd, cfg.spike_id);
 S_list = {};
 for iS = 1:length(t_id)
     spike = ft_read_spike(t_id{iS}); % needs fixed read_mclust_t.m
-    spike.label{1} = t_id{iS}(1:end-4); 
-    disp([spike.label{1} 'Contained: ' num2str(length(spike.timestamp{1})) ' spikes'])
+    spike.label{1} = t_id{iS}(1:end-2); 
+    disp([spike.label{1} ' Contained: ' num2str(length(spike.timestamp{1})) ' spikes'])
     if length(spike.timestamp{1}) < cfg.min_nSpikes
         continue
     end
@@ -74,6 +74,7 @@ for  iLFP = 1:length(LFP_list)
         cfg_i.spikechannel = spk_chan;
         cfg_i.channel      = lfp_chan(1:end-4);
         cfg_i.method       = 'linear'; % remove the replaced segment with interpolation
+        
         data_i        = ft_spiketriggeredinterpolation(cfg_i, data_trl);
         
         %% STA

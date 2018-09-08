@@ -72,13 +72,13 @@ end % subjects
 %%%%%%%%%%%%%%%%%%%%%%%%%%% EVENT PROCESSING   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Event Processing
-for iSub = 1:length(PARAMS.Subjects)
+for iSub = 4:length(PARAMS.Subjects)
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'])
      load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
 % 	d_t = data;
     
     sess_list = fieldnames(data);
-    for iSess = 1:length(sess_list)
+    for iSess = 2:length(sess_list)
         fprintf(['\nRunning Phases Analyses on ' sess_list{iSess} '....\n']);
         
         cfg_in = [];

@@ -16,17 +16,17 @@ mkdir(data_root, 'PPC_figs')
 nShuffle = 100; 
 %%
 
-disp('112 TT7 ...')
+disp('112 ST1 ...')
 cfg_in = [];
-cfg_in.dataset = {'CSC16.ncs'};
-cfg_in.data_dir = [data_root '/R112-2017-08-01_post'];
+cfg_in.dataset = {'CSC1.ncs'};
+cfg_in.data_dir = [data_root '/R112-2017-07-31_post'];
 cfg_in.inter_dir = [data_root '/PPC_figs'];
 cfg_in.phase = 1; % corresponds to the first recording phase ('pre').  2 = 'task', 3 = 'post'.
 cfg_in.shuffle = nShuffle; 
 cfg_in.plot = 1;
 cfg_in.min_nSpikes = 500; 
-cfg_in.spike_id = 'TT7_cut'; 
-%PPC_comparison_CG(cfg_in); 
+cfg_in.spike_id = 'ST1_SS'; 
+PPC_comparison_CG(cfg_in); 
 disp('complete')
 %%
 disp('112 St1 ...')
