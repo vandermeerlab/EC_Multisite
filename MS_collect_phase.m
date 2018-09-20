@@ -19,6 +19,7 @@ function MS_collect_phase()
 clear all
 run('/Users/jericcarmichael/Documents/GitHub/EC_Multisite/MS_initialize.m')
 global PARAMS
+%%
 mat_out =[];
 Sub_count = 1;
 for Subjects = {'R102','R104','R107', 'R112','R122','R123'}

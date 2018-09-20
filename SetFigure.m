@@ -15,6 +15,7 @@ cfg_def.grid = 'off';
 cfg_def.resize = 1;
 cfg_def.pos = [600 50 560*1.4 420*1.4]; 
 cfg_def.box = 'off';
+cfg_def.axes_labels = 1;
 cfg = ProcessConfig2(cfg_def, cfg_in);
 
 
@@ -36,11 +37,14 @@ for iH = 1:length(H)
         box(H(iH),'on'); 
     end
 end
+if cfg.axes_labels ==1
 g = get(gca, 'XLabel');
 set(g, 'fontsize', cfg.ft_size);
 g = get(gca, 'YLabel');
 set(g, 'fontsize', cfg.ft_size);
+end
 g = get(gca, 'title');
 set(g, 'fontsize', cfg.ft_size);
+
 
 
