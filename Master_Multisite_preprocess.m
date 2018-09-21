@@ -19,40 +19,43 @@ fprintf(PARAMS.log, date);
 global PARAMS
 
 for iSub = 1:length(PARAMS.Subjects)
-    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
-	d_t = data;
-clear data
-data.(PARAMS.Subjects{iSub}) = d_t;
-%     if isunix
-%         cd([PARAMS.data_dir '/' PARAMS.Subjects{iSub}])
-%     else
-%         cd([PARAMS.data_dir '\' PARAMS.Subjects{iSub}])
-%     end
-% 
-%     dir_files = dir(); % get all the sessions for the current subject
-%     dir_files(1:2) = [];
-%     sess_list = [];
-%     for iDir = 1:length(dir_files)
-%         if dir_files(iDir).isdir == 1 && strcmp(dir_files(iDir).name(1:4), PARAMS.Subjects{iSub}) % ensure that the session folders have the correct names
-%             sess_list = [sess_list;dir_files(iDir).name];  % extract only the folders for the seesions
-%         end
-%     end
-%     sess_list = cellstr(sess_list);
-%     % load the data for each session within the current subject.
-%     for iSess = 1:length(sess_list)
-%         cfg_loading = [];
-%         cfg_loading.fname = sess_list{iSess};
-%         fprintf(['\n' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-%         fprintf(PARAMS.log,['\nLoading ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-% 
-%         [data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_loading] = MS_load_data_fast(cfg_loading);
-%         fprintf(PARAMS.log, '...complete');
-%     end
-%     % ensure the correct number of sessions exist per rat
-%     if length(fieldnames(data.(PARAMS.Subjects{iSub}))) ~=4
-%         error('too many or too few sessions for multisite experiment.  Should only contain 4 per rat')
-%     end
-% 
+   %% speed loading
+   load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
+   d_t = data;
+   clear data
+   data.(PARAMS.Subjects{iSub}) = d_t;
+
+%% 
+    if isunix
+        cd([PARAMS.data_dir '/' PARAMS.Subjects{iSub}])
+    else
+        cd([PARAMS.data_dir '\' PARAMS.Subjects{iSub}])
+    end
+
+    dir_files = dir(); % get all the sessions for the current subject
+    dir_files(1:2) = [];
+    sess_list = [];
+    for iDir = 1:length(dir_files)
+        if dir_files(iDir).isdir == 1 && strcmp(dir_files(iDir).name(1:4), PARAMS.Subjects{iSub}) % ensure that the session folders have the correct names
+            sess_list = [sess_list;dir_files(iDir).name];  % extract only the folders for the seesions
+        end
+    end
+    sess_list = cellstr(sess_list);
+    % load the data for each session within the current subject.
+    for iSess = 1:length(sess_list)
+        cfg_loading = [];
+        cfg_loading.fname = sess_list{iSess};
+        fprintf(['\n' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+        fprintf(PARAMS.log,['\nLoading ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+
+        [data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_loading] = MS_load_data_fast(cfg_loading);
+        fprintf(PARAMS.log, '...complete');
+    end
+    % ensure the correct number of sessions exist per rat
+    if length(fieldnames(data.(PARAMS.Subjects{iSub}))) ~=4
+        error('too many or too few sessions for multisite experiment.  Should only contain 4 per rat')
+    end
+
 % % 
 %% get the gamma events per recording phase
 fprintf(PARAMS.log,'\n\nCollecting Events');
