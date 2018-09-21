@@ -18,7 +18,7 @@ cfg_def.inter_dir = '/Users/jericcarmichael/Documents/Multisite/R112-2017-08-01_
 cfg_def.phase = 1; % corresponds to the first recording phase ('pre').  2 = 'task', 3 = 'post'.
 cfg_def.shuffle = 10;
 cfg_def.min_nSpikes = 300;
-cfg_def.spike_id = '*.t';
+cfg_def.spike_id = '.t';
 
 cfg = ProcessConfig(cfg_def, cfg_in);
 cd(cfg.data_dir)

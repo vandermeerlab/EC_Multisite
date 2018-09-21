@@ -72,7 +72,7 @@ end % subjects
 %%%%%%%%%%%%%%%%%%%%%%%%%%% EVENT PROCESSING   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Event Processing
-for iSub = 4:length(PARAMS.Subjects)
+for iSub = 5%:length(PARAMS.Subjects)
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'])
      load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
 % 	d_t = data;
