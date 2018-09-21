@@ -1,7 +1,7 @@
 %% for debugging
 run('/Users/jericcarmichael/Documents/GitHub/EC_Multisite/MS_initialize.m')
 global PARAMS
-Subjects = {'R102','R104','R107', 'R112','R122','R123', 'all'};
+Subjects = {'R102','R104','R107', 'R108', 'R112','R122','R123', 'all'};
 %%
 for iSub = Subjects
     

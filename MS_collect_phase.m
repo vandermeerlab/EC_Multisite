@@ -22,7 +22,7 @@ global PARAMS
 %%
 mat_out =[];
 Sub_count = 1;
-for Subjects = {'R102','R104','R107', 'R112','R122','R123'}
+for Subjects = {'R102','R104','R107', 'R108' ,'R112','R122','R123'}
     load([PARAMS.inter_dir '/Phase_outputs/' Subjects{1} '_phase_out.mat']);
     
     if Sub_count ==1
