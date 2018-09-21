@@ -18,18 +18,18 @@ fprintf(PARAMS.log, date);
 % Extract the data from each recroding phase within each session and separate pot vs track sections
 global PARAMS
 
-for iSub = 1:length(PARAMS.Subjects)
+for iSub = 4%:length(PARAMS.Subjects)
    %% speed loading
-   load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
-   d_t = data;
-   clear data
-   data.(PARAMS.Subjects{iSub}) = d_t;
+%    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
+%    d_t = data;
+%    clear data
+%    data.(PARAMS.Subjects{iSub}) = d_t;
 
 %% 
     if isunix
-        cd([PARAMS.data_dir '/' PARAMS.Subjects{iSub}])
+        cd([PARAMS.data_dir  PARAMS.Subjects{iSub}])
     else
-        cd([PARAMS.data_dir '\' PARAMS.Subjects{iSub}])
+        cd([PARAMS.data_dir  PARAMS.Subjects{iSub}])
     end
 
     dir_files = dir(); % get all the sessions for the current subject
@@ -68,20 +68,20 @@ fprintf(PARAMS.log,'\n\nCollecting Events');
     end
     
     
-end % subjects
+% end % subjects
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%% EVENT PROCESSING   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Event Processing
-for iSub = 5%:length(PARAMS.Subjects)
-    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'])
-     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
+% for iSub = 4%:length(PARAMS.Subjects)
+%     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'])
+%      load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
 % 	d_t = data;
     
     sess_list = fieldnames(data);
-    for iSess = 2:length(sess_list)
+    for iSess = 1:length(sess_list)
         fprintf(['\nRunning Phases Analyses on ' sess_list{iSess} '....\n']);
         
         cfg_in = [];
@@ -98,16 +98,12 @@ for iSub = 5%:length(PARAMS.Subjects)
     fprintf('...Complete');
 
 
-clear Events Phase_mat data
-
-
-
     
-end
+% end
 %% save the intermediate files
 fprintf(PARAMS.log,'\n\nSaving intermediates');
 % mkdir(PARAMS.data_dir, 'temp');
-% save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'], 'data', '-v7.3')
+save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'], 'data', '-v7.3')
 save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'], 'Events', '-v7.3')
 
 clearvars -except iSub PARAMS
