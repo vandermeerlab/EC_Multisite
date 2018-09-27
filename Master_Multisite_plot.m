@@ -16,20 +16,32 @@
 %% make a log
 global PARAMS
 fprintf(PARAMS.log, date);
+PARAMS.inter_dir = '/Volumes/Fenrir/MS_temp/';
+
 % Extract the data from each recroding phase within each session and separate pot vs track sections
 close all
-%% generate a spectrogram across each session for each site.
-for iSub = 1:length(PARAMS.Subjects)
+for iSub = 4%1:length(PARAMS.Subjects)
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
-        load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris.mat'])
+    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris.mat'])
+    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'])
 
+    %% generate sample events for each session for each site.
+
+        sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
+    for iSess = 1:length(sess_list)
+        fprintf(PARAMS.log,['\nPlotting Events ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+        MS_event_fig([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(strrep(sess_list{iSess}, '-', '_')));
+        fprintf(PARAMS.log, '...complete');
+    end
     
-    %     sess_list = fieldnames(data);
-    %     for iSess = 1:length(sess_list)
-    %         fprintf(PARAMS.log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-    %         MS_spec_fig([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
-    %         fprintf(PARAMS.log, '...complete');
-    %     end
+    %% generate a spectrogram across each session for each site.
+
+        sess_list = fieldnames(data);
+        for iSess = 1:length(sess_list)
+            fprintf(PARAMS.log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+            MS_spec_fig([], data.(strrep(sess_list{iSess}, '-', '_')));
+            fprintf(PARAMS.log, '...complete');
+        end
     
     
     %% plot the PSD for each session and each site
@@ -40,15 +52,26 @@ for iSub = 1:length(PARAMS.Subjects)
     
 end
 
+%% %%%%%%% CROSS SESSION ANALYSES  %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+for iSub = 1:length(PARAMS.Subjects)    
+    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris.mat'])
+    
+     all_Naris.(PARAMS.Subjects{iSub}) = Naris.(PARAMS.Subjects{iSub});
+    
+    clearvars -except iSub PARAMS all_Naris
+    close all
+end
+    
 %% generate the average PSD for each site across sessions
 
 MS_plot_psd_avg([], Naris)
 
-
 %% get the session wide coherence and amplitude plots
-for iSub = 1:length(PARAMS.Subjects)
-    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
-    
+
     % %% generate a Coherogram across each session for each site.
     % fprintf(PARAMS.log,['\nPlotting Coh Sess ' PARAMS.Subjects{iSub}]);
     % mkdir(PARAMS.inter_dir, 'sess')
@@ -69,9 +92,7 @@ for iSub = 1:length(PARAMS.Subjects)
     % cfg_coh.measure = 'amp';
     % MS_plot_session_phase(cfg_coh, Naris);
     % fprintf(PARAMS.log, '...complete');
-    
-    %% plot example events
-    
+        
     
     
     %% generate a Coherogram across each session for each site.
@@ -86,11 +107,8 @@ for iSub = 1:length(PARAMS.Subjects)
     
     
     
-    all_Naris.(PARAMS.Subjects{iSub}) = Naris.(PARAMS.Subjects{iSub});
-    
-    clearvars -except iSub PARAMS all_Naris
-    close all
-end
+   
+
 
 
 %% Figure S2 all coherence for each site pair (no piri)

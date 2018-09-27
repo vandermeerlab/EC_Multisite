@@ -62,7 +62,7 @@ for iSite =1:length(sites)
                 plot_loop = 1;
                 labels = {};
                 y_val = [];
-                for iSite2 =1:length(sites)
+                for iSite2 =length(sites):-1:1
                     if strcmp(sites{iSite2}(end-2:end), 'trk')
                         continue
                     else

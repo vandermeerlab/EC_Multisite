@@ -8,7 +8,7 @@ PARAMS.inter_dir = '/Volumes/Fenrir/MS_temp/';
 cd(PARAMS.inter_dir)
 
 
-for iSub = 4:length(PARAMS.Subjects)
+for iSub = 1:length(PARAMS.Subjects)
     
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
     
@@ -51,7 +51,7 @@ for iSub = 4:length(PARAMS.Subjects)
 % cfg_pow_ratio_plot.power_ratio.gamma_freq = [45 65; 70 90];
 
 % cfg_pow_ratio_plot.pot_trk = 'pot'; 
-MS_plot_power_ratio(cfg_pow_ratio_plot, Naris)
+% MS_plot_power_ratio(cfg_pow_ratio_plot, Naris)
     
     
     

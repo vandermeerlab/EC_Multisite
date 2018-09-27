@@ -1,6 +1,11 @@
 %% for debugging
 run('/Users/jericcarmichael/Documents/GitHub/EC_Multisite/MS_initialize.m')
 global PARAMS
+
+% for USB data
+PARAMS.inter_dir = '/Volumes/Fenrir/MS_temp/';
+cd(PARAMS.inter_dir)
+
 Subjects = {'R102','R104','R107', 'R108', 'R112','R122','R123', 'all'};
 %%
 for iSub = Subjects
@@ -8,11 +13,11 @@ for iSub = Subjects
     load([PARAMS.inter_dir '/Phase_outputs/' iSub{1} '_phase_out.mat']);
     
     if strcmp(iSub{1}, 'all')
-        mat_in = mat_out; 
-            clear mat_out;
+        mat_in = mat_out;
+        clear mat_out;
     else
-         mat_in = Phase_mat;
-    clear Phase_mat;
+        mat_in = Phase_mat;
+        clear Phase_mat;
     end
     cfg_in = [];
     %%
@@ -88,7 +93,7 @@ for iSub = Subjects
                             %                         else
                             temp(cellfun(@(temp) any(isnan(temp)),temp)) = [];
                             temp = cell2mat(squeeze(temp));
-                            if isempty(temp) || size(temp,1) <10; 
+                            if isempty(temp) || size(temp,1) <10;
                                 all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = [];
                                 all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  [];
                                 
@@ -240,50 +245,51 @@ for iSub = Subjects
                             elseif strcmp(bands{iBand}, 'high')
                                 comp_mat = high_mat';
                             end
-                            
-                            if ~isempty(all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}) && comp_mat(ii, jj)
-                                iC = find(ismember(c_labels, labels{ii,jj}));
-                                hold on
-                                % for the coherence
-                                if strcmp(measures{iMs}, 'COH_cxx')
-                                    h =shadedErrorBar(all_mean.COH_fxx.(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}, all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj})));
-                                    h.mainLine.Color = c_ord(iC,:);
-                                    h.patch.FaceColor = c_ord(iC,:);
-                                    h.patch.FaceAlpha = .5;
-                                    handles_p = [handles_p, h.patch];
-                                end
-                                % for the phase lag
-                                if strcmp(measures{iMs}, 'Phase_lag_cxy')
-                                    sem =  rad2deg(all_std.Phase_lag_cxy.(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj})/sqrt(length(all_mean.Phase_lag_cxy.(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}));
-                                    h =shadedErrorBar(all_mean.Phase_lag_F.(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}, rad2deg(all_mean.Phase_lag_cxy.(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}),sem);
-                                    h.mainLine.Color = c_ord(iC,:);
-                                    h.patch.FaceColor = c_ord(iC,:);
-                                    h.patch.FaceAlpha = .5;
+                            if isempty(strfind(labels{ii,jj}, 'Piri'))
+                                if ~isempty(all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}) && comp_mat(ii, jj)
+                                    iC = find(ismember(c_labels, labels{ii,jj}));
+                                    hold on
+                                    % for the coherence
+                                    if strcmp(measures{iMs}, 'COH_cxx')
+                                        h =shadedErrorBar(all_mean.COH_fxx.(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}, all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj})));
+                                        h.mainLine.Color = c_ord(iC,:);
+                                        h.patch.FaceColor = c_ord(iC,:);
+                                        h.patch.FaceAlpha = .5;
+                                        handles_p = [handles_p, h.patch];
+                                    end
+                                    % for the phase lag
+                                    if strcmp(measures{iMs}, 'Phase_lag_cxy')
+                                        sem =  rad2deg(all_std.Phase_lag_cxy.(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj})/sqrt(length(all_mean.Phase_lag_cxy.(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}));
+                                        h =shadedErrorBar(all_mean.Phase_lag_F.(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}, rad2deg(all_mean.Phase_lag_cxy.(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}),sem);
+                                        h.mainLine.Color = c_ord(iC,:);
+                                        h.patch.FaceColor = c_ord(iC,:);
+                                        h.patch.FaceAlpha = .5;
+                                        
+                                        %                                 hE(iC) = plot(all_mean.Phase_lag_F.(PARAMS.Phases{iPhase}).low{ii, jj}, rad2deg(all_mean.Phase_lag_cxy.(PARAMS.Phases{iPhase}).low{ii, jj}), 'o', 'color', c_ord(iC,:), 'markerfacecolor', c_ord(iC,:));
+                                        %                                 hE(iC) = errorbar(all_mean.Phase_lag_F.(PARAMS.Phases{iPhase}).low{ii, jj}, rad2deg(all_mean.Phase_lag_cxy.(PARAMS.Phases{iPhase}).low{ii, jj}), sem, 'o', 'color', c_ord(iC,:))%, 'CapSize',2);
+                                        handles_p = [handles_p, h.patch];
+                                    end
+                                    % for the phase slope
+                                    if strcmp(measures{iMs}, 'PS_slope')
+                                        h =shadedErrorBar(all_mean.PS_F.(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}, all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj})));
+                                        h.mainLine.Color = c_ord(iC,:);
+                                        h.patch.FaceColor = c_ord(iC,:);
+                                        h.patch.FaceAlpha = .5;
+                                        handles_p = [handles_p, h.patch];
+                                    end
                                     
-                                    %                                 hE(iC) = plot(all_mean.Phase_lag_F.(PARAMS.Phases{iPhase}).low{ii, jj}, rad2deg(all_mean.Phase_lag_cxy.(PARAMS.Phases{iPhase}).low{ii, jj}), 'o', 'color', c_ord(iC,:), 'markerfacecolor', c_ord(iC,:));
-                                    %                                 hE(iC) = errorbar(all_mean.Phase_lag_F.(PARAMS.Phases{iPhase}).low{ii, jj}, rad2deg(all_mean.Phase_lag_cxy.(PARAMS.Phases{iPhase}).low{ii, jj}), sem, 'o', 'color', c_ord(iC,:))%, 'CapSize',2);
-                                    handles_p = [handles_p, h.patch];
+                                    if strcmp(measures{iMs}, 'AMP_AC')
+                                        h =shadedErrorBar(all_mean.AMP_LAG.(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}, all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj})));
+                                        h.mainLine.Color = c_ord(iC,:);
+                                        h.patch.FaceColor = c_ord(iC,:);
+                                        h.patch.FaceAlpha = .5;
+                                        handles_p = [handles_p, h.patch];
+                                    end
+                                    
+                                    
+                                    labs = [labs, labels{ii, jj}];
+                                    iC = iC+1;
                                 end
-                                % for the phase slope
-                                if strcmp(measures{iMs}, 'PS_slope')
-                                    h =shadedErrorBar(all_mean.PS_F.(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}, all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj})));
-                                    h.mainLine.Color = c_ord(iC,:);
-                                    h.patch.FaceColor = c_ord(iC,:);
-                                    h.patch.FaceAlpha = .5;
-                                    handles_p = [handles_p, h.patch];
-                                end
-                                
-                                if strcmp(measures{iMs}, 'AMP_AC')
-                                    h =shadedErrorBar(all_mean.AMP_LAG.(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}, all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj})));
-                                    h.mainLine.Color = c_ord(iC,:);
-                                    h.patch.FaceColor = c_ord(iC,:);
-                                    h.patch.FaceAlpha = .5;
-                                    handles_p = [handles_p, h.patch];
-                                end
-                                
-                                
-                                labs = [labs, labels{ii, jj}];
-                                iC = iC+1;
                             end
                         end
                     end
@@ -453,89 +459,101 @@ for iSub = Subjects
         close all
     end
     
-
+    
     %%
+    stats_log = fopen([PARAMS.inter_dir iSub{1} '_Phase_stats.txt'], 'w');
     ver = version;
     ver = str2double(ver(end-5:end-2));
     for iPhase =1:length(PARAMS.Phases)
-%         phase_mean_mat.(PARAMS.Phases{iPhase}) = NaN(length(labels), length(labels));
-str_vals = [];
+        %         phase_mean_mat.(PARAMS.Phases{iPhase}) = NaN(length(labels), length(labels));
+        str_vals.low = cell(7,7); str_vals.high = cell(7,7);
+        str_vals_piri.low = cell(7,7); str_vals_piri.high = cell(7,7);
+        phase_mean = NaN(7,7); vector_r = NaN(7,7);
+        
         pol_legend = {}; piri_legend = {};
         n = 1000;
         figure(1115)
         all_h = [];
-%         for kk = 1:4
-%            hold on
-%            subplot(2,2,kk)
-%            h_temp = polar([0 0], [0 1]);
-%            set(h_temp, 'visible', 'off') ;
-% 
-%         end
-        %% 
+        %         for kk = 1:4
+        %            hold on
+        %            subplot(2,2,kk)
+        %            h_temp = polar([0 0], [0 1]);
+        %            set(h_temp, 'visible', 'off') ;
+        %
+        %         end
+        %%
         for ii = 1:size(labels,1)
             for jj = 1:size(labels,2)
                 iC = find(ismember(c_labels, labels{ii,jj}));
                 if ~isnan(mean_out.Phase_diff_out.(PARAMS.Phases{iPhase})(ii,jj)) && low_mat(ii,jj)
                     iC = find(ismember(c_labels, labels{ii,jj}));
                     
-                    phase_mean = circ_mean(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).low{ii,jj});
-                    vector_r = circ_r(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).low{ii,jj});
-%                     spacing_str = '________';
-%                     spacing_str =  spacing_str(1:end-length(labels{ii,jj}))
-
-                    str_vals.low{ii,jj} = sprintf('low %s: %.0f? ,MVL %.2f',labels{ii,jj}, rad2deg(phase_mean), vector_r);
+                    phase_mean(ii,jj) = circ_mean(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).low{ii,jj});
+                    vector_r(ii,jj) = circ_r(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).low{ii,jj});
+                    %                     spacing_str = '________';
+                    %                     spacing_str =  spacing_str(1:end-length(labels{ii,jj}))
+                    
+                    %                     str_vals.low{ii,jj} = sprintf('low %s: %.0f ,MVL .2f',labels{ii,jj}, rad2deg(phase_mean), vector_r); % with values.
+                    %                     str_vals.low{ii, jj} = labels{ii, jj}; % just the labels
                     if isempty(strfind(labels{ii,jj}, 'Piri'))
-                        subplot(2,3,1)
-                        pol_legend = [pol_legend, str_vals.low{ii,jj}];
-                        
+                        subplot(2,2,1)
+                        pol_legend = [pol_legend, labels{ii,jj}];
+                        str_vals.low{ii,jj} = sprintf('%s: & %.0f & %.2f',labels{ii,jj}, rad2deg(phase_mean(ii,jj)), vector_r(ii,jj)); % with values.
                     else
-                        subplot(2,3,4)
-                        piri_legend = [piri_legend, str_vals.low{ii,jj}];
+                        subplot(2,2,3)
+                        piri_legend = [piri_legend, labels{ii,jj}];
+                        str_vals_piri.low{ii,jj} = sprintf('%s: & %.0f & %.2f',labels{ii,jj}, rad2deg(phase_mean(ii,jj)), vector_r(ii,jj)); % with values.
                         
                     end
-                    % save the values for a summary table later. 
-%                     if isempty(phase_mean)
-%                         phase_mean_mat.(PARAMS.Phases{iPhase})(ii, jj) = NaN;
-%                         phase_vec_mat.(PARAMS.Phases{iPhase})(ii, jj) = NaN;
-%                     else
-%                         phase_mean_mat.(PARAMS.Phases{iPhase})(ii, jj) = phase_mean;
-%                         phase_vec_mat.(PARAMS.Phases{iPhase})(ii, jj) = vector_r;
-%                     end
-
+                    % save the values for a summary table later.
+                    %                     if isempty(phase_mean)
+                    %                         phase_mean_mat.(PARAMS.Phases{iPhase})(ii, jj) = NaN;
+                    %                         phase_vec_mat.(PARAMS.Phases{iPhase})(ii, jj) = NaN;
+                    %                     else
+                    %                         phase_mean_mat.(PARAMS.Phases{iPhase})(ii, jj) = phase_mean;
+                    %                         phase_vec_mat.(PARAMS.Phases{iPhase})(ii, jj) = vector_r;
+                    %                     end
+                    
                     %                 [t,r]= rose(mean_out.Phase_diff_out.(PARAMS.Phases{iPhase})(ii,jj),n);
                     
                     %                 h = polar(t,r);
-
+                    
                     %polar plot the median and the vector length
                     if ver >= 2017
-                        h = polarplot( [0 phase_mean],[0 vector_r]);
+                        h = polarplot([0 phase_mean(ii,jj)],[0 vector_r(ii,jj)]);
                         rlim([0 1])
                         set(gca, 'ThetaDir', 'clockwise', 'ThetaZeroLocation', 'top','RTick' ,[0.5 1], 'FontSize', 22, 'FontName', 'Helvetica')
                         cfg_polar.axes_labels = 0; % turns off any scaling of the x and y label which don't work in polar plots
                     else
                         h_temp = polar([0 0], [0 1]);
                         hold on
-                        h = polar([0 phase_mean], [0 vector_r]);
+                        h = polar([0 phase_mean(ii,jj)], [0 vector_r(ii,jj)]);
                         set(h_temp, 'visible', 'off') ;
                         cfg_polar.axes_labels = 1; % turns off any scaling of the x and y label which don't work in polar plots
                     end
                     
                     S = strsplit(labels{ii,jj}, '_');
-                    if strcmp(S{1}, 'NAc') && strcmp(S{2}, 'OFC') || strcmp(S{1}, 'PiriN') && strcmp(S{2}, 'NAc')
+                    if strcmp(S{1}, 'NAc') && strcmp(S{2}, 'OFC') || strcmp(S{1}, 'PiriN') && strcmp(S{2}, 'PiriO')
                         set(h, 'color', 'k', 'linewidth', 7)
                     else
                         set(h, 'color', c_ord(iC,:), 'linewidth', 4)
                     end
                     hold all
-%                     view([90, 90])
+                    %                     view([90, 90])
                     
-                elseif ~isnan(mean_out.Phase_diff_out.(PARAMS.Phases{iPhase})(ii,jj)) && high_mat(ii,jj)
+                elseif ~isnan(mean_out.Phase_diff_out.(PARAMS.Phases{iPhase})(ii,jj)) && high_mat(ii,jj) && ~isempty(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).high{ii,jj})
                     iC = find(ismember(c_labels, labels{jj,ii}));
                     
-                    if isempty(strfind(labels{ii,jj}, 'Piri'))
-                        subplot(2,3,3)
-                    else
-                        subplot(2,3,6)
+                    phase_mean(ii,jj) = circ_mean(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).high{ii,jj});
+                    vector_r(ii,jj) = circ_r(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).high{ii,jj});
+                    
+                    if isempty(strfind(labels{ii,jj}, 'Piri')) % contains no piriform channel
+                        subplot(2,2,2)
+                        str_vals.high{ii,jj} = sprintf('%s: & %.0f  & %.2f',labels{jj,ii}, rad2deg(phase_mean(ii,jj)), vector_r(jj,ii)); % with values.
+                        
+                    else % if it is a piriform - x comparison
+                        subplot(2,2,4)
+                        str_vals_piri.high{ii,jj} = sprintf('%s: & %.0f  & %.2f',labels{jj,ii}, rad2deg(phase_mean(ii,jj)), vector_r(jj,ii)); % with values.
                     end
                     %                 [t,r]= rose(mean_out.Phase_diff_out.(PARAMS.Phases{iPhase})(ii,jj),n);
                     %
@@ -543,44 +561,41 @@ str_vals = [];
                     %                 phase_mean = circ_mean(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).high{ii,jj});
                     %                 vector_r = circ_r(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).high{ii,jj});
                     %                 h = compass(phase_mean,vector_r);
-                    phase_mean = circ_mean(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).high{ii,jj});
-                    vector_r = circ_r(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).high{ii,jj});
                     
-                    str_vals.high{ii,jj} = sprintf('high %s: %.0f? ,MVL %.2f',labels{ii,jj}, rad2deg(phase_mean), vector_r);
-
+                    
                     
                     % save the values for a summary table later.
-%                     if isempty(phase_mean)
-%                         phase_mean_mat.(PARAMS.Phases{iPhase})(ii, jj) = NaN;
-%                         phase_vec_mat.(PARAMS.Phases{iPhase})(ii, jj) = NaN;
-%                     else
-%                         phase_mean_mat.(PARAMS.Phases{iPhase})(ii, jj) = phase_mean;
-%                         phase_vec_mat.(PARAMS.Phases{iPhase})(ii, jj) = vector_r;
-%                     end
+                    %                     if isempty(phase_mean)
+                    %                         phase_mean_mat.(PARAMS.Phases{iPhase})(ii, jj) = NaN;
+                    %                         phase_vec_mat.(PARAMS.Phases{iPhase})(ii, jj) = NaN;
+                    %                     else
+                    %                         phase_mean_mat.(PARAMS.Phases{iPhase})(ii, jj) = phase_mean;
+                    %                         phase_vec_mat.(PARAMS.Phases{iPhase})(ii, jj) = vector_r;
+                    %                     end
                     %polar plot the median and the vector length
                     if ver >= 2017
-                        h = polarplot( [0 phase_mean],[0 vector_r]);
+                        h = polarplot( [0 phase_mean(ii,jj)],[0 vector_r(ii,jj)]);
                         rlim([0 1])
                         set(gca, 'ThetaDir', 'clockwise', 'ThetaZeroLocation', 'top','RTick' ,[0.5 1], 'FontSize', 22, 'FontName', 'Helvetica')
                         cfg_polar.axes_labels = 0; % turns off any scaling of the x and y label which don't work in polar plots
                     else
                         h_temp = polar([0 0], [0 1]);
                         hold on
-                        h = polar([0 phase_mean], [0 vector_r]);
+                        h = polar([0 phase_mean(ii,jj)], [0 vector_r(ii,jj)]);
                         set(h_temp, 'visible', 'off') ;
                         cfg_polar.axes_labels = 1; % turns off any scaling of the x and y label which don't work in polar plots
                     end
-                
+                    
                     
                     S = strsplit(labels{ii,jj}, '_');
-                    if strcmp(S{2}, 'NAc') && strcmp(S{1}, 'OFC') || strcmp(S{2}, 'PiriN') && strcmp(S{1}, 'NAc')
+                    if strcmp(S{2}, 'NAc') && strcmp(S{1}, 'OFC') || strcmp(S{1}, 'PiriN') && strcmp(S{2}, 'PiriO')
                         set(h, 'color', 'k', 'linewidth', 7)
                     else
                         set(h, 'color', c_ord(iC,:), 'linewidth', 4)
                     end
                     hold all
-%                     view([270, 90])
-%                     view([0, 90])
+                    %                     view([270, 90])
+                    %                     view([0, 90])
                 end
             end
         end
@@ -591,17 +606,17 @@ str_vals = [];
         for i = 1:length(th)
             set(th(i),'FontSize',20)
         end
-        subplot(2,3,1)
+        subplot(2,2,1)
         hL = legend(pol_legend);
         set(hL,'Position', [0.5 0.7 0.05 0.1], 'Units', 'normalized')
         
-        subplot(2,3,4)
+        subplot(2,2,3)
         hL = legend(piri_legend);
         set(hL,'Position', [0.5 0.25 0.05 0.1], 'Units', 'normalized')
         %         tightfig
         cfg_polar.resize = 1;
         cfg_polar.pos = [205    50  1200   800];
-        SetFigure(cfg_polar, gcf)
+        SetFigure(cfg_polar, gcf);
         
         saveas(gcf, [PARAMS.inter_dir 'Phase_plots/' iSub{1} '_' (PARAMS.Phases{iPhase}) '_polar_phase.fig']);
         %         saveas(gcf, [PARAMS.inter_dir 'Phase_plots/' iSub{1} '_' (PARAMS.Phases{iPhase}) '_polar_phase'], 'epsc')
@@ -609,22 +624,88 @@ str_vals = [];
         print(gcf, '-dpng', [PARAMS.inter_dir 'Phase_plots/' iSub{1} '_' (PARAMS.Phases{iPhase})  '_polar_phase.png'], '-r300')
         close all
         
+        %% print the statstistics
+        fprintf(stats_log,['\n\n' PARAMS.Phases{iPhase} '\n\n'])
+        
+        bands = {'low', 'high'};
+        for iBands = 1:length(bands)
+            fprintf(stats_log, '####    Circ Stats for %s gamma    ####\n', bands{iBands})
+            for ii = 1:size(str_vals.(bands{iBands}),1)
+                for jj = 1:size(str_vals.(bands{iBands}),2)
+                    if ~isempty(str_vals.(bands{iBands}){ii, jj})
+                        fprintf(stats_log,str_vals.(bands{iBands}){ii, jj})
+                        fprintf(stats_log,'\n')
+                    end
+                    
+                end
+            end
+        end
+        % same for the piriform pairs
+        fprintf(stats_log,'-------- Trans piriform---------')
+        bands = {'low', 'high'};
+        for iBands = 1:length(bands)
+            fprintf(stats_log,'####    Circ Stats for %s gamma    ####\n', bands{iBands})
+            for ii = 1:size(str_vals_piri.(bands{iBands}),1)
+                for jj = 1:size(str_vals_piri.(bands{iBands}),2)
+                    if ~isempty(str_vals_piri.(bands{iBands}){ii, jj})
+                        fprintf(stats_log,str_vals_piri.(bands{iBands}){ii, jj})
+                        fprintf(stats_log,'\n')
+                    end
+                    
+                end
+            end
+        end
+        
+        %% stats for latex table:
+        for ii = 1:size(phase_mean,1)
+            for jj = 1:size(phase_mean,2)
+                if ~isempty(phase_mean(ii,jj)) && ~isnan(phase_mean(ii,jj)) &&  low_mat(ii,jj) &&isempty(strfind(labels{ii,jj}, 'Piri'))
+                    if strcmp(labels{ii,jj}, 'PiriN_PiriO') || strcmp(labels{ii,jj}, 'NAc_OFC')
+                        fprintf(stats_log,'%s}: & %.0f & %.2f & %.0f & %.2f', ['\textbf{' strrep(labels{ii,jj}, '_', '-')], rad2deg(phase_mean(ii,jj)), vector_r(ii,jj), rad2deg(phase_mean(jj,ii)), vector_r(jj,ii))
+                    else
+                        fprintf(stats_log,'%s: & %.0f & %.2f & %.0f & %.2f', strrep(labels{ii,jj}, '_', '-'), round(rad2deg(phase_mean(ii,jj))), vector_r(ii,jj), round(rad2deg(phase_mean(jj,ii))), vector_r(jj,ii))
+                    end
+                    fprintf(stats_log,'\\\\ \n ')
+                    fprintf(stats_log,'%s', '\hline')
+                    fprintf(stats_log,'\n')
+                end
+                
+            end
+        end
+        fprintf(stats_log,'\n\n % Trans-Piriform\n\n')
+        % same thing but with piriform
+        for ii = 1:size(phase_mean,1)
+            for jj = 1:size(phase_mean,2)
+                if ~isempty(phase_mean(ii,jj)) && ~isnan(phase_mean(ii,jj)) &&  low_mat(ii,jj) && ~isempty(strfind(labels{ii,jj}, 'Piri'))
+                    if strcmp(labels{ii,jj}, 'PiriN_PiriO') || strcmp(labels{ii,jj}, 'NAc_OFC')
+                        fprintf(stats_log,'%s}: & %.0f & %.2f & %.0f & %.2f', ['\textbf{' strrep(labels{ii,jj}, '_', '-')], rad2deg(phase_mean(ii,jj)), vector_r(ii,jj), rad2deg(phase_mean(jj,ii)), vector_r(jj,ii))
+                        
+                    else
+                        fprintf(stats_log,'%s: & %.0f & %.2f & %.0f & %.2f', strrep(labels{ii,jj}, '_', '-'), round(rad2deg(phase_mean(ii,jj))), vector_r(ii,jj), round(rad2deg(phase_mean(jj,ii))), vector_r(jj,ii))
+                    end
+                    fprintf(stats_log,'\\\\ \n ')
+                    fprintf(stats_log,'%s', '\hline')
+                    fprintf(stats_log,'\n')
+                end
+                
+            end
+        end
     end
 end
-%% make a table of the pairs and corresponding values 
+%% make a table of the pairs and corresponding values
 %% check the rayleigh score of each and report
 R = [];
 for iPhase =1:length(PARAMS.Phases)
     for iBand = 1:length(bands);
-    for ii = 1:size(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).(bands{iBand}),1)
-        for jj = 1:size(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).(bands{iBand}),2)
-            if ~isempty(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj})
-            R.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = circ_rtest(...
-                all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj});
-            else
-                R.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = NaN;
+        for ii = 1:size(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).(bands{iBand}),1)
+            for jj = 1:size(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).(bands{iBand}),2)
+                if ~isempty(all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj})
+                    R.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = circ_rtest(...
+                        all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj});
+                else
+                    R.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = NaN;
+                end
             end
-        end
         end
     end
 end
@@ -638,14 +719,14 @@ h = nan_imagesc_ec(cell2mat(R.contra.high));
 add_num_imagesc(h, cell2mat(R.contra.high), 4)
 
 caxis([0 0.001])
-    %% try to make the compass plots for the phase differences
-    % conver the tril or triu to a linear
+%% try to make the compass plots for the phase differences
+% conver the tril or triu to a linear
 %     for iPhase =1:length(PARAMS.Phases)
 %         for iBand = 1:2
 %             Polar_phase.(PARAMS.Phases{iPhase}).(bands{iBand}) = [];
 %         end
 %     end
-%     
+%
 %     pol_legend = {};
 %     for ii = 1:size(labels,1)
 %         for jj = 1:size(labels,2)
@@ -654,7 +735,7 @@ caxis([0 0.001])
 %                 pol_legend = [pol_legend, labels{ii,jj}];
 %             elseif ~low_mat(ii,jj) && ii == jj
 %                 Polar_phase.(PARAMS.Phases{iPhase}).high = [Polar_phase.(PARAMS.Phases{iPhase}).high, mean_out.Phase_diff_out.(PARAMS.Phases{iPhase})(ii,jj)];
-%                 
+%
 %             end
 %         end
 %     end
