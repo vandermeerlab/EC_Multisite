@@ -62,9 +62,9 @@ for iSub = 4:length(PARAMS.Subjects)
 %     clear d_t
 save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris.mat'], 'Naris', '-v7.3')
 
-    if exist([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat']) ==2
-        load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
-    end
+%     if exist([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat']) ==2
+%         load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
+%     end
 
 %% generate a Coherogram across each session for each site.
 %for iSub = length(PARAMS.Subjects):-1:5

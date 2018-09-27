@@ -55,18 +55,30 @@ cfg = ProcessConfig2(cfg_def, cfg_in);
 for iPhase = 1:length(PARAMS.Phases)
     f_names = fieldnames(data.(PARAMS.Phases{iPhase}));
     for iF = 1:length(f_names)
-        if strcmp(f_names{iF}, 'Piri_O_pot')
+         if strcmp(f_names{iF}, 'Piri_O_pot')
             data.(PARAMS.Phases{iPhase}).PiriO_pot = data.(PARAMS.Phases{iPhase}).(f_names{iF});
             data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'Piri_O_pot');
+        elseif   strcmp(f_names{iF}, 'Piri_OFC_pot')
+            data.(PARAMS.Phases{iPhase}).PiriO_pot = data.(PARAMS.Phases{iPhase}).(f_names{iF});
+            data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'Piri_OFC_pot');
         elseif strcmp(f_names{iF}, 'Piri_O_trk')
             data.(PARAMS.Phases{iPhase}).PiriO_trk = data.(PARAMS.Phases{iPhase}).(f_names{iF});
             data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'Piri_O_trk');
+        elseif   strcmp(f_names{iF}, 'Piri_OFC_trk')
+            data.(PARAMS.Phases{iPhase}).PiriO_trk = data.(PARAMS.Phases{iPhase}).(f_names{iF});
+            data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'Piri_OFC_trk');
         elseif strcmp(f_names{iF}, 'Piri_N_pot')
             data.(PARAMS.Phases{iPhase}).PiriN_pot = data.(PARAMS.Phases{iPhase}).(f_names{iF});
             data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'Piri_N_pot');
+        elseif strcmp(f_names{iF}, 'Piri_NAc_pot')
+            data.(PARAMS.Phases{iPhase}).PiriN_pot = data.(PARAMS.Phases{iPhase}).(f_names{iF});
+            data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'Piri_NAc_pot');
         elseif strcmp(f_names{iF}, 'Piri_N_trk')
             data.(PARAMS.Phases{iPhase}).PiriN_trk = data.(PARAMS.Phases{iPhase}).(f_names{iF});
             data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'Piri_N_trk');
+        elseif strcmp(f_names{iF}, 'Piri_NAc_trk')
+            data.(PARAMS.Phases{iPhase}).PiriN_trk = data.(PARAMS.Phases{iPhase}).(f_names{iF});
+            data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'Piri_NAc_trk');
         end
     end
 end

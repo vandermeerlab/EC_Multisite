@@ -18,7 +18,7 @@ fprintf(PARAMS.log, date);
 % Extract the data from each recroding phase within each session and separate pot vs track sections
 global PARAMS
 
-for iSub = 4%:length(PARAMS.Subjects)
+for iSub = 5%:length(PARAMS.Subjects)
    %% speed loading
 %    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
 %    d_t = data;
@@ -80,7 +80,7 @@ fprintf(PARAMS.log,'\n\nCollecting Events');
 %      load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
 % 	d_t = data;
     
-    sess_list = fieldnames(data);
+    sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
         fprintf(['\nRunning Phases Analyses on ' sess_list{iSess} '....\n']);
         
@@ -88,7 +88,7 @@ fprintf(PARAMS.log,'\n\nCollecting Events');
         cfg_in.Subject_id = sess_list{iSess};
         %	cfg.check = 1;
         
-        Phase_mat.(sess_list{iSess}) =  MS_Phase_Analyses(cfg_in, data.(sess_list{iSess}), Events.(PARAMS.Subjects{iSub}).(sess_list{iSess}));
+        Phase_mat.(sess_list{iSess}) =  MS_Phase_Analyses(cfg_in, data.(PARAMS.Subjects{iSub}).(sess_list{iSess}), Events.(PARAMS.Subjects{iSub}).(sess_list{iSess}));
         
         fprintf('...Complete\n');
     end
@@ -103,6 +103,7 @@ fprintf(PARAMS.log,'\n\nCollecting Events');
 %% save the intermediate files
 fprintf(PARAMS.log,'\n\nSaving intermediates');
 % mkdir(PARAMS.data_dir, 'temp');
+data = data.(PARAMS.Subjects{iSub}); 
 save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'], 'data', '-v7.3')
 save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'], 'Events', '-v7.3')
 
