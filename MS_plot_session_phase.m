@@ -148,7 +148,7 @@ for iSub = 1:length(Subjects)
             xlabel('Frequency (Hz)');
             ylabel('Coherence')
             ylim(cfg.ylim)
-            set(gca, 'ytick', [0:0.25:1], 'xtick',[0:25:100])
+            set(gca, 'ytick', [0:.5:1], 'xtick',[0 100])
             cfg.set_fig =[];
             cfg.set_fig.ft_size = 28;
             SetFigure(cfg.set_fig, gcf)
@@ -186,7 +186,7 @@ for iSub = 1:length(Subjects)
                 xlabel('Frequency (Hz)');
                 ylabel('Coherence')
                 ylim(cfg.ylim)
-                set(gca, 'ytick', [0:0.25:1], 'xtick',[0:25:100])
+                set(gca, 'ytick', [0:0.5:1], 'xtick',[0 100])
                 cfg.set_fig.ft_size = 28;
                 SetFigure(cfg.set_fig, gcf)
                 
@@ -225,7 +225,7 @@ for iSub = 1:length(Subjects)
                 xlabel('Frequency (Hz)');
                 ylabel('Coherence')
                 ylim(cfg.ylim)
-                set(gca, 'ytick', [0:0.25:1], 'xtick',[0:25:100])
+                set(gca, 'ytick', [0:0.5:1], 'xtick',[0 100])
                 cfg.set_fig.ft_size = 36;
                 SetFigure(cfg.set_fig, gcf)
                 
@@ -307,6 +307,8 @@ for iSub = 1:length(Subjects)
             xlabel('Frequency (Hz)');
             ylabel('Amplitude xcorr')
             ylim(cfg.ylim)
+            set(gca, 'ytick', [0:0.5:1], 'xtick',[0 100])
+
             cfg.set_fig =[];
             cfg.set_fig.ft_size = 28;
             SetFigure(cfg.set_fig, gcf)
@@ -342,7 +344,7 @@ for iSub = 1:length(Subjects)
                 xlabel('Frequency (Hz)');
                 ylabel('Amplitude xcorr')
                 ylim(cfg.ylim)
-                set(gca, 'ytick', [0:0.25:1], 'xtick',[0:25:100])
+                set(gca, 'ytick', [0:0.5:1], 'xtick',[0 100])
                 cfg.set_fig.ft_size = 28;
                 SetFigure(cfg.set_fig, gcf)
                 
@@ -381,7 +383,7 @@ for iSub = 1:length(Subjects)
                 xlabel('Frequency (Hz)');
                 ylabel('Amplitude xcorr')
                 ylim(cfg.ylim)
-                set(gca, 'ytick', [0:0.25:1], 'xtick',[0:25:100])
+                set(gca, 'ytick', [0:0.5:1], 'xtick',[0 100])
                 cfg.set_fig.ft_size = 36;
                 SetFigure(cfg.set_fig, gcf)
                 

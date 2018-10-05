@@ -1,4 +1,4 @@
-edit M% % Multi_Master:
+% % Multi_Master:
 % %   Master control script for multi-site loading, analysis, and statistics.
 % %   Requirements:
 % %        - van der Meer lab codebase

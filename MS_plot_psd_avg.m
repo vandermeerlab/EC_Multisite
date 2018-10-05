@@ -296,56 +296,57 @@ error_bar_high = circshift(error_bar_high,1,2);
 h_low = errorbar_groups(m_low.White_Pxx',error_bar_low, 'bar_colors', c_ord, 'bar_names', bar_names', 'FigID', 100);
 h_high = errorbar_groups(m_high.White_Pxx',error_bar_high, 'bar_colors', c_ord,  'bar_names', bar_names', 'FigID', 200);
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Same thing but average in the gamma bands  %%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% low gamma bar plot
-figure(200)
-figHandles = get(0,'Children');
-if sum(figHandles == 200) > 0
-    close(200)
-end
-cfg.conditions = {'control', 'ipsi', 'contra'};
-
-F = figure(200);
-set(gcf, 'PaperPositionMode', 'auto', 'color', 'w')
-set(F, 'Position', [200, 200, 900 700])
-if isfield(cfg, 'whitefilter')
-    cfg.phases = cfg.conditions;
-    note = ('w/diff');
-    labels = {'Control', 'Ipsi', 'Contra'};
-else
-    labels = {'Pre', 'Ipsi', 'Contra', 'Post'};
-    note = '';
-end
-hold on
-for iphase = 1:length(cfg.phases)
-    for id= 1:length(ids)
-        if id ==1 % "*iphase-(1/10) is to give a slight horizontal offset to the data for easier viewing.
-            h1 = plot(ones(4,3)*iphase-(1/10),comp_data.(cfg.phases{iphase})(:,id),  cfg.marker_ord{id}, 'MarkerEdgeColor', cfg.c_order_pow(id,:), 'MarkerSize', 14, 'LineWidth', 3) ;
-        elseif id==2
-            h2 = plot(ones(4,3)*iphase,comp_data.(cfg.phases{iphase})(:,id),  cfg.marker_ord{id}, 'MarkerEdgeColor', cfg.c_order_pow(id,:), 'MarkerSize', 14, 'LineWidth', 3);
-        elseif id ==3
-            h3 = plot(ones(4,3)*iphase+(1/10),comp_data.(cfg.phases{iphase})(:,id),  cfg.marker_ord{id}, 'MarkerEdgeColor', cfg.c_order_pow(id,:), 'MarkerSize', 14, 'LineWidth', 3);
-        end
-        disp(num2str(comp_data.(cfg.phases{iphase})(:,id)))
-    end
-    %         legend([h1(1), h2(1), h3(1)], 'R2', 'R4', 'R5', 'orientation', 'horizontal', 'fontsize', 16)
-    
-    legend([h1(1), h2(1), h3(1)],{'R5', 'R6', 'R7'}, 'location', 'northoutside', 'orientation', 'horizontal', 'fontsize', 16)
-    line_of_best_fit(1,iphase) = mean(nanmean(comp_data.(cfg.phases{iphase}),1));
-end
-
-plot(1:length(cfg.phases), line_of_best_fit, 'k', 'LineWidth', 1)
-% set the figure properties
-box on
-set(gcf, 'color', [1 1 1])
-ylabh = get(gca,'yLabel');
-% ylab_str('interpreter','latex','string','\fontsize{20}{0}\selectfont$Power$\fontsize{16}{0}\selectfont$(Normalized)$');
-% ylabel('\fontsize{20}{0}\selectfont$Power$\n\fontsize{16}{0}\selectfont$(Normalized)$','Interpreter','LaTex')
-ylabel('Power (normalized)')%, 'position', get(ylabh,'Position') - [.2 0 0] )
-text(2, -3, 'Contidtion', 'FontSize', 20)
-SetFigure([], gcf)
+% %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%% Same thing but average in the gamma bands  %%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % low gamma bar plot
+% figure(200)
+% figHandles = get(0,'Children');
+% if sum(figHandles == 200) > 0
+%     close(200)
+% end
+% cfg.conditions = {'control', 'ipsi', 'contra'};
+% 
+% F = figure(200);
+% set(gcf, 'PaperPositionMode', 'auto', 'color', 'w')
+% set(F, 'Position', [200, 200, 900 700])
+% if isfield(cfg, 'whitefilter')
+%     cfg.phases = cfg.conditions;
+%     note = ('w/diff');
+%     labels = {'Control', 'Ipsi', 'Contra'};
+% else
+%     cfg.phases = {'Pre', 'Ipsi', 'Contra', 'Post'};
+%     labels = cfg.phases;
+%     note = '';
+% end
+% hold on
+% for iphase = 1:length(cfg.phases)
+%     for id= 1:length(ids)
+%         if id ==1 % "*iphase-(1/10) is to give a slight horizontal offset to the data for easier viewing.
+%             h1 = plot(ones(4,3)*iphase-(1/10),comp_data.(cfg.phases{iphase})(:,id),  cfg.marker_ord{id}, 'MarkerEdgeColor', cfg.c_order_pow(id,:), 'MarkerSize', 14, 'LineWidth', 3) ;
+%         elseif id==2
+%             h2 = plot(ones(4,3)*iphase,comp_data.(cfg.phases{iphase})(:,id),  cfg.marker_ord{id}, 'MarkerEdgeColor', cfg.c_order_pow(id,:), 'MarkerSize', 14, 'LineWidth', 3);
+%         elseif id ==3
+%             h3 = plot(ones(4,3)*iphase+(1/10),comp_data.(cfg.phases{iphase})(:,id),  cfg.marker_ord{id}, 'MarkerEdgeColor', cfg.c_order_pow(id,:), 'MarkerSize', 14, 'LineWidth', 3);
+%         end
+%         disp(num2str(comp_data.(cfg.phases{iphase})(:,id)))
+%     end
+%     %         legend([h1(1), h2(1), h3(1)], 'R2', 'R4', 'R5', 'orientation', 'horizontal', 'fontsize', 16)
+%     
+%     legend([h1(1), h2(1), h3(1)],{'R5', 'R6', 'R7'}, 'location', 'northoutside', 'orientation', 'horizontal', 'fontsize', 16)
+%     line_of_best_fit(1,iphase) = mean(nanmean(comp_data.(cfg.phases{iphase}),1));
+% end
+% 
+% plot(1:length(cfg.phases), line_of_best_fit, 'k', 'LineWidth', 1)
+% % set the figure properties
+% box on
+% set(gcf, 'color', [1 1 1])
+% ylabh = get(gca,'yLabel');
+% % ylab_str('interpreter','latex','string','\fontsize{20}{0}\selectfont$Power$\fontsize{16}{0}\selectfont$(Normalized)$');
+% % ylabel('\fontsize{20}{0}\selectfont$Power$\n\fontsize{16}{0}\selectfont$(Normalized)$','Interpreter','LaTex')
+% ylabel('Power (normalized)')%, 'position', get(ylabh,'Position') - [.2 0 0] )
+% text(2, -3, 'Contidtion', 'FontSize', 20)
+% SetFigure([], gcf)
 
 
 

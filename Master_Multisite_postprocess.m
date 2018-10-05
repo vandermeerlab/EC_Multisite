@@ -20,7 +20,7 @@ fprintf(PARAMS.log, date);
 cd(PARAMS.inter_dir)
 
 %% loop through subjects
-for iSub = 4:length(PARAMS.Subjects)
+for iSub = 3%:length(PARAMS.Subjects)
 % iSub = 4;
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
     
@@ -52,6 +52,7 @@ for iSub = 4:length(PARAMS.Subjects)
         [Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), cfg_p_ratio] = MS_get_power_ratio(cfg_pow_ratio,Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
         %         Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_power_ratio(cfg_pow_ratio,Naris_trk.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
         fprintf(PARAMS.log, '...complete');
+        close all
     end
 % end
 
@@ -61,7 +62,6 @@ for iSub = 4:length(PARAMS.Subjects)
 %     data.(PARAMS.Subjects{iSub}) = d_t;
 %     clear d_t
 save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris.mat'], 'Naris', '-v7.3')
-
 %     if exist([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat']) ==2
 %         load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
 %     end
@@ -78,7 +78,7 @@ save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris.mat'], 'Naris', '-v7.3')
 
 %% Get the coherence across each session.
 % for iSub = 1:length(PARAMS.Subjects)
-    sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
+    sess_list = fieldnames(data);
     for iSess = 1:length(sess_list)
         fprintf(PARAMS.log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
         Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).coh = MS_coh_session([], data.(strrep(sess_list{iSess}, '-', '_')));

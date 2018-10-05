@@ -25,7 +25,7 @@ cfg_def.linewidth = 2;
 cfg_def.mrk_off = -5;
 cfg_def.markers = {'#', '+', 'x', 'o'};
 cfg_def.type = 'low';
-cfg_def.nEvt = 8;
+cfg_def.nEvt = 6;
 cfg = ProcessConfig2(cfg_def, cfg_in);
 
 global PARAMS
@@ -79,7 +79,6 @@ for iSite =1:length(sites)
                 end
                 rectangle('position',[events.(sites{iSite}).post.(cfg.type).tstart(iEvt), y_lim(1)+0.1*10^-4, events.(sites{iSite}).post.(cfg.type).tend(iEvt) - events.(sites{iSite}).post.(cfg.type).tstart(iEvt), 0.5*10^-4], 'facecolor', [.6 .6 .6], 'edgecolor', [.6 .6 .6])
                 %% save the figure
-                set(gca,'FontSize',20);
                 if isfield(data.pre.ExpKeys, 'Subject')
                     sess = [data.contra.ExpKeys.Subject '_' strrep(data.contra.ExpKeys.date, '-', '-')];
                     subject = data.contra.ExpKeys.Subject;
@@ -89,15 +88,20 @@ for iSite =1:length(sites)
                 end
                 title([sess '-' num2str(iEvt) '-' sites{iSite}]);
                 sess = strrep(sess, '-', '-');
+                cfg_fig = [];
+                cfg_fig.ft_size  = 24;
+                SetFigure(cfg_fig, gcf)
                 mkdir(PARAMS.inter_dir, 'Events');
                 if isunix
-                    saveas(gcf, [PARAMS.inter_dir '/Events/' subject '_' sess '_' sites{iSite} '_' num2str(iEvt) ], 'png')
-                    saveas(gcf, [PARAMS.inter_dir '/Events/' subject '_' sess '_' sites{iSite} '_' num2str(iEvt) ], 'fig')
-                    saveas(gcf, [PARAMS.inter_dir '/Events/' subject '_' sess '_' sites{iSite} '_' num2str(iEvt) ], 'epsc')
+                    saveas(gcf, [PARAMS.inter_dir 'Events/' subject '_' sess '_' sites{iSite} '_' num2str(iEvt) '_' cfg.type], 'png')
+                    saveas(gcf, [PARAMS.inter_dir 'Events/' subject '_' sess '_' sites{iSite} '_' num2str(iEvt) '_' cfg.type ], 'fig')
+                            saveas_eps([subject '_' sess '_' sites{iSite} '_' num2str(iEvt) '_' cfg.type], [PARAMS.inter_dir 'Events/'])
+
                 else
-                    saveas(gcf, [PARAMS.inter_dir '\Events\' subject '_' sess '_' sites{iSite} '_' num2str(iEvt) ], 'png')
-                    saveas(gcf, [PARAMS.inter_dir '\Events\' subject '_' sess '_' sites{iSite} '_' num2str(iEvt) ], 'fig')
-                    saveas(gcf, [PARAMS.inter_dir '\Events\' subject '_' sess '_' sites{iSite} '_' num2str(iEvt) ], 'epsc')
+                    saveas(gcf, [PARAMS.inter_dir 'Events\' subject '_' sess '_' sites{iSite} '_' num2str(iEvt) '_' cfg.type ], 'png')
+                    saveas(gcf, [PARAMS.inter_dir 'Events\' subject '_' sess '_' sites{iSite} '_' num2str(iEvt)  '_' cfg.type], 'fig')
+                            saveas_eps([subject '_' sess '_' sites{iSite} '_' num2str(iEvt) '_' cfg.type], [PARAMS.inter_dir 'Events\'])
+
                     
                 end
             end

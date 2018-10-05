@@ -10,6 +10,9 @@ function PPC_comparison(cfg_in)
 % addpath('/Users/jericcarmichael/Documents/GitHub/fieldtrip')
 % ft_defaults
 % addpath('/Users/jericcarmichael/Documents/GitHub/EC_Multisite/Basic_functions/')
+
+
+
 %%
 cfg_def = [];
 cfg_def.dataset = {'CSC14.ncs'};

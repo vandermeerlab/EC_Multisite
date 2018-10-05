@@ -375,7 +375,6 @@ for iSub = Subjects
                             elseif strcmp(bands{iBand}, 'high')
                                 comp_mat = high_mat';
                             end
-                            figure(
                             if isempty(strfind(labels{ii,jj}, 'Piri'))
                                 if ~isempty(all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii, jj}) && comp_mat(ii, jj)
                                     iC = find(ismember(c_labels, labels{ii,jj}));
