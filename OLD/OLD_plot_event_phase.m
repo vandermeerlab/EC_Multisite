@@ -1,4 +1,4 @@
-function MS_plot_phase(cfg_in, all_Phase)
+function MS_plot_event_phase(cfg_in, all_Phase)
 % %% for debugging
 % run('/Users/jericcarmichael/Documents/GitHub/EC_Multisite/MS_initialize.m')
 % global PARAMS
