@@ -18,7 +18,7 @@ function out = MS_get_naris_dist(cfg_in, all_Naris)
 
 % pl distances
 Pl_dist = repmat([NaN,    4.841  NaN   NaN  4.327  3.976  NaN],4,1)';
-IL_dist = repmat([3.124   NaN    NaN   NaN  NaN    NaN    3.561],4,1)';
+IL_dist = repmat([3.124   NaN    NaN   NaN  NaN    3.329    3.561],4,1)';
 OFC_dist = repmat([NaN    1.887  1.265 1    0.825  1.166  0.894],4,1)';
 NAc_dist = repmat([0.447  1.897  0.6   1    1.414  0.6    1.4],4,1)';
 CG_dist = repmat([NaN     6.251  NaN   NaN  5.855  5.492  6.030],4,1)';
@@ -28,11 +28,11 @@ R104 = repmat([ 4.841 NaN 1.887 1.897 6.251],4,1)';
 R122 = repmat([NaN NaN 1.265 0.6 NaN],4,1)';
 R123 = repmat([NaN NaN 1 1  NaN],4,1)';
 R107 = repmat([4.327 NaN 0.825 1.414 5.855],4,1)';
-R108 = repmat([3.967 NaN 1.166 0.6 5.492],4,1)';
+R108 = repmat([3.967 3.329 1.166 0.6 5.492],4,1)';
 R112 = repmat([NaN 3.561 0.894 1.4 6.030],4,1)'; 
 
 
-distance = cat(3,R102, R104, R107, R108, R112, R122, R123)
+distance = cat(3,R102, R104, R107, R108, R112, R122, R123);
 % distance = cat(3, Pl_dist, IL_dist, OFC_dist, NAc_dist, CG_dist);
 
 
@@ -177,6 +177,7 @@ for iRec= 1:length(rec_type)
 end
 all_low.labels = sites;
 all_high.labels = sites;
+
 %% match distance to each subject/site/session for the difference between contra and ipsi power
 Subjects = {'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7'};
 sites = {'PL', 'IL', 'OFC', 'NAc', 'CG'};
@@ -187,24 +188,62 @@ this_power_mat = all_low.pot.Contrast_Pxx;
 this_power_mat(6,:,:) = [];
 this_power_mat(4,:,:) = [];
 
+%% fix an issue where R102 has the PL and IL mislabeled.  
+this_power_mat(2,:,1) = this_power_mat(1,:,1);
+this_power_mat(1,:,1) = NaN;
+% temporary R102 CG fix
+this_power_mat(5,:,1) = NaN;
 %% apply the distance to piriform in a corresponding array. 
 c_ord = linspecer(length(sites));
+m_ord = {'o', '+', '*', 'x', 's', 'd', 'p'};
 figure
 hold on
 for iSub = 1:length(Subjects)
     for iSite = 1:length(sites)
         if ~isnan(distance(iSite,1,iSub))
-        scatter(distance(iSite,:,iSub), this_power_mat(iSite,:,iSub),50,c_ord(iSite,:), 'filled' )
+        plot(distance(iSite,:,iSub), this_power_mat(iSite,:,iSub),m_ord{iSub}, 'color', c_ord(iSite,:), 'markersize', 10)
         end
     end
 end
 legend(sites, 'location', 'southeast')
 
+%% make a regression plot
 
+% convert the data into a distance and power 1d array
+dist_1d = reshape(distance, 140,1);
+pow_1d = reshape(this_power_mat, 140,1);
+sess_1d = reshape(repmat([1:4]',5,1,7),140,1);
+for ii = 1:length(Subjects)
+rat_ids(:,:,ii) = ones(5,4)*ii;
+end
+rat_1d = reshape(rat_ids, 140,1);
 
+%% 
+% remove NaN values
+nan_idx = isnan(dist_1d);
+pow_1d(nan_idx) = [];
+dist_1d(nan_idx) =[]; 
+sess_1d(nan_idx) = [];
+rat_1d(nan_idx) = [];
 
+% figure
+% p = polyfit(dist_1d, pow_1d, 1);
 
+%%
 
+APP.tbl = table(rat_1d, sess_1d, dist_1d, pow_1d,'VariableNames',{'RatID','SessID', 'Distance', 'Power'});
+APP.tbl.CueIdentity = nominal(APP.tbl.RatID);
+APP.tbl.CueOutcome = nominal(APP.tbl.SessID);
+APP.lme = fitlme(APP.tbl,'Power~1+Distance+(1|RatID)+(1|SessID)');
+APP.lme_2 = fitlme(APP.tbl,'Power~1+Distance^2+(1|RatID)+(1|SessID)');
+APP.lme_3 = fitlme(APP.tbl,'Power~1+Distance^2+(1+Distance|RatID)+(1|SessID)');
+APP.lme_4 = fitlme(APP.tbl,'Power~1+Distance+(1+Distance|RatID)+(1|SessID)');
+
+plotResiduals(APP.lme,'fitted')
+
+% APP.lme_reduced = fitlme(APP.tbl,'Power~(1|RatID)+(1|SessID)');
+
+APP.comparison = compare(APP.lme_4,APP.lme)
 
 
 
