@@ -15,7 +15,7 @@ addpath('/Users/jericcarmichael/Documents/GitHub/EC_Multisite/Basic_functions/')
 
 %%
 cfg_def = [];
-cfg_def.dataset = {'CSC24.ncs'};
+cfg_def.dataset = {'CSC14.ncs'};
 cfg_def.data_dir = '/Users/jericcarmichael/Documents/Multisite/R112-2017-08-01_post';
 cfg_def.inter_dir = '/Users/jericcarmichael/Documents/Multisite/R112-2017-08-01_post';
 cfg_def.phase = 1; % corresponds to the first recording phase ('pre').  2 = 'task', 3 = 'post'.
@@ -33,15 +33,6 @@ LFP_list = cfg.dataset;
 %get the Ts files for all cells. and appended them to the csc file
 t_id = FindFile_str(cd, cfg.spike_id);
 % hack around above finding '.txt files
-for ii =1:length(t_id)
-    if strcmp(t_id{ii}(end-1:end), '.t')
-        keep_idx(ii) = 1;
-    else
-        keep_idx(ii) = 0;
-    end
-end
-t_id(keep_idx==0) = [];
-
 S_list = {};
 for iS = 1:length(t_id)
     spike = ft_read_spike(t_id{iS}); % needs fixed read_mclust_t.m

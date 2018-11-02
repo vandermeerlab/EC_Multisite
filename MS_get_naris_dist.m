@@ -29,7 +29,7 @@ R122 = repmat([NaN NaN 1.265 0.6 NaN],4,1)';
 R123 = repmat([NaN NaN 1 1  NaN],4,1)';
 R107 = repmat([4.327 NaN 0.825 1.414 5.855],4,1)';
 R108 = repmat([3.967 3.329 1.166 0.6 5.492],4,1)';
-R112 = repmat([NaN 3.561 0.894 1.4 6.030],4,1)'; 
+R112 = repmat([NaN 3.561 0.894 NaN 6.030],4,1)'; 
 
 
 distance = cat(3,R102, R104, R107, R108, R112, R122, R123);
@@ -78,6 +78,14 @@ for iRec= 1:length(rec_type)
     all_high.(rec_type{iRec}).Contrast_Pxx = [];
     all_low.(rec_type{iRec}).Contrast_White_Pxx = [];
     all_high.(rec_type{iRec}).Contrast_White_Pxx = [];
+    Contra_low.(rec_type{iRec}).Pxx = [];
+    Contra_high.(rec_type{iRec}).Pxx = [];
+    Contra_low.(rec_type{iRec}).White_Pxx =[];
+    Contra_high.(rec_type{iRec}).White_Pxx =[];
+    Ipsi_low.(rec_type{iRec}).Pxx = [];
+    Ipsi_high.(rec_type{iRec}).Pxx = [];
+    Ipsi_low.(rec_type{iRec}).White_Pxx =[];
+    Ipsi_high.(rec_type{iRec}).White_Pxx =[];
 end
 
 % collect PSDs
@@ -108,13 +116,24 @@ for iRec= 1:length(rec_type)
                         this_high.White_Pxx(iSite, iPhase, iSess) = mean(10*log10(current_PSD.(rec_type{iRec}).(PARAMS.Phases{iPhase}).White_Pxx(iSite,nearest_idx(cfg.filter(2,1), this_F):nearest_idx(cfg.filter(2,2), this_F),iSess)));
                     end
                     % contrast 
-                    temp_contrast = (10*log10(current_PSD.(rec_type{iRec}).ipsi.Pxx(iSite,:,iSess))) - (10*log10(current_PSD.(rec_type{iRec}).contra.Pxx(iSite,:,iSess)));
+                    temp_contrast = ((10*log10(current_PSD.(rec_type{iRec}).ipsi.Pxx(iSite,:,iSess))) - (10*log10(current_PSD.(rec_type{iRec}).contra.Pxx(iSite,:,iSess))))./((10*log10(current_PSD.(rec_type{iRec}).ipsi.Pxx(iSite,:,iSess))) + (10*log10(current_PSD.(rec_type{iRec}).contra.Pxx(iSite,:,iSess))));
                     this_low.Contrast_Pxx(iSite, iSess) = mean(temp_contrast(nearest_idx(cfg.filter(1,1), this_F):nearest_idx(cfg.filter(1,2), this_F)));
                     this_high.Contrast_Pxx(iSite, iSess) = mean(temp_contrast(nearest_idx(cfg.filter(2,1), this_F):nearest_idx(cfg.filter(2,2), this_F)));
+                    
+                    just_contra_low.Pxx(iSite, iSess) = mean(10*log10(current_PSD.(rec_type{iRec}).contra.Pxx(iSite, nearest_idx(cfg.filter(1,1), this_F):nearest_idx(cfg.filter(1,2), this_F),iSess)));
+                    just_contra_high.Pxx(iSite, iSess) = mean(10*log10(current_PSD.(rec_type{iRec}).contra.Pxx(iSite, nearest_idx(cfg.filter(2,1), this_F):nearest_idx(cfg.filter(2,2), this_F),iSess)));
+                    just_ipsi_low.Pxx(iSite, iSess) = mean(10*log10(current_PSD.(rec_type{iRec}).ipsi.Pxx(iSite, nearest_idx(cfg.filter(1,1), this_F):nearest_idx(cfg.filter(1,2), this_F),iSess)));
+                    just_ipsi_high.Pxx(iSite, iSess) = mean(10*log10(current_PSD.(rec_type{iRec}).ipsi.Pxx(iSite, nearest_idx(cfg.filter(2,1), this_F):nearest_idx(cfg.filter(2,2), this_F),iSess)));
 
-                    temp_contrast = (10*log10(current_PSD.(rec_type{iRec}).ipsi.White_Pxx(iSite,:,iSess))) - (10*log10(current_PSD.(rec_type{iRec}).contra.White_Pxx(iSite,:,iSess)));
+                    
+                    temp_contrast = ((10*log10(current_PSD.(rec_type{iRec}).ipsi.White_Pxx(iSite,:,iSess))) - (10*log10(current_PSD.(rec_type{iRec}).contra.White_Pxx(iSite,:,iSess))))./((10*log10(current_PSD.(rec_type{iRec}).ipsi.Pxx(iSite,:,iSess))) + (10*log10(current_PSD.(rec_type{iRec}).contra.Pxx(iSite,:,iSess))));
                     this_low.Contrast_White_Pxx(iSite, iSess) = mean(temp_contrast(nearest_idx(cfg.filter(1,1), this_F):nearest_idx(cfg.filter(1,2), this_F)));
                     this_high.Contrast_White_Pxx(iSite, iSess) = mean(temp_contrast(nearest_idx(cfg.filter(2,1), this_F):nearest_idx(cfg.filter(2,2), this_F)));
+
+                    just_contra_low.White_Pxx(iSite, iSess) = mean(10*log10(current_PSD.(rec_type{iRec}).contra.White_Pxx(iSite, nearest_idx(cfg.filter(1,1), this_F):nearest_idx(cfg.filter(1,2), this_F),iSess)));
+                    just_contra_high.White_Pxx(iSite, iSess) = mean(10*log10(current_PSD.(rec_type{iRec}).contra.White_Pxx(iSite, nearest_idx(cfg.filter(2,1), this_F):nearest_idx(cfg.filter(2,2), this_F),iSess)));
+                    just_ipsi_low.White_Pxx(iSite, iSess) = mean(10*log10(current_PSD.(rec_type{iRec}).ipsi.White_Pxx(iSite, nearest_idx(cfg.filter(1,1), this_F):nearest_idx(cfg.filter(1,2), this_F),iSess)));
+                    just_ipsi_high.White_Pxx(iSite, iSess) = mean(10*log10(current_PSD.(rec_type{iRec}).ipsi.White_Pxx(iSite, nearest_idx(cfg.filter(2,1), this_F):nearest_idx(cfg.filter(2,2), this_F),iSess)));
 
                     % set up control with average of pre and post
                     for iType = 1:length(types)
@@ -170,6 +189,17 @@ for iRec= 1:length(rec_type)
         all_high.(rec_type{iRec}).Contrast_Pxx = cat(3,all_high.(rec_type{iRec}).Contrast_Pxx, this_high.Contrast_Pxx);
         all_low.(rec_type{iRec}).Contrast_White_Pxx = cat(3,all_low.(rec_type{iRec}).Contrast_White_Pxx, this_low.Contrast_White_Pxx);
         all_high.(rec_type{iRec}).Contrast_White_Pxx = cat(3,all_high.(rec_type{iRec}).Contrast_White_Pxx, this_high.Contrast_White_Pxx);
+        %% pure contra values. 
+        Contra_low.(rec_type{iRec}).Pxx = cat(3,Contra_low.(rec_type{iRec}).Pxx, just_contra_low.Pxx);
+        Contra_high.(rec_type{iRec}).Pxx = cat(3,Contra_high.(rec_type{iRec}).Pxx, just_contra_high.Pxx);
+        Contra_low.(rec_type{iRec}).White_Pxx = cat(3,Contra_low.(rec_type{iRec}).White_Pxx, just_contra_low.White_Pxx);
+        Contra_high.(rec_type{iRec}).White_Pxx = cat(3,Contra_high.(rec_type{iRec}).White_Pxx, just_contra_high.White_Pxx);
+
+        %% pure ipsi values.
+        Ipsi_low.(rec_type{iRec}).Pxx = cat(3,Contra_low.(rec_type{iRec}).Pxx, just_contra_low.Pxx);
+        Ipsi_high.(rec_type{iRec}).Pxx = cat(3,Contra_high.(rec_type{iRec}).Pxx, just_contra_high.Pxx);
+        Ipsi_low.(rec_type{iRec}).White_Pxx = cat(3,Contra_low.(rec_type{iRec}).White_Pxx, just_contra_low.White_Pxx);
+        Ipsi_high.(rec_type{iRec}).White_Pxx = cat(3,Contra_high.(rec_type{iRec}).White_Pxx, just_contra_high.White_Pxx);
         
         clear current_PSD;
         
@@ -183,8 +213,8 @@ Subjects = {'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7'};
 sites = {'PL', 'IL', 'OFC', 'NAc', 'CG'};
 
 % for now remove the two piri rows.  format should be site x sess x subject
-this_power_mat = all_low.pot.Contrast_Pxx;
-
+% this_power_mat = all_low.pot.Contrast_Pxx;
+this_power_mat = Contra_low.pot.White_Pxx;
 this_power_mat(6,:,:) = [];
 this_power_mat(4,:,:) = [];
 
@@ -205,8 +235,10 @@ for iSub = 1:length(Subjects)
         end
     end
 end
+xlabel('Distance from PC (mm)')
+ylabel('Ipsi/Contra contrast index')
 legend(sites, 'location', 'southeast')
-
+SetFigure([], gcf)
 %% make a regression plot
 
 % convert the data into a distance and power 1d array
@@ -220,31 +252,77 @@ rat_1d = reshape(rat_ids, 140,1);
 
 %% 
 % remove NaN values
-nan_idx = isnan(dist_1d);
+nan_idx = isnan(dist_1d); %first for any NaNs in the distances which correspond to missed electrodes per subject
+pow_1d(nan_idx) = [];
+dist_1d(nan_idx) =[]; 
+sess_1d(nan_idx) = [];
+rat_1d(nan_idx) = [];
+
+nan_idx = isnan(pow_1d); % second for anythin in power.  Can correspond to missing sites that don't match the ExpKeys.  will be fixed with updated ExpKeys for a few subjects.
 pow_1d(nan_idx) = [];
 dist_1d(nan_idx) =[]; 
 sess_1d(nan_idx) = [];
 rat_1d(nan_idx) = [];
 
 % figure
-% p = polyfit(dist_1d, pow_1d, 1);
-
+p = polyfit(dist_1d, pow_1d, 1);
+hold on
+% plot(
 %%
+clear D_power
+D_power.tbl = table(rat_1d, sess_1d, dist_1d, pow_1d,'VariableNames',{'RatID','SessID', 'Distance', 'Power'});
+D_power.tbl.RatID = nominal(D_power.tbl.RatID);
+D_power.tbl.SessID = nominal(D_power.tbl.SessID);
+D_power.lme = fitlme(D_power.tbl,'Power~1+Distance+(1|RatID)+(1|SessID)');
+D_power.lme_2 = fitlme(D_power.tbl,'Power~1+Distance+(1+Distance|RatID)+(1|SessID)');
+D_power.lme_2b = fitlme(D_power.tbl,'Power~1+Distance+(1+Distance|RatID)+(1+Distance|SessID)');
+D_power.lme_3 = fitlme(D_power.tbl,'Power~1+Distance^2+(1|RatID)+(1|SessID)');
+D_power.lme_4 = fitlme(D_power.tbl,'Power~1+Distance^2+(1+Distance|RatID)+(1|SessID)');
+D_power.lme_red = fitlme(D_power.tbl,'Power~1+(1|RatID)+(1|SessID)');
 
-APP.tbl = table(rat_1d, sess_1d, dist_1d, pow_1d,'VariableNames',{'RatID','SessID', 'Distance', 'Power'});
-APP.tbl.CueIdentity = nominal(APP.tbl.RatID);
-APP.tbl.CueOutcome = nominal(APP.tbl.SessID);
-APP.lme = fitlme(APP.tbl,'Power~1+Distance+(1|RatID)+(1|SessID)');
-APP.lme_2 = fitlme(APP.tbl,'Power~1+Distance^2+(1|RatID)+(1|SessID)');
-APP.lme_3 = fitlme(APP.tbl,'Power~1+Distance^2+(1+Distance|RatID)+(1|SessID)');
-APP.lme_4 = fitlme(APP.tbl,'Power~1+Distance+(1+Distance|RatID)+(1|SessID)');
-
-plotResiduals(APP.lme,'fitted')
+figure
+plotResiduals(D_power.lme,'fitted')
 
 % APP.lme_reduced = fitlme(APP.tbl,'Power~(1|RatID)+(1|SessID)');
+D_power.comparison1_v2 = compare(D_power.lme,D_power.lme_2);
+D_power.comparison1_v3 = compare(D_power.lme,D_power.lme_3);
+D_power.comparison1_v4 = compare(D_power.lme,D_power.lme_4);
+D_power.comparison1_vR = compare(D_power.lme_red, D_power.lme);
+D_power.comparison2_v3 = compare(D_power.lme_2,D_power.lme_3);
+D_power.comparison2_V4 = compare(D_power.lme_2,D_power.lme_4);
+D_power.comparison2_vR = compare(D_power.lme_2,D_power.lme_red);
+D_power.comparison3_v4 = compare(D_power.lme_3,D_power.lme_4);
+D_power.comparison3_vR = compare(D_power.lme_3,D_power.lme_red);
+D_power.comparison4_vR = compare(D_power.lme_4,D_power.lme_red);
 
-APP.comparison = compare(APP.lme_4,APP.lme)
 
 
+%% try it as a logistic for 'prox' vs 'dist'
+% this didn't work.  
+clear L_power
+% add new value for distances greater than 2mm or less than
+log_1d = cell(size(dist_1d));
+prox_idx = dist_1d <=2;
+for ii = length(log_1d):-1:1
+    if prox_idx(ii) ==1
+        log_1d{ii} = 'prox';
+    else
+        log_1d{ii} = 'dist';
+    end
+end
+
+L_power.tbl = table(rat_1d, sess_1d, prox_idx, pow_1d,'VariableNames',{'RatID','SessID', 'Distance', 'Power'});
+L_power.tbl.RatID = nominal(L_power.tbl.RatID);
+L_power.tbl.SessID = nominal(L_power.tbl.SessID);
+L_power.tbl.Distance = logical(L_power.tbl.Distance);
+
+% m_spec = 'Power ~ 1+ Distance +(1|RatID) + (1|SessID)';
+% m_spec = 'Distance ~ 1+ Power +(1|RatID) + (1|SessID)';
+m_spec = 'Distance ~ Power ';
+
+glm_out = fitglme(L_power.tbl, m_spec, 'distribution', 'binomial')
+% fitglm(L_power.tbl, m_spec)
+
+plotResiduals(glm_out_2,'fitted')
 
 
