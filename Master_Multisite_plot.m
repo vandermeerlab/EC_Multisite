@@ -20,7 +20,7 @@ PARAMS.inter_dir = '/Volumes/Fenrir/MS_temp/';
 
 % Extract the data from each recroding phase within each session and separate pot vs track sections
 close all
-for iSub = 4%1:length(PARAMS.Subjects)
+for iSub = 1:length(PARAMS.Subjects)
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris.mat'])
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'])
@@ -30,7 +30,14 @@ for iSub = 4%1:length(PARAMS.Subjects)
         sess_list = fieldnames(Events.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
         fprintf(PARAMS.log,['\nPlotting Events ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-        MS_event_fig([], Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(strrep(sess_list{iSess}, '-', '_')));
+        % once for low events
+        cfg_in = [];
+        cfg_in.type = 'low';
+        MS_event_fig(cfg_in, Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(strrep(sess_list{iSess}, '-', '_')));
+        %once for high events
+        cfg_in = [];
+        cfg_in.type = 'high';
+        MS_event_fig(cfg_in, Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')), data.(strrep(sess_list{iSess}, '-', '_')));
         fprintf(PARAMS.log, '...complete');
     end
     
@@ -58,40 +65,51 @@ end
 
 
 for iSub = 1:length(PARAMS.Subjects)    
-    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris.mat'])
-    
+    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
+    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'])
+
      all_Naris.(PARAMS.Subjects{iSub}) = Naris.(PARAMS.Subjects{iSub});
-    
-    clearvars -except iSub PARAMS all_Naris
+     all_Events.(PARAMS.Subjects{iSub}) = Events.(PARAMS.Subjects{iSub});
+
+    clearvars -except iSub PARAMS all_Naris all_Events
     close all
 end
     
-%% generate the average PSD for each site across sessions
+%% generate the averages for each site across sessions
 
-MS_plot_psd_avg([], Naris)
+% plot the average psd across sessions
+MS_plot_psd_avg([], all_Naris)
+close all
 
+% plot all the power ratio statistics
+MS_plot_power_ratio([], all_Naris)
+close all
+
+% plot all the gamma event statistics
+MS_plot_gamma_stats([], all_Events)
+close all
 %% get the session wide coherence and amplitude plots
 
     % %% generate a Coherogram across each session for each site.
     % fprintf(PARAMS.log,['\nPlotting Coh Sess ' PARAMS.Subjects{iSub}]);
-    % mkdir(PARAMS.inter_dir, 'sess')
-    % cfg_coh = [];
-    % cfg_coh.measure = 'coh';
-    % cfg_coh.plot_type = 'no_piri';
-    % if iSub ==1
-    %     cfg_coh.legend = 'on';
-    % end
-    % MS_plot_session_phase(cfg_coh, Naris);
-    % fprintf(PARAMS.log, '...complete');
-    %
-    % close all
-    % %% Get the coherence across each session.
-    %
-    % fprintf(PARAMS.log,['\nPlotting Amp Sess ' PARAMS.Subjects{iSub}]);
-    % cfg_coh = [];
-    % cfg_coh.measure = 'amp';
-    % MS_plot_session_phase(cfg_coh, Naris);
-    % fprintf(PARAMS.log, '...complete');
+    mkdir(PARAMS.inter_dir, 'sess')
+    cfg_coh = [];
+    cfg_coh.measure = 'coh';
+    cfg_coh.plot_type = 'no_piri';
+    if iSub ==1
+        cfg_coh.legend = 'on';
+    end
+    MS_plot_session_phase(cfg_coh, all_Naris);
+    fprintf(PARAMS.log, '...complete');
+    
+    close all
+    %% Get the coherence across each session.
+    
+    fprintf(PARAMS.log,['\nPlotting Amp Sess ' PARAMS.Subjects{iSub}]);
+    cfg_coh = [];
+    cfg_coh.measure = 'amp';
+    MS_plot_session_phase(cfg_coh, all_Naris);
+    fprintf(PARAMS.log, '...complete');
         
     
     

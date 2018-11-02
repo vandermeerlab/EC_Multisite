@@ -44,10 +44,10 @@ end
 std_vals = nanstd(data_in, [], 3)';
 SEM_vals = (nanstd(data_in,[],3)./sqrt(size(data_in,3)))';
 
-fprintf(cfg.stats_dir,['**************** ' cfg.title ' ****************\n'])
-fprintf(cfg.stats_dir,['**************** ' date ' ****************\n'])
+fprintf(cfg.stats_dir,['**************** ' cfg.title ' ****************\n']);
+fprintf(cfg.stats_dir,['**************** ' date ' ****************\n']);
 
-fprintf(cfg.stats_dir, ['Using ' cfg.method '\n'])
+fprintf(cfg.stats_dir, ['Using ' cfg.method '\n']);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%% Get the stats %%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -95,24 +95,24 @@ end
 
 %% display stats
 if sum(ks) >=1
-    fprintf(cfg.stats_dir,'\nWilcoxin Sign Rank test\n')
-    fprintf(cfg.stats_dir,[cfg.title ': ' cfg.method '\n'])
-    fprintf(cfg.stats_dir,'                                      ')
+    fprintf(cfg.stats_dir,'\nWilcoxin Sign Rank test\n');
+    fprintf(cfg.stats_dir,[cfg.title ': ' cfg.method '\n']);
+    fprintf(cfg.stats_dir,'                                      ');
     for iR = 1:length(cfg.row_names)
-        fprintf(cfg.stats_dir,[cfg.row_names{iR} '        '] )
-        fprintf(cfg.stats_dir,repmat('\b', 1, length(cfg.row_names{iR})-2))
+        fprintf(cfg.stats_dir,[cfg.row_names{iR} '        '] );
+        fprintf(cfg.stats_dir,repmat('\b', 1, length(cfg.row_names{iR})-2));
     end
-    fprintf(cfg.stats_dir,['\nIpsilateral   vs. Contralateral:    P:' num2str(p_ip_con, '%10.4f') '\n' ])
-    fprintf(cfg.stats_dir,['Ipsilateral   vs. Control:          P:' num2str(p_ip_ctr, '%10.4f') '\n' ])
-    fprintf(cfg.stats_dir,['Contralateral vs. Control:          P:' num2str(p_con_ctr, '%10.4f') '\n' ])
+    fprintf(cfg.stats_dir,['\nIpsilateral   vs. Contralateral:    P:' num2str(p_ip_con, '%10.4f') '\n' ]);
+    fprintf(cfg.stats_dir,['Ipsilateral   vs. Control:          P:' num2str(p_ip_ctr, '%10.4f') '\n' ]);
+    fprintf(cfg.stats_dir,['Contralateral vs. Control:          P:' num2str(p_con_ctr, '%10.4f') '\n' ]);
     
 else
     fprintf('\nPaired T-Test\n')
     for iR = 1:length(cfg.row_names)
         fprintf(cfg.stats_dir,['\nLow Gamma   ' cfg.row_names{iR} '\n'])
-        fprintf(cfg.stats_dir,[cfg.row_names{iR} ' Ipsilateral   vs. Contralateral:   df(' num2str(l_stats_ip_con(iR).df) ')   t:' num2str(l_stats_ip_con(iR).tstat, '%4.4f') '  P:' num2str(p_ip_con(iR), '%4.4f') '\n' ])
-        fprintf(cfg.stats_dir,[cfg.row_names{iR} ' Ipsilateral   vs. Control:         df(' num2str(l_stats_ip_ctr(iR).df) ')   t:' num2str(l_stats_ip_ctr(iR).tstat, '%4.4f') '  P:' num2str(p_ip_ctr(iR), '%4.4f') '\n' ])
-        fprintf(cfg.stats_dir,[cfg.row_names{iR} ' Contralateral vs. Control:         df(' num2str(l_stats_con_ctr(iR).df) ')   t:' num2str(l_stats_con_ctr(iR).tstat, '%4.4f') '  P:' num2str(p_con_ctr(iR), '%4.4f') '\n' ])
+        fprintf(cfg.stats_dir,[cfg.row_names{iR} ' Ipsilateral   vs. Contralateral:   df(' num2str(l_stats_ip_con(iR).df) ')   t:' num2str(l_stats_ip_con(iR).tstat, '%4.4f') '  P:' num2str(p_ip_con(iR), '%4.4f') '\n' ]);
+        fprintf(cfg.stats_dir,[cfg.row_names{iR} ' Ipsilateral   vs. Control:         df(' num2str(l_stats_ip_ctr(iR).df) ')   t:' num2str(l_stats_ip_ctr(iR).tstat, '%4.4f') '  P:' num2str(p_ip_ctr(iR), '%4.4f') '\n' ]);
+        fprintf(cfg.stats_dir,[cfg.row_names{iR} ' Contralateral vs. Control:         df(' num2str(l_stats_con_ctr(iR).df) ')   t:' num2str(l_stats_con_ctr(iR).tstat, '%4.4f') '  P:' num2str(p_con_ctr(iR), '%4.4f') '\n' ]);
     end
 end
 
@@ -148,7 +148,7 @@ p_con_ctr(~ismember(1:length(cfg.row_names),cfg.s_idx)) = [];
 
 %
 for iR  = 1:length(bar_names)
-    disp(bar_names{iR})
+%     disp(bar_names{iR})
     hold on
     l_width = 1;
     ip_con = [];
@@ -202,20 +202,20 @@ end
 
 
 %% set the default figure layout 
-SetFigure([], gcf)
+SetFigure([], gcf);
 
 
 %% save the figure
       mkdir(cfg.save_dir)
       save_name = strrep(cfg.title, ' ', '_');
       if isunix
-          fprintf(cfg.stats_dir,['\n\nSaving output in:      '  cfg.save_dir '/' save_name '\n\n'])
+          fprintf(cfg.stats_dir,['\n\nSaving output in:      '  cfg.save_dir '/' save_name '\n\n']);
           saveas(gcf, [ cfg.save_dir '/' save_name])
           saveas(gcf, [cfg.save_dir '/' save_name], 'png')
           saveas_eps(save_name,[cfg.save_dir '/'])
           %             saveas(gcf, [PARAMS.inter_dir '/AOC_fit/AOC_Summary_' F_id '_' cfg.pot_trk '_' types{iType}  '_' cfg.plot_type], 'epsc')
       else
-          fprintf(cfg.stats_dir,['\n\nSaving output in:      '  cfg.save_dir '\' save_name '\n\n'])
+          fprintf(cfg.stats_dir,['\n\nSaving output in:      '  cfg.save_dir '\' save_name '\n\n']);
           saveas(gcf, [cfg.save_dir '\' save_name])
           saveas(gcf, [cfg.save_dir '\' save_name], 'png')
           saveas_eps(save_name,[cfg.save_dir '\'])
