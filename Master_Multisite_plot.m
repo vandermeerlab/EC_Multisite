@@ -20,7 +20,7 @@ PARAMS.inter_dir = '/Volumes/Fenrir/MS_temp/';
 
 % Extract the data from each recroding phase within each session and separate pot vs track sections
 close all
-for iSub = 1:length(PARAMS.Subjects)
+for iSub = 1%:length(PARAMS.Subjects)
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris.mat'])
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'])
@@ -88,7 +88,7 @@ close all
 % plot all the gamma event statistics
 MS_plot_gamma_stats([], all_Events)
 close all
-%% get the session wide coherence and amplitude plots
+%% get the session wide coherence plots
 
     % %% generate a Coherogram across each session for each site.
     % fprintf(PARAMS.log,['\nPlotting Coh Sess ' PARAMS.Subjects{iSub}]);
@@ -103,7 +103,7 @@ close all
     fprintf(PARAMS.log, '...complete');
     
     close all
-    %% Get the coherence across each session.
+%% get the session wide amplitude plots
     
     fprintf(PARAMS.log,['\nPlotting Amp Sess ' PARAMS.Subjects{iSub}]);
     cfg_coh = [];
@@ -112,7 +112,19 @@ close all
     fprintf(PARAMS.log, '...complete');
         
     
-    
+
+%% plot the phase measures for all events
+close all
+cfg_event = [];
+MS_plot_event_phase(cfg_event)
+
+
+
+
+
+
+
+
     %% generate a Coherogram across each session for each site.
     %     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
     %
@@ -126,7 +138,9 @@ close all
     
     
    
-
+%% Naris power by distance.  Used for stats only.  
+cfg_dist_stats = [];
+MS_get_naris_dist(cfg_dist_stats, all_Naris);
 
 
 %% Figure S2 all coherence for each site pair (no piri)
@@ -134,15 +148,17 @@ cfg_S2 = [];
 cfg_S2.measure = 'coh';
 
 MS_Figure_S2(cfg_S2, all_Naris);
+close all
 
 cfg_S2 = [];
 cfg_S2.measure = 'amp';
 
 MS_Figure_S2(cfg_S2, all_Naris);
 
-
-cfg_S2 = [];
-cfg_S2.measure = 'lag';
-
-MS_Figure_S2(cfg_S2, all_Naris);
+close all
+% just for debugging
+% cfg_S2 = [];
+% cfg_S2.measure = 'lag';
+% 
+% MS_Figure_S2(cfg_S2, all_Naris);
 

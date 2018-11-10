@@ -9,8 +9,9 @@ cfg_def = [];
 cfg_def.measure = 'coh';
 cfg_def.color.blue = double([158,202,225])/255;
 cfg_def.color.green = double([168,221,181])/255;
-cfg_def.color.OFC_NAc = double([123,225,160])/255
-cfg_def.color.OFC_CG= double([255,168,213])/255
+cfg_def.color.OFC_NAc = double([123,225,160])/255;
+% cfg_def.color.OFC_CG= double([255,168,213])/255;% old too bright
+cfg_def.color.OFC_CG= double([158 1 66])/255;
 cfg_def.linewidth = 4;
 cfg_def.ylim = [0 1];
 cfg_def.filter = [45 65; 70 90];
@@ -223,7 +224,7 @@ for iPair = 1:length(PARAMS.all_pairs)
 %         c_idx = find(strcmp(PARAMS.all_pairs,PARAMS.all_pairs{iPair}));
         
         h1 = shadedErrorBar(mean_fxx.(PARAMS.all_pairs{iPair}).post, mean_cxx.(PARAMS.all_pairs{iPair}).post, sem_cxx.(PARAMS.all_pairs{iPair}).post);
-        h1.mainLine.Color = PARAMS.fig_pink;
+        h1.mainLine.Color = cfg.color.OFC_CG;
         h1.mainLine.LineWidth = cfg.linewidth+4;
         h1.patch.FaceColor = h1.mainLine.Color;
         h1.patch.EdgeColor = h1.mainLine.Color;
@@ -602,12 +603,12 @@ for iSub =1:length(Subjects)
             c_idx = find(strcmp(PARAMS.all_pairs,sub_pairs{iPair}));
             
             h1 = shadedErrorBar(all_sub_fxx.(Subjects{iSub}).(sub_pairs{iPair}).post, all_sub_mean_cxx.(Subjects{iSub}).(sub_pairs{iPair}).post, all_sub_sem_cxx.(Subjects{iSub}).(sub_pairs{iPair}).post);
-            h1.mainLine.Color = PARAMS.fig_pink;
-            h1.patch.FaceColor = PARAMS.fig_pink;
-            h1.patch.EdgeColor = PARAMS.fig_pink;
+            h1.mainLine.Color = cfg.color.OFC_CG;
+            h1.patch.FaceColor = cfg.color.OFC_CG;
+            h1.patch.EdgeColor = cfg.color.OFC_CG;
             h1.patch.FaceAlpha = .5;
-            h1.edge(1).Color = PARAMS.fig_pink;
-            h1.edge(2).Color = PARAMS.fig_pink;
+            h1.edge(1).Color = cfg.color.OFC_CG;
+            h1.edge(2).Color = cfg.color.OFC_CG;
             
             set(findall(gca, 'Type', 'Line'),'LineWidth',2)
             h1.mainLine.LineWidth = cfg.linewidth+4;

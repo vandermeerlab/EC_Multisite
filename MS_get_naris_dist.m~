@@ -319,14 +319,12 @@ end
 clc
 diary('on')
 diary(['LME_' datestr(date, 'YY_mm_dd') '.txt'])
-disp(' LME Out')
+disp(' LME Out
 disp(D_power.lme)
-disp(' LME Anova Out')
 anova(D_power.lme)
-disp('Compare out')
 compare(D_power.lme_red, D_power.lme)
 diary('off')
-movefile(['LME_' datestr(date, 'YY_mm_dd') '.txt'], PARAMS.stats_dir);
+    
 %% try it as a logistic for 'prox' vs 'dist'.  Did not use.  
 % this didn't work.  
 clear L_power
