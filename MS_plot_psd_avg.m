@@ -276,6 +276,7 @@ cfg_stats = [];
         cfg_stats.ft_size= 20;
 %         cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
         cfg_stats.stats_dir = stats_file;
+        cfg_stats.stats_method = 'lme'; 
         MS_stats(cfg_stats,permute(all_low.(rec_type{iRec}).White_Pxx,[2 1 3]));
         
 %%

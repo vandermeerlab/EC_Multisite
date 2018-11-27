@@ -115,6 +115,7 @@ for iComp = {'Pink', 'Exp2'}
             cfg_stats.title = strcat({'AOC low gamma'},{' '}, Exp{iExp},{' '},types{iType},{' '},iComp);
             cfg_stats.title = cfg_stats.title{1};
             cfg_stats.method= 'median';
+            cfg_stats.stats_method = cfg.stats_method; 
             cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
             cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
             cfg_stats.s_idx= s_idx;
@@ -130,6 +131,7 @@ for iComp = {'Pink', 'Exp2'}
             cfg_stats.title = strcat({'AOC high gamma'},{' '},Exp{iExp},{' '},types{iType},{' '},iComp);
             cfg_stats.title = cfg_stats.title{1};
             cfg_stats.method= 'median';
+            cfg_stats.stats_method = cfg.stats_method;
             cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
             cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
             cfg_stats.s_idx= s_idx;
@@ -142,35 +144,37 @@ for iComp = {'Pink', 'Exp2'}
             
             % same but using normalized
             
-            cfg_stats = [];
-            cfg_stats.title = strcat({'Norm AOC low gamma'},{' '}, Exp{iExp},{' '},types{iType},{' '},iComp);
-            cfg_stats.title = cfg_stats.title{1};
-            cfg_stats.method= 'median';
-            cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
-            cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
-            cfg_stats.s_idx= s_idx;
-            cfg_stats.ft_size= 20;
-            cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
-            cfg_stats.stats_dir = stats_file;
-            
-            MS_stats(cfg_stats, norm_all_AOC_low.(types{iType}));
-            
-            close all
-            
-            % high gamma median using MS sites
-            cfg_stats = [];
-            cfg_stats.title = strcat({'Norm AOC high gamma'},{' '}, Exp{iExp},{' '},types{iType},{' '},iComp);
-            cfg_stats.title = cfg_stats.title{1};
-            cfg_stats.method= 'median';
-            cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
-            cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
-            cfg_stats.s_idx= s_idx;
-            cfg_stats.ft_size= 20;
-            cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
-            cfg_stats.stats_dir = stats_file;
-            
-            MS_stats(cfg_stats, norm_all_AOC_high.(types{iType}));
-            close all
+%             cfg_stats = [];
+%             cfg_stats.title = strcat({'Norm AOC low gamma'},{' '}, Exp{iExp},{' '},types{iType},{' '},iComp);
+%             cfg_stats.title = cfg_stats.title{1};
+%             cfg_stats.method= 'median';
+%             cfg_stats.stats_method = cfg.stats_method;
+%             cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
+%             cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
+%             cfg_stats.s_idx= s_idx;
+%             cfg_stats.ft_size= 20;
+%             cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
+%             cfg_stats.stats_dir = stats_file;
+%             
+%             MS_stats(cfg_stats, norm_all_AOC_low.(types{iType}));
+%             
+%             close all
+%             
+%             % high gamma median using MS sites
+%             cfg_stats = [];
+%             cfg_stats.title = strcat({'Norm AOC high gamma'},{' '}, Exp{iExp},{' '},types{iType},{' '},iComp);
+%             cfg_stats.title = cfg_stats.title{1};
+%             cfg_stats.method= 'median';
+%             cfg_stats.stats_method = cfg.stats_method;
+%             cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
+%             cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
+%             cfg_stats.s_idx= s_idx;
+%             cfg_stats.ft_size= 20;
+%             cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
+%             cfg_stats.stats_dir = stats_file;
+%             
+%             MS_stats(cfg_stats, norm_all_AOC_high.(types{iType}));
+%             close all
             
         end
     end

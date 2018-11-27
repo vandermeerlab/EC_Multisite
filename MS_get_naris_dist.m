@@ -220,7 +220,14 @@ sites = {'PL', 'IL', 'OFC', 'NAc', 'CG'};
 
 % for now remove the two piri rows.  format should be site x sess x subject
 % this_power_mat = all_low.pot.Contrast_Pxx;
-this_power_mat = Contra_low.pot.White_Pxx;
+for iBand = {'low', 'high'}
+    if strcmp(iBand, 'low')
+        this_power_mat = Contra_low.pot.White_Pxx;
+    elseif strcmp(iBand, 'high')
+        this_power_mat = Contra_high.pot.White_Pxx;
+    else
+        error('no band selected')
+    end
 this_power_mat(6,:,:) = [];
 this_power_mat(4,:,:) = [];
 
@@ -313,46 +320,47 @@ D_power.comparison3_vR = compare(D_power.lme_3,D_power.lme_red);
 D_power.comparison4_vR = compare(D_power.lme_4,D_power.lme_red);
 
 %% write the output
-if exist(['LME_' datestr(date, 'YY_mm_dd') '.txt'], 'file');
-    delete(['LME_' datestr(date, 'YY_mm_dd') '.txt'])
+if exist(['LME_' iBand{1} '_' datestr(date, 'YY_mm_dd') '.txt'], 'file');
+    delete(['LME_' iBand{1} '_' datestr(date, 'YY_mm_dd') '.txt'])
 end
 clc
 diary('on')
-diary(['LME_' datestr(date, 'YY_mm_dd') '.txt'])
-disp(' LME Out')
+diary(['LME_' iBand{1} '_' datestr(date, 'YY_mm_dd') '.txt'])
+disp([' LME Out ' iBand{1}])
 disp(D_power.lme)
 disp(' LME Anova Out')
 anova(D_power.lme)
 disp('Compare out')
 compare(D_power.lme_red, D_power.lme)
 diary('off')
-movefile(['LME_' datestr(date, 'YY_mm_dd') '.txt'], PARAMS.stats_dir);
-%% try it as a logistic for 'prox' vs 'dist'.  Did not use.  
-% this didn't work.  
-clear L_power
-% add new value for distances greater than 2mm or less than
-log_1d = cell(size(dist_1d));
-prox_idx = dist_1d <=2;
-for ii = length(log_1d):-1:1
-    if prox_idx(ii) ==1
-        log_1d{ii} = 'prox';
-    else
-        log_1d{ii} = 'dist';
-    end
+movefile(['LME_' iBand{1} '_' datestr(date, 'YY_mm_dd') '.txt'], PARAMS.stats_dir);
+% %% try it as a logistic for 'prox' vs 'dist'.  Did not use.  
+% % this didn't work.  
+% clear L_power
+% % add new value for distances greater than 2mm or less than
+% log_1d = cell(size(dist_1d));
+% prox_idx = dist_1d <=2;
+% for ii = length(log_1d):-1:1
+%     if prox_idx(ii) ==1
+%         log_1d{ii} = 'prox';
+%     else
+%         log_1d{ii} = 'dist';
+%     end
+% end
 end
-
-L_power.tbl = table(rat_1d, sess_1d, prox_idx, pow_1d,'VariableNames',{'RatID','SessID', 'Distance', 'Power'});
-L_power.tbl.RatID = nominal(L_power.tbl.RatID);
-L_power.tbl.SessID = nominal(L_power.tbl.SessID);
-L_power.tbl.Distance = logical(L_power.tbl.Distance);
-
-% m_spec = 'Power ~ 1+ Distance +(1|RatID) + (1|SessID)';
-% m_spec = 'Distance ~ 1+ Power +(1|RatID) + (1|SessID)';
-m_spec = 'Distance ~ Power ';
-
-glm_out = fitglme(L_power.tbl, m_spec, 'distribution', 'binomial')
-% fitglm(L_power.tbl, m_spec)
-
-plotResiduals(glm_out_2,'fitted')
+% %% odd attempt at glm
+% L_power.tbl = table(rat_1d, sess_1d, prox_idx, pow_1d,'VariableNames',{'RatID','SessID', 'Distance', 'Power'});
+% L_power.tbl.RatID = nominal(L_power.tbl.RatID);
+% L_power.tbl.SessID = nominal(L_power.tbl.SessID);
+% L_power.tbl.Distance = logical(L_power.tbl.Distance);
+% 
+% % m_spec = 'Power ~ 1+ Distance +(1|RatID) + (1|SessID)';
+% % m_spec = 'Distance ~ 1+ Power +(1|RatID) + (1|SessID)';
+% m_spec = 'Distance ~ Power ';
+% 
+% glm_out = fitglme(L_power.tbl, m_spec, 'distribution', 'binomial')
+% % fitglm(L_power.tbl, m_spec)
+% 
+% plotResiduals(glm_out_2,'fitted')
 
 

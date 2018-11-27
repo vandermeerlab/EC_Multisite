@@ -50,19 +50,19 @@ for iSub = 1:length(PARAMS.Subjects)
             fprintf(PARAMS.log, '...complete');
         end
     
-    %% generate a coher-o-gram for each session used in Fig 6 (very time consuming.  Run if needed) Session R107-2018-08-04 was used in paper
-    sess_list = fieldnames(data);
+    %% generate a coher-o-gram for each session used in Fig 6 (very time consuming.  Run if needed)
+    sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
         fprintf(PARAMS.log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-        MS_coherogram_fig([], data.(strrep(sess_list{iSess}, '-', '_')));
+        MS_coherogram_fig([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
         fprintf(PARAMS.log, '...complete');
     end
     
-        %% generate a amplitude cross corr-o-gram for each session used in Fig 7 (very time consuming.  Run if needed) Session R107-2018-08-04 was used in paper
-    sess_list = fieldnames(data);
+        %% generate a amplitude cross corr-o-gram for each session used in Fig 6 (very time consuming.  Run if needed) 
+    sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess = 1:length(sess_list)
-        fprintf(PARAMS.log,['\nPlotting Ampxcorr_o_gram ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
-        MS_plot_amp_xcorrogram([], data.(strrep(sess_list{iSess}, '-', '_')));
+        fprintf(PARAMS.log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+        MS_coherogram_fig([], data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
         fprintf(PARAMS.log, '...complete');
     end
     

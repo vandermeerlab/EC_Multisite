@@ -102,7 +102,7 @@ for iSub = cfg.Subjects
                             %                         else
                             temp(cellfun(@(temp) any(isnan(temp)),temp)) = [];
                             temp = cell2mat(squeeze(temp));
-                            if isempty(temp) || size(temp,1) <10;
+                            if isempty(temp) || size(temp,1) <10
                                 all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = [];
                                 all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  [];
                                 
@@ -126,7 +126,7 @@ for iSub = cfg.Subjects
                                     
                                 elseif strcmp(measures{iMs}, 'PS_slope')
                                     all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj}=  nanmean((temp./(2*pi))*1000); % ./(2*pi))*1000 convert to time rather than deg/Hz
-                                    all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanstd(temp);
+                                    all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanstd((temp./(2*pi))*1000);
                                     
                                 else
                                     all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanmedian(temp,1);
@@ -464,7 +464,7 @@ for iSub = cfg.Subjects
                                             h2.edge(2).Color = [.6 .6 .6];
                                         end
                                         
-                                        y_lim = [-20 20];
+                                        y_lim = [-15, 0, 15];
                                         ylabel('Phase_slope (deg/Hz)');
                                         x_lim=([30 100]);
                                         box_pos =  [30, -5, 100, 40];
@@ -480,6 +480,8 @@ for iSub = cfg.Subjects
                                         h.patch.EdgeColor = this_color;
                                         h.edge(1).Color = this_color;
                                         h.edge(2).Color = this_color;
+                                        [con_val, con_idx] = max(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj});
+                                        
                                         
                                         if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
                                             h2 =shadedErrorBar(all_mean.AMP_LAG.ipsi.(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})));
@@ -489,19 +491,33 @@ for iSub = cfg.Subjects
                                             h2.patch.EdgeColor = [.6 .6 .6];
                                             h2.edge(1).Color = [.6 .6 .6];
                                             h2.edge(2).Color = [.6 .6 .6];
+                                            [ip_val, ip_idx] = max(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj});
                                         end
                                         y_lim =[0 1];
                                         ylabel('Amplitude xcor');
                                         x_lim=([-0.05 0 0.05]);
                                         box_pos =  [-0.05, 0, .1, 1];
                                         gamma_box_h = 1;
+                                        ylim([y_lim(1) y_lim(end)]);xlim([x_lim(1) x_lim(end)])
+                                        h_con = vline(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx));
+                                        h_con.Color = this_color; h_con.LineStyle = '- -'; h_con.LineWidth = 3;
+                                        if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
+                                            h_ip = [];
+                                            h_ip = vline(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(ip_idx));
+                                            h_ip.Color = [.6 .6 .6]; h_ip.LineStyle =  ':'; h_ip.LineWidth = 3;
+                                            lgd = legend([h_con, h_ip],['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)) 'ms'],...
+                                                [ 'Ipsi lag: ' num2str(all_mean.AMP_LAG.ipsi.(bands{iBand}){ii, jj}(ip_idx)) 'ms']);
+                                        else
+                                            lgd = legend(h_con,['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)) 'ms']);
+                                        end
                                         
+                                        lgd.FontSize = 24; lgd.Box = 'off';
                                     end
                                     % save the sigure
                                     
                                     ylim([y_lim(1) y_lim(end)]);xlim([x_lim(1) x_lim(end)])
                                     if strcmp(measures{iMs}, 'AMP_AC')
-                                        vline(0, 'k')
+                                        v_zero = vline(0, 'k');
                                     end
                                     % put boxes for the gamma bands
                                     rectangle('position', [cfg.filter1.f(1), y_lim(1), (cfg.filter1.f(2)-cfg.filter1.f(1)), gamma_box_h],  'facecolor', [cfg.color.blue 0.3], 'edgecolor', [cfg.color.blue 0.3])
@@ -510,6 +526,12 @@ for iSub = cfg.Subjects
                                     set(gca, 'Children',flipud(chi))
                                     
                                     set(findall(gca, 'Type', 'Line'),'LineWidth',2)
+                                    if strcmp(measures{iMs}, 'AMP_AC')
+                                        h_ip.LineWidth = 3;
+                                        h_con.LineWidth = 3;
+                                        v_zero.LineWidth = 1;
+                                        uistack(v_zero, 'bottom')
+                                    end
                                     set(gca, 'ytick', y_lim, 'xtick',x_lim)
                                     ylabel([]); xlabel([]); %remove the labels for clerity in the figure.
                                     
@@ -527,6 +549,11 @@ for iSub = cfg.Subjects
                                     % same thing but without the ipsi line
                                     if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
                                         set(h2.patch, 'visible', 'off'); set(h2.edge, 'visible', 'off'); set(h2.mainLine, 'visible', 'off')
+                                        if strcmp(measures{iMs}, 'AMP_AC')
+                                            h_ip.Visible = 'off';
+                                            lgd = legend(h_con,['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)) 'ms']);
+                                            clear h_ip
+                                        end
                                     end
                                     set(gca, 'ytick', y_lim, 'xtick',x_lim)
                                     cfg.set_fig.ft_size = 36;
