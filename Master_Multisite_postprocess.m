@@ -20,7 +20,7 @@ fprintf(PARAMS.log, date);
 cd(PARAMS.inter_dir)
 
 %% loop through subjects
-for iSub = [1 6]%1:length(PARAMS.Subjects)
+for iSub = 1%1:length(PARAMS.Subjects)
 
 % iSub = 4;
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
