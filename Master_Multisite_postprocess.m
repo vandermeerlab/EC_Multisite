@@ -67,7 +67,7 @@ save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris.mat'], 'Naris', '-v7.3')
 %         load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
 %     end
 
-%% generate a Coherogram across each session for each site.
+%% get amplitude xcorr for each event .
 %for iSub = length(PARAMS.Subjects):-1:5
     sess_list = fieldnames(data);
     for iSess = 1:length(sess_list)
@@ -95,23 +95,15 @@ save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'], 'Naris', '-v7.3'
 
 clearvars -except iSub PARAMS
 
-end % subject loop. 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%% Event Measures %%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+end
 
-% for iSub = length(PARAMS.Subjects):-1:1
-%     
-%     %% load the events file for the subjects
-%     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'])
-%     
-%     all_Events.(PARAMS.Subjects{iSub}) = Events.(PARAMS.Subjects{iSub});
-%     
-% end
-%     stats = MS_gamma_stats([], all_Events)
+%% Collect the phase information in an 'All' structure
+MS_collect_phase()
+
+
 
     
-    %% PPC for cut sessions
+    % PPC for cut sessions (did not use)
     
     
 

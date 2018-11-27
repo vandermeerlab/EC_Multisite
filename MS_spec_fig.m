@@ -82,8 +82,12 @@ for iSite =1:length(sites)
         %         P(P==inf) = NaN;
         ax1 = imagesc(T,F,10*log10(P)); % converting to dB as usual
         set(ax1, 'AlphaData', ~isinf(10*log10(P)))
-        set(gca,'FontSize',20);
-        axis xy; xlabel('time (s)'); ylabel('Frequency (Hz)');
+        set(gca,'FontSize',28);
+        axis xy; xlabel('Time (s)'); ylabel('Frequency (Hz)');
+        ax = gca; 
+        ax.YTickLabels = {0 [], [], 60, [], [], 120}; % set
+        set(gca, 'tickdir', 'out')
+        
         caxis([-150 -80])
         h = vline([Tp(end),(Tp(end)+Ti(end)),(Tp(end)+Ti(end)+Tc(end))], {'k', 'k', 'k'} );
         for jj = 1:length(h)
@@ -104,17 +108,17 @@ for iSite =1:length(sites)
         h(3) =rectangle('position', [length(0:(Tp(end)+Ti(end))) -4.5 length(Ti(end):(Tp(end)+Ti(end)+Tc(end))) 5.5], 'facecolor',cfg.c_ord(3,:), 'edgecolor', cfg.c_ord(3,:));
         h(4) = rectangle('position',[length(0:(Tp(end)+Ti(end)+Tc(end))) -4.5 length(Tc(end):(Tp(end)+Ti(end)+Tc(end)+Tpo(end))) 5.5], 'facecolor',cfg.c_ord(4,:), 'edgecolor', cfg.c_ord(4,:));
         
-        text(length(0:Tp(end))/2, -1.5, 'pre', 'fontsize', 20, 'horizontalAlignment', 'center')
-        text(length(0:Tp(end))+(length(Tp(end):(Tp(end)+Ti(end)))/2), -1.5, 'ipsi', 'fontsize', 20, 'horizontalAlignment', 'center')
-        text(length(0:Tp(end)+Ti(end))+(length(Ti(end):(Ti(end)+Tc(end)))/2), -1.5, 'contra', 'fontsize', 20, 'horizontalAlignment', 'center')
-        text(length(0:Tp(end)+Ti(end)+Tc(end))+(length(Tc(end):(Tc(end)+Tpo(end)))/2), -1.5, 'post', 'fontsize', 20, 'horizontalAlignment', 'center')
+        text(length(0:Tp(end))/2, -1.5, 'pre', 'fontsize', 28, 'horizontalAlignment', 'center')
+        text(length(0:Tp(end))+(length(Tp(end):(Tp(end)+Ti(end)))/2), -1.5, 'ipsi', 'fontsize', 28, 'horizontalAlignment', 'center')
+        text(length(0:Tp(end)+Ti(end))+(length(Ti(end):(Ti(end)+Tc(end)))/2), -1.5, 'contra', 'fontsize', 28, 'horizontalAlignment', 'center')
+        text(length(0:Tp(end)+Ti(end)+Tc(end))+(length(Tc(end):(Tc(end)+Tpo(end)))/2), -1.5, 'post', 'fontsize', 28, 'horizontalAlignment', 'center')
         
         
         
         set(h(:), 'linewidth', cfg.linewidth);
         colormap('PARULA');
-        
-        SetFigure([],gcf);
+        cfg_fig.ft_size = 28;
+        SetFigure(cfg_fig,gcf);
         set(gcf, 'position', [0 50 1600*.9 420*.9]);
         tightfig;
         sess = strrep(data.pre.ExpKeys.date, '-', '_');

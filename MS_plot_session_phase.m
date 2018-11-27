@@ -22,6 +22,9 @@ cfg_def.measure = 'coh';
 cfg_def.plot_type = 'all'; % can be "all", 'no_piri'
 cfg_def.color.blue = double([158,202,225])/255;
 cfg_def.color.green = double([168,221,181])/255;
+cfg_def.color.OFC_NAc = double([123,225,160])/255;
+% cfg_def.color.OFC_CG= double([255,168,213])/255;% old too bright
+cfg_def.color.OFC_CG= double([158 1 66])/255;
 cfg_def.linewidth = 4;
 cfg_def.ylim = [0 1];
 cfg_def.legend = 'off';
@@ -176,11 +179,11 @@ for iSub = 1:length(Subjects)
                 rectangle('position', [70, 0.001, 20, 1], 'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
                 
                 hold on
-                plot(all_naris.(Subjects{iSub}).coh.fxx.OFC_NAc.contra, all_naris.(Subjects{iSub}).coh.cxx.OFC_NAc.contra, 'color', [0.3639    0.5755    0.7484], 'linewidth', cfg.linewidth)
+                plot(all_naris.(Subjects{iSub}).coh.fxx.OFC_NAc.contra, all_naris.(Subjects{iSub}).coh.cxx.OFC_NAc.contra, 'color', cfg_def.color.OFC_NAc, 'linewidth', cfg.linewidth)
                 xlim([0 100])
                 legend({'OFC - NAc'}, 'location', 'Northwest')
                 legend boxoff
-                plot(all_naris.(Subjects{iSub}).coh.fxx.OFC_NAc.ipsi, all_naris.(Subjects{iSub}).coh.cxx.OFC_NAc.ipsi, '--', 'color',[0.3639    0.5755    0.7484] , 'linewidth', cfg.linewidth)
+                plot(all_naris.(Subjects{iSub}).coh.fxx.OFC_NAc.ipsi, all_naris.(Subjects{iSub}).coh.cxx.OFC_NAc.ipsi, '--', 'color',cfg_def.color.OFC_NAc , 'linewidth', cfg.linewidth)
                 xlim([0 100])
                 
                 xlabel('Frequency (Hz)');
@@ -214,11 +217,11 @@ for iSub = 1:length(Subjects)
                 rectangle('position', [70, 0.001, 20, 1], 'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
                 
                 hold on
-                plot(all_naris.(Subjects{iSub}).coh.fxx.OFC_CG.contra, all_naris.(Subjects{iSub}).coh.cxx.OFC_CG.contra, 'color', [0.9153    0.2816    0.2878], 'linewidth', cfg.linewidth)
+                plot(all_naris.(Subjects{iSub}).coh.fxx.OFC_CG.contra, all_naris.(Subjects{iSub}).coh.cxx.OFC_CG.contra, 'color', cfg_def.color.OFC_CG, 'linewidth', cfg.linewidth)
                 xlim([0 100])
                 legend({'OFC - CG'}, 'location', 'Northwest')
                 legend boxoff
-                plot(all_naris.(Subjects{iSub}).coh.fxx.OFC_CG.ipsi, all_naris.(Subjects{iSub}).coh.cxx.OFC_CG.ipsi, '--', 'color',[0.9153    0.2816    0.2878], 'linewidth', cfg.linewidth)
+                plot(all_naris.(Subjects{iSub}).coh.fxx.OFC_CG.ipsi, all_naris.(Subjects{iSub}).coh.cxx.OFC_CG.ipsi, '--', 'color',cfg_def.color.OFC_CG, 'linewidth', cfg.linewidth)
                 xlim([0 100])
                 
                 
@@ -334,11 +337,11 @@ for iSub = 1:length(Subjects)
                 rectangle('position', [70, 0.001, 20, 1], 'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
                 
                 hold on
-                plot(all_naris.(Subjects{iSub}).amp.f.OFC_NAc.contra, all_naris.(Subjects{iSub}).amp.ac.OFC_NAc.contra, 'color', [0.3639    0.5755    0.7484], 'linewidth', cfg.linewidth)
+                plot(all_naris.(Subjects{iSub}).amp.f.OFC_NAc.contra, all_naris.(Subjects{iSub}).amp.ac.OFC_NAc.contra, 'color', cfg_def.color.OFC_NAc, 'linewidth', cfg.linewidth)
                 xlim([0 100])
                 legend({'OFC - NAc'}, 'location', 'Northwest')
                 legend boxoff
-                plot(all_naris.(Subjects{iSub}).amp.f.OFC_NAc.ipsi, all_naris.(Subjects{iSub}).amp.ac.OFC_NAc.ipsi, '--', 'color',[0.3639    0.5755    0.7484] , 'linewidth', cfg.linewidth)
+                plot(all_naris.(Subjects{iSub}).amp.f.OFC_NAc.ipsi, all_naris.(Subjects{iSub}).amp.ac.OFC_NAc.ipsi, '--', 'color',cfg_def.color.OFC_NAc , 'linewidth', cfg.linewidth)
                 xlim([0 100])
                 
                 xlabel('Frequency (Hz)');
@@ -372,11 +375,11 @@ for iSub = 1:length(Subjects)
                 rectangle('position', [70, 0.001, 20, 1], 'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
                 
                 hold on
-                plot(all_naris.(Subjects{iSub}).amp.f.OFC_CG.contra, all_naris.(Subjects{iSub}).amp.ac.OFC_CG.contra, 'color', [0.9153    0.2816    0.2878], 'linewidth', cfg.linewidth)
+                plot(all_naris.(Subjects{iSub}).amp.f.OFC_CG.contra, all_naris.(Subjects{iSub}).amp.ac.OFC_CG.contra, 'color', cfg_def.color.OFC_CG, 'linewidth', cfg.linewidth)
                 xlim([0 100])
                 legend({'OFC - CG'}, 'location', 'Northwest')
                 legend boxoff
-                plot(all_naris.(Subjects{iSub}).amp.f.OFC_CG.ipsi, all_naris.(Subjects{iSub}).amp.ac.OFC_CG.ipsi, '--', 'color',[0.9153    0.2816    0.2878], 'linewidth', cfg.linewidth)
+                plot(all_naris.(Subjects{iSub}).amp.f.OFC_CG.ipsi, all_naris.(Subjects{iSub}).amp.ac.OFC_CG.ipsi, '--', 'color',cfg_def.color.OFC_CG, 'linewidth', cfg.linewidth)
                 xlim([0 100])
                 
                 

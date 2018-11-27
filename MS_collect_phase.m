@@ -16,8 +16,8 @@ function MS_collect_phase()
 %
 
 %% for debugging
-clear all
-run('/Users/jericcarmichael/Documents/GitHub/EC_Multisite/MS_initialize.m')
+% clear all
+% run('/Users/jericcarmichael/Documents/GitHub/EC_Multisite/MS_initialize.m')
 global PARAMS
 %%
 mat_out =[];

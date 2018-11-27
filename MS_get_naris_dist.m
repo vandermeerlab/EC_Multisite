@@ -101,6 +101,12 @@ for iRec= 1:length(rec_type)
         this_high.Contrast_Pxx = NaN(length(sites), length(sess_list));
         this_low.Contrast_White_Pxx = NaN(length(sites), length(sess_list));
         this_high.Contrast_White_Pxx = NaN(length(sites), length(sess_list));
+        %% contrast only
+        just_contra_low.Pxx = NaN(length(sites), length(sess_list));
+        just_contra_low.White_Pxx = NaN(length(sites), length(sess_list));
+        just_contra_high.Pxx = NaN(length(sites), length(sess_list));
+        just_contra_high.White_Pxx = NaN(length(sites), length(sess_list));
+        
         for iSess = 1:length(sess_list);
             for iSite = 1:length(sites)
                 if sum(ismember(fieldnames(all_Naris.(subjects{iSub}).(sess_list{iSess}).pre), [sites{iSite} '_' rec_type{iRec}])) >0
@@ -214,15 +220,22 @@ sites = {'PL', 'IL', 'OFC', 'NAc', 'CG'};
 
 % for now remove the two piri rows.  format should be site x sess x subject
 % this_power_mat = all_low.pot.Contrast_Pxx;
-this_power_mat = Contra_low.pot.White_Pxx;
+for iBand = {'low', 'high'}
+    if strcmp(iBand, 'low')
+        this_power_mat = Contra_low.pot.White_Pxx;
+    elseif strcmp(iBand, 'high')
+        this_power_mat = Contra_high.pot.White_Pxx;
+    else
+        error('no band selected')
+    end
 this_power_mat(6,:,:) = [];
 this_power_mat(4,:,:) = [];
 
 %% fix an issue where R102 has the PL and IL mislabeled.  
-this_power_mat(2,:,1) = this_power_mat(1,:,1);
-this_power_mat(1,:,1) = NaN;
-% temporary R102 CG fix
-this_power_mat(5,:,1) = NaN;
+% this_power_mat(2,:,1) = this_power_mat(1,:,1);
+% this_power_mat(1,:,1) = NaN;
+% % temporary R102 CG fix
+% this_power_mat(5,:,1) = NaN;
 %% apply the distance to piriform in a corresponding array. 
 c_ord = linspecer(length(sites));
 m_ord = {'o', '+', '*', 'x', 's', 'd', 'p'};
@@ -237,7 +250,16 @@ for iSub = 1:length(Subjects)
 end
 xlabel('Distance from PC (mm)')
 ylabel('Ipsi/Contra contrast index')
-legend(sites, 'location', 'southeast')
+%% annoying forced legend.  Avoids issue of markers and colors not working properly. 
+hold on
+h = zeros(length(sites), 1);
+for iSite = 1:length(sites)
+    h(iSite) = plot(NaN,NaN,'color', c_ord(iSite,:));
+end
+[~, hobj, ~, ~] = legend(h, sites, 'location', 'northeast');
+hl = findobj(hobj,'type','line');
+set(hl,'LineWidth',3);
+% legend(sites, 'location', 'southeast')
 SetFigure([], gcf)
 %% make a regression plot
 
@@ -279,6 +301,8 @@ D_power.lme_2b = fitlme(D_power.tbl,'Power~1+Distance+(1+Distance|RatID)+(1+Dist
 D_power.lme_3 = fitlme(D_power.tbl,'Power~1+Distance^2+(1|RatID)+(1|SessID)');
 D_power.lme_4 = fitlme(D_power.tbl,'Power~1+Distance^2+(1+Distance|RatID)+(1|SessID)');
 D_power.lme_red = fitlme(D_power.tbl,'Power~1+(1|RatID)+(1|SessID)');
+D_power.lme_red_fixed = fitlme(D_power.tbl,'Power~1+SessID +(RatID)');
+% D_power.lme_red_sess_by_sub = fitlme(D_power.tbl,'Power~Distance +(1|RatID)+(SessID-1|RatID)');
 
 figure
 plotResiduals(D_power.lme,'fitted')
@@ -295,34 +319,48 @@ D_power.comparison3_v4 = compare(D_power.lme_3,D_power.lme_4);
 D_power.comparison3_vR = compare(D_power.lme_3,D_power.lme_red);
 D_power.comparison4_vR = compare(D_power.lme_4,D_power.lme_red);
 
-
-
-%% try it as a logistic for 'prox' vs 'dist'
-% this didn't work.  
-clear L_power
-% add new value for distances greater than 2mm or less than
-log_1d = cell(size(dist_1d));
-prox_idx = dist_1d <=2;
-for ii = length(log_1d):-1:1
-    if prox_idx(ii) ==1
-        log_1d{ii} = 'prox';
-    else
-        log_1d{ii} = 'dist';
-    end
+%% write the output
+if exist(['LME_' iBand{1} '_' datestr(date, 'YY_mm_dd') '.txt'], 'file');
+    delete(['LME_' iBand{1} '_' datestr(date, 'YY_mm_dd') '.txt'])
 end
-
-L_power.tbl = table(rat_1d, sess_1d, prox_idx, pow_1d,'VariableNames',{'RatID','SessID', 'Distance', 'Power'});
-L_power.tbl.RatID = nominal(L_power.tbl.RatID);
-L_power.tbl.SessID = nominal(L_power.tbl.SessID);
-L_power.tbl.Distance = logical(L_power.tbl.Distance);
-
-% m_spec = 'Power ~ 1+ Distance +(1|RatID) + (1|SessID)';
-% m_spec = 'Distance ~ 1+ Power +(1|RatID) + (1|SessID)';
-m_spec = 'Distance ~ Power ';
-
-glm_out = fitglme(L_power.tbl, m_spec, 'distribution', 'binomial')
-% fitglm(L_power.tbl, m_spec)
-
-plotResiduals(glm_out_2,'fitted')
+clc
+diary('on')
+diary(['LME_' iBand{1} '_' datestr(date, 'YY_mm_dd') '.txt'])
+disp([' LME Out ' iBand{1}])
+disp(D_power.lme)
+disp(' LME Anova Out')
+anova(D_power.lme)
+disp('Compare out')
+compare(D_power.lme_red, D_power.lme)
+diary('off')
+movefile(['LME_' iBand{1} '_' datestr(date, 'YY_mm_dd') '.txt'], PARAMS.stats_dir);
+% %% try it as a logistic for 'prox' vs 'dist'.  Did not use.  
+% % this didn't work.  
+% clear L_power
+% % add new value for distances greater than 2mm or less than
+% log_1d = cell(size(dist_1d));
+% prox_idx = dist_1d <=2;
+% for ii = length(log_1d):-1:1
+%     if prox_idx(ii) ==1
+%         log_1d{ii} = 'prox';
+%     else
+%         log_1d{ii} = 'dist';
+%     end
+% end
+end
+% %% odd attempt at glm
+% L_power.tbl = table(rat_1d, sess_1d, prox_idx, pow_1d,'VariableNames',{'RatID','SessID', 'Distance', 'Power'});
+% L_power.tbl.RatID = nominal(L_power.tbl.RatID);
+% L_power.tbl.SessID = nominal(L_power.tbl.SessID);
+% L_power.tbl.Distance = logical(L_power.tbl.Distance);
+% 
+% % m_spec = 'Power ~ 1+ Distance +(1|RatID) + (1|SessID)';
+% % m_spec = 'Distance ~ 1+ Power +(1|RatID) + (1|SessID)';
+% m_spec = 'Distance ~ Power ';
+% 
+% glm_out = fitglme(L_power.tbl, m_spec, 'distribution', 'binomial')
+% % fitglm(L_power.tbl, m_spec)
+% 
+% plotResiduals(glm_out_2,'fitted')
 
 

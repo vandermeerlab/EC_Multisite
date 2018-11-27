@@ -27,7 +27,7 @@ cfg_def.ipsi_x_lim = [854 855];
 cfg_def.Fs_restrict = 0.01; % dt to be used when computed the insets.
 % cfgs for amp-corr-ogram
 cfg_def.cfg_amp_cor_ogram = [];
-cfg_def.cfg_amp_cor_ogram.dT = .1;
+cfg_def.cfg_amp_cor_ogram.dT = 1;
 
 cfg = ProcessConfig2(cfg_def, cfg_in);
 
@@ -223,7 +223,7 @@ for iRun = 1:2
     figure(111)
     ax1 = imagesc('XData', all_time, 'CData', all_sess);
     axis xy
-    set(gca, 'ytick',[1 size(all_sess,1)], 'yticklabel',[Freq_list(1) Freq_list(end)], 'xtick', (0:500:length(all_time)), 'xticklabel', [0:500:2500])
+    set(gca, 'ytick',[1 size(all_sess,1)], 'yticklabel',[Freq_list(1) Freq_list(end)], 'xtick', (1:5000:length(all_time)), 'xticklabel', [0:500:2500])
     
     set(ax1, 'AlphaData', ~isnan(all_sess))
     %     title(['Coherogram: ' S{1} ' ' S{2}] )
@@ -264,8 +264,8 @@ for iRun = 1:2
     set(h(:), 'linewidth', cfg.linewidth);
     colormap('PARULA');
     
-        text(median(cfg.pre_x_lim)*1, 102, 'V', 'fontsize', 28, 'color', cfg.c_ord(1,:))
-    text(median(cfg.ipsi_x_lim)*1, 102, 'V', 'fontsize', 28, 'Color', cfg.c_ord(2,:))
+        text(median(cfg.pre_x_lim)*10, 102, 'V', 'fontsize', 28, 'color', cfg.c_ord(1,:))
+    text(median(cfg.ipsi_x_lim)*10, 102, 'V', 'fontsize', 28, 'Color', cfg.c_ord(2,:))
     
     
     h = vline([length(amp_ac.(this_pair).pre), (length(amp_ac.(this_pair).pre) +length(amp_ac.(this_pair).ipsi)),...

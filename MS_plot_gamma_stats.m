@@ -116,6 +116,7 @@ cfg_stats = [];
         cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post', 'control'};
         cfg_stats.s_idx= s_idx;
         cfg_stats.ft_size= 20;
+        cfg_stats.stats_method = 'lme'; 
         cfg_stats.save_dir= [PARAMS.inter_dir 'Count'];
         cfg_stats.stats_dir = stats_file;
 MS_stats(cfg_stats,out.low)
@@ -128,6 +129,7 @@ cfg_stats = [];
         cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post', 'control'};
         cfg_stats.s_idx= s_idx;
         cfg_stats.ft_size= 20;
+        cfg_stats.stats_method = 'lme';
         cfg_stats.save_dir= [PARAMS.inter_dir 'Count'];
         cfg_stats.stats_dir = stats_file;
 MS_stats(cfg_stats,out.high)
@@ -140,6 +142,7 @@ cfg_stats = [];
         cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post', 'control'};
         cfg_stats.s_idx= s_idx;
         cfg_stats.ft_size= 20;
+        cfg_stats.stats_method = 'lme';
         cfg_stats.save_dir= [PARAMS.inter_dir 'Count'];
         cfg_stats.stats_dir = stats_file;
 MS_stats(cfg_stats,out_norm.low)
@@ -152,6 +155,7 @@ cfg_stats = [];
         cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post', 'control'};
         cfg_stats.s_idx= s_idx;
         cfg_stats.ft_size= 20;
+        cfg_stats.stats_method = 'lme';
         cfg_stats.save_dir= [PARAMS.inter_dir 'Count'];
         cfg_stats.stats_dir = stats_file;
 MS_stats(cfg_stats,out_norm.high)

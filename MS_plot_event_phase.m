@@ -1,4 +1,4 @@
-function MS_plot_event_phase(cfg_in, all_Phase)
+function MS_plot_event_phase(cfg_in)
 % %% for debugging
 % run('/Users/jericcarmichael/Documents/GitHub/EC_Multisite/MS_initialize.m')
 % global PARAMS
@@ -7,10 +7,26 @@ function MS_plot_event_phase(cfg_in, all_Phase)
 % PARAMS.inter_dir = '/Volumes/Fenrir/MS_temp/';
 % cd(PARAMS.inter_dir)
 
-Subjects = {'R102','R104','R107', 'R108', 'R112','R122','R123'};
+% Subjects = {'R102','R104','R107', 'R108', 'R112','R122','R123'};
+
+%% default configurations
+global PARAMS
+
+cfg_def = [];
+cfg_def.Subjects = {'R102','R104','R107', 'R108', 'R112','R122','R123'}; % can also be {'all'}
+cfg_def.filter = [];
+cfg_def.filter1.f = [45 65];
+cfg_def.filter2.f = [70 90];
+cfg_def.color.blue = double([158,202,225])/255;
+cfg_def.color.green = double([168,221,181])/255;
+cfg_def.color.OFC_NAc = double([123,225,160])/255;
+% cfg_def.color.OFC_CG= double([255,168,213])/255;% old too bright
+cfg_def.color.OFC_CG= double([158 1 66])/255;
+cfg = ProcessConfig2(cfg_def, cfg_in);
+
 %%
-for iSub = Subjects
-    
+for iSub = cfg.Subjects
+    fprintf('\nAnalyzing subject %s\n', iSub{1})
     load([PARAMS.inter_dir '/Phase_outputs/' iSub{1} '_phase_out.mat']);
     
     if strcmp(iSub{1}, 'all')
@@ -20,7 +36,6 @@ for iSub = Subjects
         mat_in = Phase_mat;
         clear Phase_mat;
     end
-    cfg_in = [];
     %%
     % function MS_plot_phase(cfg_in, mat_in)
     %% MS_plot_phase: plots the outputs from the three phase measures in the
@@ -36,15 +51,6 @@ for iSub = Subjects
     %       - mat_in [struct]:
     %
     %
-    %% default configurations
-    cfg_def = [];
-    cfg_def.filter = [];
-    cfg_def.filter1.f = [45 65];
-    cfg_def.filter2.f = [70 90];
-    cfg_def.color.blue = double([158,202,225])/255;
-    cfg_def.color.green = double([168,221,181])/255;
-    
-    cfg = ProcessConfig2(cfg_def, cfg_in);
     
     
     
@@ -96,13 +102,13 @@ for iSub = Subjects
                             %                         else
                             temp(cellfun(@(temp) any(isnan(temp)),temp)) = [];
                             temp = cell2mat(squeeze(temp));
-                            if isempty(temp) || size(temp,1) <10;
+                            if isempty(temp) || size(temp,1) <10
                                 all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = [];
                                 all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  [];
                                 
                             else
                                 %                         end
-                                if strcmp(measures{iMs}, 'Phase_lag_cxy')  || strcmp(measures{iMs}, 'PS_slope')
+                                if strcmp(measures{iMs}, 'Phase_lag_cxy')
                                     all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj}=  circ_mean(temp);
                                     all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  circ_std(temp);
                                     
@@ -117,6 +123,11 @@ for iSub = Subjects
                                     
                                 elseif strcmp(measures{iMs}, 'EVT_COUNT')
                                     all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nansum(temp, 1);
+                                    
+                                elseif strcmp(measures{iMs}, 'PS_slope')
+                                    all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj}=  nanmean((temp./(2*pi))*1000); % ./(2*pi))*1000 convert to time rather than deg/Hz
+                                    all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanstd((temp./(2*pi))*1000);
+                                    
                                 else
                                     all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanmedian(temp,1);
                                     all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanstd(temp,[],1);
@@ -285,12 +296,12 @@ for iSub = Subjects
                         end
                     end
                     if strcmp(measures{iMs}, 'PS_slope')
-                        y_lim = [-.25 .25];
+                        y_lim = [-20 20];
                         ylabel('Phase_slope (deg/Hz)');
                         xlim([30 100])
-                        box_pos =  [30, -5, 70, 0.5];
-                        gamma_box_h = 0.01;
-                        title_pos = [80  .2 1.00011];
+                        box_pos =  [0, y_lim(1), 100, sum(abs(y_lim))];
+                        gamma_box_h = 2;
+                        title_pos = [80  8 1.00011];
                         
                     elseif strcmp(measures{iMs}, 'Phase_lag_cxy')
                         y_lim = [-200 200];
@@ -372,9 +383,9 @@ for iSub = Subjects
                                     h_curr= figure();
                                     hold on
                                     if strcmp(labels{ii,jj}, 'CG_OFC') || strcmp(labels{ii,jj}, 'OFC_CG')
-                                        this_color = PARAMS.fig_pink;
+                                        this_color = cfg_def.color.OFC_CG;
                                     else
-                                        this_color = PARAMS.fig_blue;
+                                        this_color = cfg_def.color.OFC_NAc;
                                     end
                                     if strcmp(measures{iMs}, 'COH_cxx')
                                         h =shadedErrorBar(all_mean.COH_fxx.contra.(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).contra.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj})));
@@ -453,11 +464,11 @@ for iSub = Subjects
                                             h2.edge(2).Color = [.6 .6 .6];
                                         end
                                         
-                                        y_lim = [-.25 0 .25];
+                                        y_lim = [-15, 0, 15];
                                         ylabel('Phase_slope (deg/Hz)');
                                         x_lim=([30 100]);
-                                        box_pos =  [30, -5, 70, 0.5];
-                                        gamma_box_h = 0.5;
+                                        box_pos =  [30, -5, 100, 40];
+                                        gamma_box_h = 2;
                                         
                                     end
                                     
@@ -469,6 +480,8 @@ for iSub = Subjects
                                         h.patch.EdgeColor = this_color;
                                         h.edge(1).Color = this_color;
                                         h.edge(2).Color = this_color;
+                                        [con_val, con_idx] = max(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj});
+                                        
                                         
                                         if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
                                             h2 =shadedErrorBar(all_mean.AMP_LAG.ipsi.(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})));
@@ -478,19 +491,33 @@ for iSub = Subjects
                                             h2.patch.EdgeColor = [.6 .6 .6];
                                             h2.edge(1).Color = [.6 .6 .6];
                                             h2.edge(2).Color = [.6 .6 .6];
+                                            [ip_val, ip_idx] = max(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj});
                                         end
                                         y_lim =[0 1];
                                         ylabel('Amplitude xcor');
                                         x_lim=([-0.05 0 0.05]);
                                         box_pos =  [-0.05, 0, .1, 1];
                                         gamma_box_h = 1;
+                                        ylim([y_lim(1) y_lim(end)]);xlim([x_lim(1) x_lim(end)])
+                                        h_con = vline(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx));
+                                        h_con.Color = this_color; h_con.LineStyle = '- -'; h_con.LineWidth = 3;
+                                        if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
+                                            h_ip = [];
+                                            h_ip = vline(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(ip_idx));
+                                            h_ip.Color = [.6 .6 .6]; h_ip.LineStyle =  ':'; h_ip.LineWidth = 3;
+                                            lgd = legend([h_con, h_ip],['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)) 'ms'],...
+                                                [ 'Ipsi lag: ' num2str(all_mean.AMP_LAG.ipsi.(bands{iBand}){ii, jj}(ip_idx)) 'ms']);
+                                        else
+                                            lgd = legend(h_con,['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)) 'ms']);
+                                        end
                                         
+                                        lgd.FontSize = 24; lgd.Box = 'off';
                                     end
                                     % save the sigure
                                     
                                     ylim([y_lim(1) y_lim(end)]);xlim([x_lim(1) x_lim(end)])
                                     if strcmp(measures{iMs}, 'AMP_AC')
-                                        vline(0, 'k')
+                                        v_zero = vline(0, 'k');
                                     end
                                     % put boxes for the gamma bands
                                     rectangle('position', [cfg.filter1.f(1), y_lim(1), (cfg.filter1.f(2)-cfg.filter1.f(1)), gamma_box_h],  'facecolor', [cfg.color.blue 0.3], 'edgecolor', [cfg.color.blue 0.3])
@@ -499,6 +526,12 @@ for iSub = Subjects
                                     set(gca, 'Children',flipud(chi))
                                     
                                     set(findall(gca, 'Type', 'Line'),'LineWidth',2)
+                                    if strcmp(measures{iMs}, 'AMP_AC')
+                                        h_ip.LineWidth = 3;
+                                        h_con.LineWidth = 3;
+                                        v_zero.LineWidth = 1;
+                                        uistack(v_zero, 'bottom')
+                                    end
                                     set(gca, 'ytick', y_lim, 'xtick',x_lim)
                                     ylabel([]); xlabel([]); %remove the labels for clerity in the figure.
                                     
@@ -516,6 +549,11 @@ for iSub = Subjects
                                     % same thing but without the ipsi line
                                     if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
                                         set(h2.patch, 'visible', 'off'); set(h2.edge, 'visible', 'off'); set(h2.mainLine, 'visible', 'off')
+                                        if strcmp(measures{iMs}, 'AMP_AC')
+                                            h_ip.Visible = 'off';
+                                            lgd = legend(h_con,['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)) 'ms']);
+                                            clear h_ip
+                                        end
                                     end
                                     set(gca, 'ytick', y_lim, 'xtick',x_lim)
                                     cfg.set_fig.ft_size = 36;

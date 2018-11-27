@@ -7,7 +7,7 @@ PARAMS.inter_dir = '/Volumes/Fenrir/MS_temp/';
 % Extract the data from each recroding phase within each session and separate pot vs track sections
 cd(PARAMS.inter_dir)
 
-
+%%
 for iSub = 1:length(PARAMS.Subjects)
     
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
