@@ -27,7 +27,7 @@ cfg_def.ipsi_x_lim = [854 855];
 cfg_def.Fs_restrict = 0.01; % dt to be used when computed the insets.
 % cfgs for amp-corr-ogram
 cfg_def.cfg_amp_cor_ogram = [];
-cfg_def.cfg_amp_cor_ogram.dT = .1;
+cfg_def.cfg_amp_cor_ogram.dT = .5;
 
 cfg = ProcessConfig2(cfg_def, cfg_in);
 
