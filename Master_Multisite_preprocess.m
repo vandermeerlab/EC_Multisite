@@ -19,7 +19,7 @@ fprintf(PARAMS.log, date);
 global PARAMS
 
 
-for iSub = 1:length(PARAMS.Subjects)
+for iSub = 1%:length(PARAMS.Subjects)
    %% speed loading
 %    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
 %    d_t = data;

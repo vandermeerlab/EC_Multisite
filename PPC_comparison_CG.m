@@ -1,38 +1,60 @@
 function PPC_comparison(cfg_in)
 %% PPC_comparison
-clear all
-close all
-restoredefaultpath
-cfg_in = [];
-% 
-addpath(genpath('/Users/jericcarmichael/Documents/GitHub/vandermeerlab/code-matlab/shared'))
-% 
-addpath('/Users/jericcarmichael/Documents/GitHub/fieldtrip')
-ft_defaults
-addpath('/Users/jericcarmichael/Documents/GitHub/EC_Multisite/Basic_functions/')
+% clear all
+% close all
+% restoredefaultpath
+% cfg_in = [];
+% %
+% if isunix
+%     addpath(genpath('/Users/jericcarmichael/Documents/GitHub/vandermeerlab/code-matlab/shared'))
+%     %
+%     addpath('/Users/jericcarmichael/Documents/GitHub/fieldtrip')
+%     ft_defaults
+%     addpath('/Users/jericcarmichael/Documents/GitHub/EC_Multisite/Basic_functions/')
+% else
+%     addpath(genpath('D:\Users\mvdmlab\My_Documents\GitHub\vandermeerlab\code-matlab\shared'))
+%     %
+%     addpath('D:\Users\mvdmlab\My_Documents\GitHub\fieldtrip')
+%     ft_defaults
+%     addpath('D:\Users\mvdmlab\My_Documents\GitHub\EC_Multisite\Basic_functions\')
+% end
+
 
 
 
 %%
 cfg_def = [];
-cfg_def.dataset = {'CSC24.ncs'};
+cfg_def.dataset = {'CSC7.ncs'};  % [testing] Use CSC8 for MClust and CSC7 for SS3D
+if isunix
 cfg_def.data_dir = '/Users/jericcarmichael/Documents/Multisite/R112-2017-08-01_post';
-cfg_def.inter_dir = '/Users/jericcarmichael/Documents/Multisite/R112-2017-08-01_post';
+else
+cfg_def.data_dir = 'G:\Multisite\temp\R112-2017-08-04_post';    % SS3D debug
+% cfg_def.data_dir = 'G:\R111-2017-06-20-Rec_auto for Eroc'; % MClust data debug
+end
+cfg_def.inter_dir = cfg_def.data_dir; % can be changed to some other place
 cfg_def.phase = 1; % corresponds to the first recording phase ('pre').  2 = 'task', 3 = 'post'.
 cfg_def.shuffle = 10;
 cfg_def.min_nSpikes = 300;
 cfg_def.spike_id = '.t';
+cfg_def.check = 1;
 
 cfg = ProcessConfig(cfg_def, cfg_in);
 cd(cfg.data_dir)
 
 data = ft_read_neuralynx_interp(cfg.dataset);
-
+% resample if LFP Fs is greater than 2k
+if data.fsample > 2000
+    cfg_resample = [];
+    cfg_resample.resamplefs = 2000;
+    cfg_resample.sampleindex = 'yes';
+    data = ft_resampledata(cfg_resample, data); %
+end
 LFP_list = cfg.dataset;
 
 %get the Ts files for all cells. and appended them to the csc file
 t_id = FindFile_str(cd, cfg.spike_id);
 % hack around above finding '.txt files
+keep_idx = [];
 for ii =1:length(t_id)
     if strcmp(t_id{ii}(end-1:end), '.t')
         keep_idx(ii) = 1;
@@ -41,11 +63,12 @@ for ii =1:length(t_id)
     end
 end
 t_id(keep_idx==0) = [];
-
+t_id
+%% load all the .t files and append them to the data struct
 S_list = {};
 for iS = 1:length(t_id)
     spike = ft_read_spike(t_id{iS}); % needs fixed read_mclust_t.m
-    spike.label{1} = t_id{iS}(1:end-2); 
+    spike.label{1} = t_id{iS}(1:end-2);
     disp([spike.label{1} ' Contained: ' num2str(length(spike.timestamp{1})) ' spikes'])
     if length(spike.timestamp{1}) < cfg.min_nSpikes
         continue
@@ -53,6 +76,32 @@ for iS = 1:length(t_id)
     S_list{end+1} = spike.label{1};
     data = ft_appendspike([],data, spike);
 end
+
+% %% TEMP visualization
+% if cfg.check
+%    figure(100) 
+%    plot(data.time{1}, data.trial{1}(1,:), 'b')
+%    hold on
+%    iC = 2; % spike index
+%    nSpikes = length(data.trial{1}(iC,:));
+%    xvals = [ data.trial{1}(iC,:)' ; data.trial{1}(iC,:)' ; nan(size(data.trial{1}(iC,:)')) ];
+%    yvals = [ iC.*ones(1,nSpikes);...
+%        iC.*ones(1,nSpikes) ; nan(1,nSpikes) ];
+%    
+%    xvals = xvals(:);
+%    yvals = yvals(:);
+%    
+%    plot(xvals,yvals,'Color','k','LineWidth',2);
+%    
+%    plot(data.time{1}, data.trial{1}(2,:), '.k')
+% %    
+% %    for ii = 1:10000%length(data.trial{1}):-1:1
+% %    line([data.trial{1}(2,ii), data.trial{1}(2,ii)], [-800 -700])
+% %    end
+% %     
+%     
+%     
+% end
 %% redefine trials as pre, task, post
 evt = LoadEvents([]);
 cfg_csc.fc = LFP_list(1);
@@ -63,8 +112,21 @@ start_idx = find(not(cellfun('isempty', idx)));
 idx = strfind(evt.label, 'Stopping Recording');
 stop_idx = find(not(cellfun('isempty', idx)));
 
-tstart = nearest_idx(evt.t{start_idx}(cfg.phase), d_temp.tvec);
-tstop = nearest_idx(evt.t{stop_idx}(cfg.phase), d_temp.tvec);
+
+% usefule for dealing with saturations in the LFP which kill PPC
+if isfield(cfg, 'tstart')
+    tstart = cfg.tstart;
+else
+    tstart = nearest_idx(evt.t{start_idx}(cfg.phase), d_temp.tvec);
+end
+% usefule for dealing with saturations in the LFP which kill PPC
+if isfield(cfg, 'tstop')
+    tstop = cfg.tstop;
+else
+    tstop = nearest_idx(evt.t{stop_idx}(cfg.phase), d_temp.tvec);
+end
+
+
 
 cfg_trl = [];
 cfg_trl.begsample = tstart;
@@ -155,9 +217,9 @@ for  iLFP = 1:length(LFP_list)
         shuf_ppc = zeros(nShuf,length(obs_freq));
         parfor iShuf = 1:nShuf
             fprintf('Shuffle %d...\n',iShuf);
-           shuf_ppc(iShuf,:) =  Shuffle_PPC(data_i, spk_idx, lfp_chan, iChan);
+            shuf_ppc(iShuf,:) =  Shuffle_PPC(data_i, spk_idx, lfp_chan, iChan);
         end
-
+        
         id = strrep(spk_chan, '-', '_');
         
         %% plot
@@ -179,14 +241,20 @@ for  iLFP = 1:length(LFP_list)
             title([spk_chan '_' lfp_chan]);
             
             %             mkdir(cfg.inter_dir, 'PPC')
-            sess_id = strsplit(pwd, '/');
+            if isunix
+                sess_id = strsplit(pwd, '/');
+            else
+                sess_id = strsplit(pwd, '\');
+            end
             sess_id = strrep(sess_id{end}, '-', '_');
             if isunix
                 saveas(gcf, [cfg.inter_dir '/' sess_id '_' id '_' lfp_chan(1:end-4)], 'fig');
                 saveas(gcf, [cfg.inter_dir '/' sess_id '_' id '_' lfp_chan(1:end-4)], 'png');
+                saveas_eps([ sess_id '_' id '_' lfp_chan(1:end-4)], cfg.inter_dir)
             else
                 saveas(gcf, [cfg.inter_dir '\' sess_id '_' id '_' lfp_chan(1:end-4)], 'fig');
                 saveas(gcf, [cfg.inter_dir '\' sess_id '_' id '_' lfp_chan(1:end-4)], 'png');
+                saveas_eps([ sess_id '_' id '_' lfp_chan(1:end-4)], cfg.inter_dir)
             end
         end
         %% collect variables for export
@@ -198,10 +266,10 @@ for  iLFP = 1:length(LFP_list)
     end
 end
 if ~isempty(S_list)
-[~,dir_id] = fileparts(pwd);
-dir_id = strrep(dir_id, '-', '_');
-dir_id = strrep(dir_id, ' ', '_');
-save(['PPC_MS' dir_id], 'PPC',  '-v7.3');
+    [~,dir_id] = fileparts(pwd);
+    dir_id = strrep(dir_id, '-', '_');
+    dir_id = strrep(dir_id, ' ', '_');
+    save(['PPC_MS' dir_id], 'PPC',  '-v7.3');
 end
 end
 
@@ -211,7 +279,7 @@ function shuf_ppc = Shuffle_PPC(data_i, spk_idx, lfp_chan, iChan)
 for iT = 1:length(data_i.trial) % shuffle each trial separately
     orig_data = data_i.trial{iT}(spk_idx,:);
     data_i.trial{iT}(iChan,:) = orig_data(randperm(length(orig_data)));
-
+    
 end
 
 %% ppc etc

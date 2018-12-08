@@ -18,19 +18,20 @@ filesAndFolders = dir(dir_name);     % Returns all the files and folders in the 
 filesInDir = filesAndFolders(~([filesAndFolders.isdir]));  % Returns only the files in the directory                    
 stringToBeFound = str;
 numOfFiles = length(filesInDir);
-i=1;
+ii=1;
 f_id = {[]}; 
-while(i<=numOfFiles)
-      filename = filesInDir(i).name;                              % Store the name of the file
+while(ii<=numOfFiles)
+      filename = filesInDir(ii).name;                              % Store the name of the file
 %       while(~feof(fid))                                           % Execute till EOF has been reached
-          found = strfind(filename,stringToBeFound);         % Search for the stringToBeFound in contentOfFile
+found = regexp( filename ,regexptranslate('wildcard',stringToBeFound)); % better way to deal with wildcards in the middle of string
+% found = strfind(filename,stringToBeFound);         % Search for the stringToBeFound in contentOfFile
           if ~isempty(found)
               foundString = strcat('Found in file------', filename);
               disp(foundString);
               f_id{end+1} = filename;
           end   
             
-      i = i+1;
+      ii = ii+1;
 end
 f_id = f_id(~cellfun('isempty',f_id));
 end
