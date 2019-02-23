@@ -84,8 +84,8 @@ for iSub = 1:length(PARAMS.Subjects)
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'])
 
-     all_Naris.(PARAMS.Subjects{iSub}) = Naris.(PARAMS.Subjects{iSub});
-     all_Events.(PARAMS.Subjects{iSub}) = Events.(PARAMS.Subjects{iSub});
+     all_Naris.(PARAMS.Subjects{iSub}) = Naris;
+     all_Events.(PARAMS.Subjects{iSub}) = Events;
 
     clearvars -except iSub PARAMS all_Naris all_Events
     close all

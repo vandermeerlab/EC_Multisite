@@ -495,7 +495,7 @@ for iSub = cfg.Subjects
                                         end
                                         y_lim =[0 1];
                                         ylabel('Amplitude xcor');
-                                        x_lim=([-0.05 0 0.05]);
+                                        x_lim=([-50 0 50]);
                                         box_pos =  [-0.05, 0, .1, 1];
                                         gamma_box_h = 1;
                                         ylim([y_lim(1) y_lim(end)]);xlim([x_lim(1) x_lim(end)])
@@ -505,10 +505,10 @@ for iSub = cfg.Subjects
                                             h_ip = [];
                                             h_ip = vline(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(ip_idx));
                                             h_ip.Color = [.6 .6 .6]; h_ip.LineStyle =  ':'; h_ip.LineWidth = 3;
-                                            lgd = legend([h_con, h_ip],['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)) 'ms'],...
-                                                [ 'Ipsi lag: ' num2str(all_mean.AMP_LAG.ipsi.(bands{iBand}){ii, jj}(ip_idx)) 'ms']);
+                                            lgd = legend([h_con, h_ip],['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)*1000) 'ms'],...
+                                                [ 'Ipsi lag: ' num2str(all_mean.AMP_LAG.ipsi.(bands{iBand}){ii, jj}(ip_idx)*1000) 'ms']);
                                         else
-                                            lgd = legend(h_con,['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)) 'ms']);
+                                            lgd = legend(h_con,['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)*1000) 'ms']);
                                         end
                                         
                                         lgd.FontSize = 24; lgd.Box = 'off';
