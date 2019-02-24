@@ -27,8 +27,11 @@ cfg = ProcessConfig2(cfg_def, cfg_in);
 %%
 for iSub = cfg.Subjects
     fprintf('\nAnalyzing subject %s\n', iSub{1})
-    load([PARAMS.inter_dir '/Phase_outputs/' iSub{1} '_phase_out.mat']);
-    
+    if isunix
+        load([PARAMS.inter_dir 'Phase_outputs/' iSub{1} '_phase_out.mat']);
+    else
+        load([PARAMS.inter_dir 'Phase_outputs\' iSub{1} '_phase_out.mat']);
+    end
     if strcmp(iSub{1}, 'all')
         mat_in = mat_out;
         clear mat_out;
@@ -76,82 +79,86 @@ for iSub = cfg.Subjects
     
     for iPhase =1:length(PARAMS.Phases)
         for iMs = 1:length(measures)
-            for iBand = 1:2
-                if strcmp(measures{iMs}, 'AMP_LAG_max') || strcmp(measures{iMs}, 'AMP_AC_max')
-                    all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}) = cell(size(labels));
-                    continue
-                else
-                    all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}) = cell(size(labels));
-                    all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}) = cell(size(labels));
-                    all_out = {};
-                    for iSess = 1:length(sess_list)
-                        all_out = cat(3,all_out, mat_in.(sess_list{iSess}).(PARAMS.Phases{iPhase}).(measures{iMs}).(bands{iBand}));
-                    end
-                    for ii = size(all_out,1):-1:1
-                        for jj = size(all_out,2):-1:1
-                            % get the mean and median values
-                            
-                            temp = all_out(ii, jj,:);
-                            %                     if isempty(temp{1,1,1})
-                            %                         all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  [];
-                            %                         all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  [];
-                            %                     else
-                            %                         if size(temp{1,1,1},1) > size(temp{1,1,1},2)
-                            %                             temp(cellfun(@(temp) any(isnan(temp)),temp)) = [];
-                            %                             temp = cell2mat(squeeze(temp)');
-                            %                         else
-                            temp(cellfun(@(temp) any(isnan(temp)),temp)) = [];
-                            temp = cell2mat(squeeze(temp));
-                            if isempty(temp) || size(temp,1) <10
-                                all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = [];
-                                all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  [];
+            if strcmp(measures{iMs}, 'EVT_COUNT')
+                continue
+            else
+                for iBand = 1:2
+                    if strcmp(measures{iMs}, 'AMP_LAG_max') || strcmp(measures{iMs}, 'AMP_AC_max')
+                        all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}) = cell(size(labels));
+                        continue
+                    else
+                        all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}) = cell(size(labels));
+                        all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}) = cell(size(labels));
+                        all_out = {};
+                        for iSess = 1:length(sess_list)
+                            all_out = cat(3,all_out, mat_in.(sess_list{iSess}).(PARAMS.Phases{iPhase}).(measures{iMs}).(bands{iBand}));
+                        end
+                        for ii = size(all_out,1):-1:1
+                            for jj = size(all_out,2):-1:1
+                                % get the mean and median values
                                 
-                            else
-                                %                         end
-                                if strcmp(measures{iMs}, 'Phase_lag_cxy')
-                                    all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj}=  circ_mean(temp);
-                                    all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  circ_std(temp);
-                                    
-                                elseif strcmp(measures{iMs}, 'Phase_lag_mean')
-                                    all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj}=  circ_mean(temp);
-                                    all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  circ_std(temp);
-                                    all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  temp;
-                                elseif strcmp(measures{iMs}, 'Phase_lag_F')  || strcmp(measures{iMs}, 'COH_fxx') || strcmp(measures{iMs}, 'PS_D')...
-                                        || strcmp(measures{iMs}, 'AMP_AC') || strcmp(measures{iMs}, 'AMP_LAG');
-                                    all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanmean(temp, 1);
-                                    all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanstd(temp, [],1);
-                                    
-                                elseif strcmp(measures{iMs}, 'EVT_COUNT')
-                                    all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nansum(temp, 1);
-                                    
-                                elseif strcmp(measures{iMs}, 'PS_slope')
-                                    all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj}=  nanmean((temp./(2*pi))*1000); % ./(2*pi))*1000 convert to time rather than deg/Hz
-                                    all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanstd((temp./(2*pi))*1000);
+                                temp = all_out(ii, jj,:);
+                                %                     if isempty(temp{1,1,1})
+                                %                         all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  [];
+                                %                         all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  [];
+                                %                     else
+                                %                         if size(temp{1,1,1},1) > size(temp{1,1,1},2)
+                                %                             temp(cellfun(@(temp) any(isnan(temp)),temp)) = [];
+                                %                             temp = cell2mat(squeeze(temp)');
+                                %                         else
+                                temp(cellfun(@(temp) any(isnan(temp)),temp)) = [];
+                                temp = cell2mat(squeeze(temp));
+                                if isempty(temp) || size(temp,1) <10
+                                    all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = [];
+                                    all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  [];
                                     
                                 else
-                                    all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanmedian(temp,1);
-                                    all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanstd(temp,[],1);
-                                end
-                                
-                                % work around for amp_lag max values
-                                if strcmp(measures{iMs}, 'AMP_AC')
-                                    if isempty(temp)
-                                        continue
+                                    %                         end
+                                    if strcmp(measures{iMs}, 'Phase_lag_cxy')
+                                        all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj}=  circ_mean(temp);
+                                        all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  circ_std(temp);
+                                        
+                                    elseif strcmp(measures{iMs}, 'Phase_lag_mean')
+                                        all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj}=  circ_mean(temp);
+                                        all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  circ_std(temp);
+                                        all_mean.Phase_diff_all.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  temp;
+                                    elseif strcmp(measures{iMs}, 'Phase_lag_F')  || strcmp(measures{iMs}, 'COH_fxx') || strcmp(measures{iMs}, 'PS_D')...
+                                            || strcmp(measures{iMs}, 'AMP_AC') || strcmp(measures{iMs}, 'AMP_LAG');
+                                        all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanmean(temp, 1);
+                                        all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanstd(temp, [],1);
+                                        
+                                    elseif strcmp(measures{iMs}, 'EVT_COUNT')
+                                        all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nansum(temp, 1);
+                                        
+                                    elseif strcmp(measures{iMs}, 'PS_slope')
+                                        all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj}=  nanmean((temp./(2*pi))*1000); % ./(2*pi))*1000 convert to time rather than deg/Hz
+                                        all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanstd((temp./(2*pi))*1000);
+                                        
                                     else
-                                        lag = -0.05:0.0005:0.05;
-                                        for iEvt = size(temp,1):-1:1
-                                            [t_max(iEvt), idx] = max(temp(iEvt,:));
-                                            lags_out(iEvt) = lag(idx);
+                                        all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanmedian(temp,1);
+                                        all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  nanstd(temp,[],1);
+                                    end
+                                    
+                                    % work around for amp_lag max values
+                                    if strcmp(measures{iMs}, 'AMP_AC')
+                                        if isempty(temp)
+                                            continue
+                                        else
+                                            lag = -0.05:0.0005:0.05;
+                                            for iEvt = size(temp,1):-1:1
+                                                [t_max(iEvt), idx] = max(temp(iEvt,:));
+                                                lags_out(iEvt) = lag(idx);
+                                            end
+                                            all_mean.AMP_AC_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = t_max;
+                                            all_mean.AMP_LAG_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = lags_out;
+                                            clear lags_out t_max
                                         end
-                                        all_mean.AMP_AC_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = t_max;
-                                        all_mean.AMP_LAG_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = lags_out;
-                                        clear lags_out t_max
                                     end
                                 end
                             end
                         end
+                        clear temp
                     end
-                    clear temp
                 end
             end
         end
@@ -182,12 +189,12 @@ for iSub = cfg.Subjects
                     end
                     
                     
-                    if isempty(all_mean.EVT_COUNT.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj})
-                        Evt_count.(bands{iBand})(ii, jj) = NaN;
-                        % if it is in the lower triangular put the low
-                    elseif ismember(Idx_mat(ii, jj), tril(Idx_mat,-1))
-                        Evt_count.(bands{iBand})(ii, jj) = nansum(all_mean.EVT_COUNT.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj});
-                    end
+%                     if isempty(all_mean.EVT_COUNT.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj})
+%                         Evt_count.(bands{iBand})(ii, jj) = NaN;
+%                         % if it is in the lower triangular put the low
+%                     elseif ismember(Idx_mat(ii, jj), tril(Idx_mat,-1))
+%                         Evt_count.(bands{iBand})(ii, jj) = nansum(all_mean.EVT_COUNT.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj});
+%                     end
                     
                     if isempty(all_mean.AMP_AC_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj})
                         AMP_AC_max_mean.(bands{iBand})(ii, jj) = NaN;
@@ -208,7 +215,7 @@ for iSub = cfg.Subjects
         end
         mean_out.Coh_out.(PARAMS.Phases{iPhase}) = tril(Coh_mean.low) + tril(Coh_mean.high,-1)';
         mean_out.Phase_diff_out.(PARAMS.Phases{iPhase}) = tril(Phase_diff.low) + tril(Phase_diff.high,-1)';
-        mean_out.Evt_count_out.(PARAMS.Phases{iPhase})  = tril(Evt_count.low) + tril(Evt_count.high,-1)';
+%         mean_out.Evt_count_out.(PARAMS.Phases{iPhase})  = tril(Evt_count.low) + tril(Evt_count.high,-1)';
         mean_out.AMP_AC_max_out.(PARAMS.Phases{iPhase})  = tril(AMP_AC_max_mean.low) + tril(AMP_AC_max_mean.high,-1)';
         mean_out.AMP_LAG_max_out.(PARAMS.Phases{iPhase})  = tril(AMP_LAG_max_mean.low) + tril(AMP_LAG_max_mean.high,-1)';
         
@@ -405,7 +412,7 @@ for iSub = cfg.Subjects
                                             h2.edge(2).Color = [.6 .6 .6];
                                         end
                                         y_lim = [0 1];
-                                        ylabel('Coherence');
+                                        ylabel('Coherence'); xlabel('Frequency')
                                         x_lim=([0 100]);
                                         box_pos =  [0, 0, 100, 1];
                                         gamma_box_h = 1;
@@ -465,7 +472,7 @@ for iSub = cfg.Subjects
                                         end
                                         
                                         y_lim = [-15, 0, 15];
-                                        ylabel('Phase_slope (deg/Hz)');
+                                        ylabel('Phase_slope (deg/Hz)'); xlabel('Frequency');
                                         x_lim=([30 100]);
                                         box_pos =  [30, -5, 100, 40];
                                         gamma_box_h = 2;
@@ -473,7 +480,7 @@ for iSub = cfg.Subjects
                                     end
                                     
                                     if strcmp(measures{iMs}, 'AMP_AC')
-                                        h =shadedErrorBar(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).contra.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj})));
+                                        h =shadedErrorBar(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}*1000, all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).contra.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj})));
                                         h.mainLine.Color = this_color;
                                         h.patch.FaceColor = this_color;
                                         h.patch.FaceAlpha = .5;
@@ -484,7 +491,7 @@ for iSub = cfg.Subjects
                                         
                                         
                                         if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
-                                            h2 =shadedErrorBar(all_mean.AMP_LAG.ipsi.(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})));
+                                            h2 =shadedErrorBar(all_mean.AMP_LAG.ipsi.(bands{iBand}){ii, jj}*1000, all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})));
                                             h2.mainLine.Color = [.6 .6 .6];
                                             h2.patch.FaceColor = [.6 .6 .6];
                                             h2.patch.FaceAlpha = .5;
@@ -496,6 +503,7 @@ for iSub = cfg.Subjects
                                         y_lim =[0 1];
                                         ylabel('Amplitude xcor');
                                         x_lim=([-50 0 50]);
+                                        xlabel('time (ms)')
                                         box_pos =  [-0.05, 0, .1, 1];
                                         gamma_box_h = 1;
                                         ylim([y_lim(1) y_lim(end)]);xlim([x_lim(1) x_lim(end)])
@@ -505,10 +513,10 @@ for iSub = cfg.Subjects
                                             h_ip = [];
                                             h_ip = vline(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(ip_idx));
                                             h_ip.Color = [.6 .6 .6]; h_ip.LineStyle =  ':'; h_ip.LineWidth = 3;
-                                            lgd = legend([h_con, h_ip],['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)*1000) 'ms'],...
+                                            lgd = legend([h_con, h_ip],['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)*1000,2) 'ms'],...
                                                 [ 'Ipsi lag: ' num2str(all_mean.AMP_LAG.ipsi.(bands{iBand}){ii, jj}(ip_idx)*1000) 'ms']);
                                         else
-                                            lgd = legend(h_con,['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)*1000) 'ms']);
+                                            lgd = legend(h_con,['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)*1000,2) 'ms']);
                                         end
                                         
                                         lgd.FontSize = 24; lgd.Box = 'off';
@@ -518,13 +526,13 @@ for iSub = cfg.Subjects
                                     ylim([y_lim(1) y_lim(end)]);xlim([x_lim(1) x_lim(end)])
                                     if strcmp(measures{iMs}, 'AMP_AC')
                                         v_zero = vline(0, 'k');
-                                    end
+                                    else
                                     % put boxes for the gamma bands
                                     rectangle('position', [cfg.filter1.f(1), y_lim(1), (cfg.filter1.f(2)-cfg.filter1.f(1)), gamma_box_h],  'facecolor', [cfg.color.blue 0.3], 'edgecolor', [cfg.color.blue 0.3])
                                     rectangle('position', [cfg.filter2.f(1), y_lim(1), (cfg.filter2.f(2)-cfg.filter2.f(1)), gamma_box_h],  'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
                                     chi=get(gca, 'Children');
                                     set(gca, 'Children',flipud(chi))
-                                    
+                                    end
                                     set(findall(gca, 'Type', 'Line'),'LineWidth',2)
                                     if strcmp(measures{iMs}, 'AMP_AC')
                                         h_ip.LineWidth = 3;
@@ -533,7 +541,7 @@ for iSub = cfg.Subjects
                                         uistack(v_zero, 'bottom')
                                     end
                                     set(gca, 'ytick', y_lim, 'xtick',x_lim)
-                                    ylabel([]); xlabel([]); %remove the labels for clerity in the figure.
+%                                     ylabel([]); xlabel([]); %remove the labels for clerity in the figure.
                                     
                                     
                                     cfg.set_fig.ft_size = 36;
@@ -551,7 +559,8 @@ for iSub = cfg.Subjects
                                         set(h2.patch, 'visible', 'off'); set(h2.edge, 'visible', 'off'); set(h2.mainLine, 'visible', 'off')
                                         if strcmp(measures{iMs}, 'AMP_AC')
                                             h_ip.Visible = 'off';
-                                            lgd = legend(h_con,['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)) 'ms']);
+                                            lgd = legend(h_con,['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)*1000,2) 'ms']);
+                                            lgd.FontSize = 24; lgd.Box = 'off';
                                             clear h_ip
                                         end
                                     end
@@ -559,7 +568,7 @@ for iSub = cfg.Subjects
                                     cfg.set_fig.ft_size = 36;
                                     SetFigure(cfg.set_fig, gcf)
                                     ylim([y_lim(1) y_lim(end)]);xlim([x_lim(1) x_lim(end)])
-                                    ylabel([]); xlabel([]); %remove the labels for clerity in the figure.
+%                                     ylabel([]); xlabel([]); %remove the labels for clerity in the figure.
                                     
                                     %                                 rectangle('position', [cfg.filter1.f(1), y_lim(1), (cfg.filter1.f(2)-cfg.filter1.f(1)), gamma_box_h],  'facecolor', [cfg.color.blue 0.3], 'edgecolor', [cfg.color.blue 0.3])
                                     %                                 rectangle('position', [cfg.filter2.f(1), y_lim(1), (cfg.filter2.f(2)-cfg.filter2.f(1)), gamma_box_h],  'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
