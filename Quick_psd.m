@@ -2,7 +2,7 @@ function [pow, coh] = Quick_psd()
 
 %% add the vdmlab codebase.  this function calls LoadExpKeys, Linspecer, 
 clear all
-addpath(genpath('C:\Users\admin\Documents\GitHub\vandermeerlab\code-matlab\shared'))
+% addpath(genpath('C:\Users\admin\Documents\GitHub\vandermeerlab\code-matlab\shared'))
 %%
 LoadExpKeys
 line_width = 2;
@@ -13,8 +13,8 @@ cfg.fc = sites;
 csc = LoadCSC(cfg);
 % get the psd
 cfg_psd = [];
-cfg_psd.hann_win = 2^12; % always make this in base 2 for speed
-%     cut = round(length(csc.data(1,:))/2); % this can be used for speed.
+cfg_psd.hann_win = 2^16; % always make this in base 2 for speed
+    cut = round(length(csc.data(1,:))/2); % this can be used for speed.
 %     only takes in half the data.  
 for iSite = 1:length(sites)
     [pow.(sites{iSite}(1:end-4)).pxx, pow.(sites{iSite}(1:end-4)).f] = pwelch(csc.data(iSite,:), hanning(cfg_psd.hann_win), cfg_psd.hann_win/2, cfg_psd.hann_win*4 , csc.cfg.hdr{1}.SamplingFrequency);
@@ -86,7 +86,7 @@ pos = LoadPos(cfg_pos);
 plot(pos.data(1,:), pos.data(2,:), '.')
 axis off
 %% plot the PSD for each channel on one plot.  
-subplot(2,3,[2,3])
+subplot(2,3,[1,2,3])
 for iSite = 1:length(sites)
     hold on
     plot(pow.(sites{iSite}(1:end-4)).f, 10*log10(pow.(sites{iSite}(1:end-4)).pxx), 'color', c_ord(iSite,:),'linewidth', line_width);
@@ -96,20 +96,20 @@ y_val = ylim;
 rectangle('position', [45, y_val(1), 20, y_val(2)-y_val(1)], 'facecolor', [0 0.2 .8 0.2],'edgecolor', [0 0.2 .8 0.2]); %low gamma rectangle
 rectangle('position', [70, y_val(1), 20, y_val(2)-y_val(1)], 'facecolor', [0 0.8 .2 0.2],'edgecolor', [0 0.8 .2 0.2]) %high gamma rectangle
 
-legend(strrep(ExpKeys.Chan_to_use_labels, '_', ' '),  'location', 'EastOutside', 'orientation', 'vertical');
+legend(strrep(ExpKeys.Chan_to_use_labels, '_', ' '))%,  'location', 'EastOutside', 'orientation', 'vertical');
 
 
 
 
 %% plot the coherence between pairs of sites. 
-subplot(2,3,[5, 6])
+subplot(2,3,[4,5, 6])
 for iPairs = 1:length(labels)
     hold on
     plot(coh.(labels{iPairs}).f, coh.(labels{iPairs}).p, 'color', c_ord(length(sites)+iPairs,:), 'linewidth', line_width)
 end
 xlim([0 120])
 ylim([0 1])
-legend(pair_labels, 'location', 'EastOutside', 'orientation', 'vertical')
+legend(pair_labels)%, 'location', 'EastOutside', 'orientation', 'vertical')
 maximize
 d_name = strsplit(cd, '\'); % what to name the figure.  
 title(strrep(d_name{end}, '_', ' ')) 

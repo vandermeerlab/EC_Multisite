@@ -1,6 +1,8 @@
-function [out] = MS_stats(cfg_in, data_in)
-%% MS_stats: takes in data in the form of a 3d array [phases, sites, sessions].
-%
+function [out] = MS_stats_Pairs(cfg_in, data_in)
+%% MS_stats_Pairs: takes in data in the form of a 3d array [phases, sites, sessions].
+% NOTE: This function is the same as MS_stats but it uses cfg.row_names instead
+% of PARAMS.all_sites. Should function the same way but this was safer than
+% making assumptions.  EC to fix later in inevitable refactoring....
 %
 %
 %
@@ -27,7 +29,7 @@ cfg_def = [];
 cfg_def.title = [];
 cfg_def.method = 'median';
 cfg_def.NaN_correct = 0; % can be used to correct for NaNs (work around for MS_get_naris_phase_distance
-cfg_def.row_names = {'PL', 'IL', 'OFC', 'PiriO', 'NAc', 'PiriN', 'CG'};
+cfg_def.row_names = PARAMS.all_pairs;
 cfg_def.col_names = {'pre', 'ipsi', 'contra','post'};
 cfg_def.s_idx = 1:length(cfg_def.row_names); % corresponds to the sites to plot.
 cfg_def.save_dir = cd; % just put it here unless otherwise specified with dir here.
@@ -164,7 +166,7 @@ elseif strcmp(cfg.stats_method, 'lme')
         
         % remove NaNs
         if cfg.NaN_correct == 1
-       D_power.tbl(~any(ismissing(D_power.tbl),2),:)
+       D_power.tbl(~any(ismissing(D_power.tbl),2),:); 
         end
         
         % disp([cfg.row_names{iSite} '___________________'])
@@ -173,34 +175,34 @@ elseif strcmp(cfg.stats_method, 'lme')
         % anova(D_power.lme,'DFMethod','satterthwaite')
         
         % collect values
-        Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).Est =  D_power.lme.Coefficients.Estimate(2);
-        Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).SE =  D_power.lme.Coefficients.SE(2);
-        Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val =  D_power.lme.Coefficients.pValue(2);
-        Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).Lower =  D_power.lme.Coefficients.Lower(2);
-        Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).Upper =  D_power.lme.Coefficients.Upper(2);
+        Stats_out.ipsi_contra.(cfg.row_names{iSite}).Est =  D_power.lme.Coefficients.Estimate(2);
+        Stats_out.ipsi_contra.(cfg.row_names{iSite}).SE =  D_power.lme.Coefficients.SE(2);
+        Stats_out.ipsi_contra.(cfg.row_names{iSite}).P_val =  D_power.lme.Coefficients.pValue(2);
+        Stats_out.ipsi_contra.(cfg.row_names{iSite}).Lower =  D_power.lme.Coefficients.Lower(2);
+        Stats_out.ipsi_contra.(cfg.row_names{iSite}).Upper =  D_power.lme.Coefficients.Upper(2);
         % T-stats
-        Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).tstat =  D_power.lme.Coefficients.tStat(2);
+        Stats_out.ipsi_contra.(cfg.row_names{iSite}).tstat =  D_power.lme.Coefficients.tStat(2);
         
         % hold the P value for plotting later
-        p_ip_con(iSite) = Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val;
+        p_ip_con(iSite) = Stats_out.ipsi_contra.(cfg.row_names{iSite}).P_val;
         
         
-        fprintf(cfg.stats_dir,['\n' PARAMS.all_sites{iSite} '& Ipsi-Contra  ']);
-        if Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val >= 0.05
-            fprintf(cfg.stats_dir,' & %4.2f &  p = %4.2f ',Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).tstat,...
-                Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val);
+        fprintf(cfg.stats_dir,['\n' cfg.row_names{iSite} '& Ipsi-Contra  ']);
+        if Stats_out.ipsi_contra.(cfg.row_names{iSite}).P_val >= 0.05
+            fprintf(cfg.stats_dir,' & %4.2f &  p = %4.2f ',Stats_out.ipsi_contra.(cfg.row_names{iSite}).tstat,...
+                Stats_out.ipsi_contra.(cfg.row_names{iSite}).P_val);
             h_ip_con(iSite) = 0; % use for assigning markers later.
             
-        elseif (0.049999 > Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val) && (Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val >= 0.01);
-         fprintf(cfg.stats_dir,' & %4.2f &  *',Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).tstat); % was p $<$ 0.05
+        elseif (0.049 > Stats_out.ipsi_contra.(cfg.row_names{iSite}).P_val) && (Stats_out.ipsi_contra.(cfg.row_names{iSite}).P_val >= 0.01);
+         fprintf(cfg.stats_dir,' & %4.2f &  p $<$ 0.05',Stats_out.ipsi_contra.(cfg.row_names{iSite}).tstat);
             h_ip_con(iSite) = 1;
             
-        elseif (0.009 > Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val) && (Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val >= 0.001);
-fprintf(cfg.stats_dir,' & %4.2f &  **',Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).tstat); %p $<$ 0.01
+        elseif (0.009 > Stats_out.ipsi_contra.(cfg.row_names{iSite}).P_val) && (Stats_out.ipsi_contra.(cfg.row_names{iSite}).P_val >= 0.001);
+fprintf(cfg.stats_dir,' & %4.2f &  p $<$ 0.01',Stats_out.ipsi_contra.(cfg.row_names{iSite}).tstat);
             h_ip_con(iSite) = 1;
             
-        elseif 0.0009 > Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val
-fprintf(cfg.stats_dir,' & %4.2f &  *** ',Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).tstat); % p $<$ 0.001
+        elseif 0.0009 > Stats_out.ipsi_contra.(cfg.row_names{iSite}).P_val
+fprintf(cfg.stats_dir,' & %4.2f &  p $<$ 0.001 ',Stats_out.ipsi_contra.(cfg.row_names{iSite}).tstat);
             h_ip_con(iSite) = 1;
             
         end
@@ -235,37 +237,37 @@ fprintf(cfg.stats_dir,' & %4.2f &  *** ',Stats_out.ipsi_contra.(PARAMS.all_sites
         % anova(D_power.lme,'DFMethod','satterthwaite')
         
         % collect values
-        Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).Est =  D_power.lme.Coefficients.Estimate(2);
-        Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).SE =  D_power.lme.Coefficients.SE(2);
-        Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val =  D_power.lme.Coefficients.pValue(2);
-        Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).Lower =  D_power.lme.Coefficients.Lower(2);
-        Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).Upper =  D_power.lme.Coefficients.Upper(2);
+        Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).Est =  D_power.lme.Coefficients.Estimate(2);
+        Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).SE =  D_power.lme.Coefficients.SE(2);
+        Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).P_val =  D_power.lme.Coefficients.pValue(2);
+        Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).Lower =  D_power.lme.Coefficients.Lower(2);
+        Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).Upper =  D_power.lme.Coefficients.Upper(2);
         %tstats
-        Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).tstat =  D_power.lme.Coefficients.tStat(2);
+        Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).tstat =  D_power.lme.Coefficients.tStat(2);
 
         
         % hold the P value for plotting later
-        p_ip_ctr(iSite) = Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val;
+        p_ip_ctr(iSite) = Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).P_val;
         
         
-        fprintf(cfg.stats_dir,['\n' PARAMS.all_sites{iSite} '& Ipsi-Control  ']);
-        if Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val >= 0.05
+        fprintf(cfg.stats_dir,['\n' cfg.row_names{iSite} '& Ipsi-Control  ']);
+        if Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).P_val >= 0.05
             fprintf(cfg.stats_dir,' & %4.2f  & p $=$ %4.2f',...
-                Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).tstat,Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val);
+                Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).tstat,Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).P_val);
             h_ip_ctr(iSite) = 0; % use for assigning markers later.
             
-        elseif (0.0499999 > Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val) && (Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val >= 0.01);
-            fprintf(cfg.stats_dir,' & %4.2f  & *',...
-                Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).tstat); % was p $<$ 0.05
+        elseif (0.049 > Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).P_val) && (Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).P_val >= 0.01);
+            fprintf(cfg.stats_dir,' & %4.2f  & p $<$ 0.05',...
+                Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).tstat);
             h_ip_ctr(iSite) = 1;
             
-        elseif (0.009 > Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val) && (Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val >= 0.001);
-            fprintf(cfg.stats_dir,' & %4.2f  & **',...
-                Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).tstat);
+        elseif (0.01 > Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).P_val) && (Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).P_val >= 0.001);
+            fprintf(cfg.stats_dir,' & %4.2f  & p $<$ 0.01',...
+                Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).tstat);
             h_ip_ctr(iSite) = 1;
             
-        elseif 0.0009 > Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val
-            fprintf(cfg.stats_dir,'& %4.2f  & ***',Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).tstat);
+        elseif 0.001 > Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).P_val
+            fprintf(cfg.stats_dir,'& %4.2f  & p $<$ 0.001',Stats_out.ipsi_ctrl.(cfg.row_names{iSite}).tstat);
             h_ip_ctr(iSite) = 1;
             
         end
@@ -298,33 +300,33 @@ fprintf(cfg.stats_dir,' & %4.2f &  *** ',Stats_out.ipsi_contra.(PARAMS.all_sites
         % anova(D_power.lme,'DFMethod','satterthwaite')
         
         % collect values
-        Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).Est =  D_power.lme.Coefficients.Estimate(2);
-        Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).SE =  D_power.lme.Coefficients.SE(2);
-        Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val =  D_power.lme.Coefficients.pValue(2);
-        Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).Lower =  D_power.lme.Coefficients.Lower(2);
-        Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).Upper =  D_power.lme.Coefficients.Upper(2);
+        Stats_out.contra_ctrl.(cfg.row_names{iSite}).Est =  D_power.lme.Coefficients.Estimate(2);
+        Stats_out.contra_ctrl.(cfg.row_names{iSite}).SE =  D_power.lme.Coefficients.SE(2);
+        Stats_out.contra_ctrl.(cfg.row_names{iSite}).P_val =  D_power.lme.Coefficients.pValue(2);
+        Stats_out.contra_ctrl.(cfg.row_names{iSite}).Lower =  D_power.lme.Coefficients.Lower(2);
+        Stats_out.contra_ctrl.(cfg.row_names{iSite}).Upper =  D_power.lme.Coefficients.Upper(2);
         % tstat
-        Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).tstat =  D_power.lme.Coefficients.tStat(2);
+        Stats_out.contra_ctrl.(cfg.row_names{iSite}).tstat =  D_power.lme.Coefficients.tStat(2);
 
         % hold the P value for plotting later
-        p_con_ctr(iSite) = Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val;
+        p_con_ctr(iSite) = Stats_out.contra_ctrl.(cfg.row_names{iSite}).P_val;
         
         
-        fprintf(cfg.stats_dir,['\n' PARAMS.all_sites{iSite} ' & Contra-Control  ']);
-        if Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val >= 0.05
-            fprintf(cfg.stats_dir,'& %4.2f &  p $=$ %4.2f ',Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).tstat,Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val);
+        fprintf(cfg.stats_dir,['\n' cfg.row_names{iSite} ' & Contra-Control  ']);
+        if Stats_out.contra_ctrl.(cfg.row_names{iSite}).P_val >= 0.05
+            fprintf(cfg.stats_dir,'& %4.2f &  p $=$ %4.2f ',Stats_out.contra_ctrl.(cfg.row_names{iSite}).tstat,Stats_out.contra_ctrl.(cfg.row_names{iSite}).P_val);
             h_con_ctr(iSite) = 0; % use for assigning markers later.
             
-        elseif (0.0499999 > Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val) && (Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val >= 0.01);
-            fprintf(cfg.stats_dir,'& %4.2f & * ',Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).tstat);
+        elseif (0.0499999 > Stats_out.contra_ctrl.(cfg.row_names{iSite}).P_val) && (Stats_out.contra_ctrl.(cfg.row_names{iSite}).P_val >= 0.01);
+            fprintf(cfg.stats_dir,'& %4.2f & p $<$ 0.05 ',Stats_out.contra_ctrl.(cfg.row_names{iSite}).tstat);
             h_con_ctr(iSite) = 1;
             
-        elseif (0.009 > Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val) && (Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val >= 0.001);
-            fprintf(cfg.stats_dir,'& %4.2f & ** ',Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).tstat);
+        elseif (0.009 > Stats_out.contra_ctrl.(cfg.row_names{iSite}).P_val) && (Stats_out.contra_ctrl.(cfg.row_names{iSite}).P_val >= 0.001);
+            fprintf(cfg.stats_dir,'& %4.2f & p $<$ 0.01 ',Stats_out.contra_ctrl.(cfg.row_names{iSite}).tstat);
             h_con_ctr(iSite) = 1;
             
-        elseif 0.0009 > Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val
-            fprintf(cfg.stats_dir,'& %4.2f & ***',Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).tstat);
+        elseif 0.0009 > Stats_out.contra_ctrl.(cfg.row_names{iSite}).P_val
+            fprintf(cfg.stats_dir,'& %4.2f & p $<$ 0.001',Stats_out.contra_ctrl.(cfg.row_names{iSite}).tstat);
             h_con_ctr(iSite) = 1;
             
         end
@@ -419,7 +421,9 @@ end
 
 
 %% set the default figure layout
-SetFigure([], gcf);
+cfg_fig = [];
+% cfg_fig.pos = [300 50 560*1.8 420*1.4]; 
+SetFigure(cfg_fig, gcf);
 
 
 %% save the figure

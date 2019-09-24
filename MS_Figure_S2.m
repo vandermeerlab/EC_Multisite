@@ -17,9 +17,15 @@ cfg_def.ylim = [0 1];
 cfg_def.filter = [45 65; 70 90];
 cfg_def.plot_type = 'no_piri';
 cfg_def.legend = 'off';
+% cfg_def.stats_dir = fopen([PARAMS.stats_dir  cfg_def.measure '_stats.txt'], 'w'); % can be used to append to a text file
 
 cfg = ProcessConfig2(cfg_def, cfg_in);
+cfg.stats_dir = fopen([PARAMS.stats_dir  cfg.measure '_stats.txt'], 'w'); % can be used to append to a text file
 
+
+    fprintf(cfg.stats_dir,['**************** ' cfg.measure ' ****************\n']);
+    fprintf(cfg.stats_dir,['**************** ' date ' ****************\n']);
+% stats_file = fopen([PARAMS.stats_dir cfg_def.measure '_stats.txt'], 'w');
 
 %% get the average phase across each subject
 for iPair = 1:length(PARAMS.all_pairs)
@@ -125,9 +131,35 @@ for iPair = 1:length(PARAMS.all_pairs)
     h1.patch.FaceColor = PARAMS.pair_c_ord(c_idx, :);
     h1.patch.EdgeColor = PARAMS.pair_c_ord(c_idx, :);
     h1.patch.FaceAlpha = .5;
+
     
-    
-    
+    % get the 100Hz cutoff
+    cut_idx = nearest_idx3(100, mean_fxx.(PARAMS.all_pairs{iPair}).contra); 
+    % print the contra values: 
+            fprintf(cfg.stats_dir,['\n' PARAMS.all_pairs{iPair} ' contra  overall mean: %4.2f std: %4.2f     |  Low mean: %4.2f std: %4.2f      | High  mean: %4.2f std: %4.2f'],...
+                mean(mean(all_cxx.(PARAMS.all_pairs{iPair}).contra(1:cut_idx,:),2),1),...
+                std2(all_cxx.(PARAMS.all_pairs{iPair}).contra(1:cut_idx,:)), ...
+                mean(all_low_xx.(PARAMS.all_pairs{iPair}).contra,2),...
+                std2(all_low_xx.(PARAMS.all_pairs{iPair}).contra),... 
+                mean(all_high_xx.(PARAMS.all_pairs{iPair}).contra,2),...
+                std2(all_high_xx.(PARAMS.all_pairs{iPair}).contra)); 
+
+            % print the ipsi
+                        fprintf(cfg.stats_dir,['\n' PARAMS.all_pairs{iPair} ' ipsi    overall mean: %4.2f std: %4.2f     |  Low mean: %4.2f std: %4.2f      | High  mean: %4.2f std: %4.2f'],...
+                mean(mean(all_cxx.(PARAMS.all_pairs{iPair}).ipsi(1:cut_idx,:),1),2),...
+                std2(all_cxx.(PARAMS.all_pairs{iPair}).ipsi(1:cut_idx,:)),...
+                mean(all_low_xx.(PARAMS.all_pairs{iPair}).ipsi,2),...
+                std2(all_low_xx.(PARAMS.all_pairs{iPair}).ipsi),... 
+                mean(all_high_xx.(PARAMS.all_pairs{iPair}).ipsi,2),...
+                std2(all_high_xx.(PARAMS.all_pairs{iPair}).ipsi)); 
+    % add text for means SD
+%   % for contra
+    text(70, .8, [num2str(mean(mean(all_cxx.(PARAMS.all_pairs{iPair}).contra(1:cut_idx,:),2),1),'%.2f') ' ' char(177) ' ' ...
+        num2str(std2(all_cxx.(PARAMS.all_pairs{iPair}).contra(1:cut_idx,:)),'%.2f')], 'color', 'k', 'fontsize', 36, 'FontName', 'helvetica');
+    % for ipsi 
+    text(70, .7, [num2str(mean(mean(all_cxx.(PARAMS.all_pairs{iPair}).ipsi(1:cut_idx,:),2),1),'%.2f') ' ' char(177) ' '...
+        num2str(std2(all_cxx.(PARAMS.all_pairs{iPair}).ipsi(1:cut_idx,:)),'%.2f')],'color', [.7 .7 .7], 'fontsize', 36, 'FontName', 'helvetica');
+
     set(findall(gca, 'Type', 'Line'),'LineWidth',2)
     set(gca, 'ytick', [0 1], 'xtick',[0 100])
     ylabel([]); xlabel([]);
@@ -330,8 +362,16 @@ end
 %% plot the matrix of mean values
 Phase_c = linspecer(4);
 figure(1111)
+mat_min_max = [];
+%set up the min and max values
 for iPhase = 1:length(PARAMS.Phases)
     mat_out.(PARAMS.Phases{iPhase})(logical(eye(size(mat_out.(PARAMS.Phases{iPhase}))))) = NaN;
+    mat_min_max = cat(3,mat_min_max, mat_out.(PARAMS.Phases{iPhase}));
+end
+c_lim = [min(min(min(mat_min_max,[],3),[],2),[],1) max(max(max(mat_min_max,[],3),[],2),[],1)];
+
+for iPhase = 1:length(PARAMS.Phases)
+%     mat_out.(PARAMS.Phases{iPhase})(logical(eye(size(mat_out.(PARAMS.Phases{iPhase}))))) = NaN;
     
     
     subplot(1,4,iPhase)
@@ -343,7 +383,7 @@ for iPhase = 1:length(PARAMS.Phases)
     %         [~, hStrings] =add_num_imagesc(gca,mat_out.(PARAMS.Phases{iPhase})./(squeeze(mean(cat(3,mat_out.pre,mat_out.post),3))), 4,  12); % adds numerics to imagesc
     
     colormap('parula')
-    
+    caxis(c_lim)
     %     set(hcb, 'Ytick', 0:0.1:.5)
     set(gca,'xtick', 1:length(labels), 'ytick', 1:length(labels), 'xaxisLocation','top', 'xticklabel', labels, 'yticklabel', labels, 'XTickLabelRotation', 65)
     
@@ -655,7 +695,7 @@ for iSub =1:length(Subjects)
     end
 end
 
-
+fclose(cfg.stats_dir)
 end
 
 

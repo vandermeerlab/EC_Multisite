@@ -109,7 +109,7 @@ for iComp = {'Pink', 'Exp2'}
         else strcmp(Exp{iExp}, 'Piri')
             s_idx = [3 4 5 6];
         end
-        types = {'Pxx', 'White_Pxx'};
+        types = { 'White_Pxx'}; % used to use 'Pxx' as well but it was not great
         for iType = 1:length(types);   % low gamma median using MS sites
             cfg_stats = [];
             cfg_stats.title = strcat({'AOC low gamma'},{' '}, Exp{iExp},{' '},types{iType},{' '},iComp);
@@ -141,7 +141,44 @@ for iComp = {'Pink', 'Exp2'}
             
             MS_stats(cfg_stats, all_AOC_high.(types{iType}));
             close all
+             end
+    end
+end
             
+            
+%% descriptive stats
+fid = fopen([PARAMS.stats_dir 'AUC_descriptive.txt'], 'w');
+
+bands = {'low', 'high'};
+phases = {'pre'  'ipsi'  'contra'  'post', 'control'};
+
+fprintf(fid, ['**************** ' date ' ****************\n']);
+
+fprintf(fid, ['\nAUC using White_Pxx and ' iComp{1} '\n']);
+for iBand= 1:length(bands)
+    this_pow = [];
+if strcmp(bands{iBand}, 'low')
+    this_pow = all_AOC_low.White_Pxx; 
+elseif strcmp(bands{iBand}, 'high')
+    this_pow = all_AOC_high.White_Pxx; 
+end
+    fprintf(fid,['\n-------- ' bands{iBand} '---------\n']);
+    for iSite = 1:length(sites)
+        n_spaces = 6 - length(sites{iSite});
+        fprintf(fid,[sites{iSite} ':%s' ], repmat(' ', 1,n_spaces));
+        fprintf(fid,repmat('\b', 1, length(sites{iSite})));
+        for iPhase = 1:size(this_pow,1)
+            all_AUC.(bands{iBand})(iSite, iPhase) = nanmedian(this_pow(iPhase, iSite,:));
+            all_AUC_std.(bands{iBand})(iSite, iPhase) = nanstd(this_pow(iPhase, iSite,:))./sqrt(size(this_pow(iPhase, iSite,:),1));
+            fprintf(fid,[phases{iPhase} ' median= %.2f +/- %.2f  '], all_AUC.(bands{iBand})(iSite, iPhase), all_AUC_std.(bands{iBand})(iSite,iPhase)); 
+        end
+        fprintf(fid,'\n')
+    end
+end
+
+
+
+fclose(fid)
             % same but using normalized
             
 %             cfg_stats = [];
@@ -176,9 +213,7 @@ for iComp = {'Pink', 'Exp2'}
 %             MS_stats(cfg_stats, norm_all_AOC_high.(types{iType}));
 %             close all
             
-        end
-    end
-end
+
 %% make a legend for all the plots.
 figure(9999)
 c_ord = linspecer(3);

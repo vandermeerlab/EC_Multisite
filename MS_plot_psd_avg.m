@@ -165,14 +165,14 @@ for this_Type = {'White', 'Pxx'};
             end
             xlim([0 100])
             if strcmp(this_Type, 'White')
-                set(gca, 'xtick', [0 100], 'ytick', [], 'ylim', [-140 -110])
+                set(gca, 'xtick', [0:20:100], 'ytick', [-140, -130, -120, -110], 'ylim', [-140 -110])
                 text(10, -138, sites{iSite}, 'fontsize', 48)
             else
-                set(gca, 'xtick', [0 100], 'ytick', [], 'ylim', [-120 -70])
+                set(gca, 'xtick', [0:20:100], 'ytick', [-140, -130, -120, -110], 'ylim', [-120 -70])
                 text(10, -118, sites{iSite}, 'fontsize', 48)
             end
             if iSite == 1
-                set(gca, 'ytick', [-140 -110]); % put these back since it is the first figure. 
+                set(gca, 'ytick', [-140, -130, -120, -110]); % put these back since it is the first figure. 
             end
             cfg_f.ft_size = 24;
             SetFigure(cfg_f, h_site.(['n' num2str(iSite)]))

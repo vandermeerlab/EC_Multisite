@@ -131,7 +131,7 @@ for iSite =1:length(sites)
         end
         %% save the session wide spectrogram
         saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'png')
-        %         saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'fig')
+                saveas(gcf, [save_dir subject '_' sess '_' sites{iSite} '_Spectrogram'], 'fig')
         h = get(gcf);
         D = h.PaperPosition; % Returns 1x4 vector [left right width height]
         set(gcf, 'PaperSize', [D(3) D(4)]); %default PaperSize is [8.5 11]

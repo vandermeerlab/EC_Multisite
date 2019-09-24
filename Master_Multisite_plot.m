@@ -18,7 +18,7 @@ global PARAMS
 fprintf(PARAMS.log, date);
 PARAMS.inter_dir = '/Volumes/Fenrir/MS_temp/';
 
-% Extract the data from each recroding phase within each session and separate pot vs track sections
+%% Extract the data from each recroding phase within each session and separate pot vs track sections
 close all
 for iSub = 1:length(PARAMS.Subjects)
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
@@ -139,9 +139,9 @@ close all
 %% plot the phase measures for all events
 close all
 cfg_event = [];
-% cfg_event.Subjects = {'all'}; % for speed
-cfg_event.Subjects = {'all', 'R102', 'R104','R107', 'R108', 'R112','R122','R123'}; % each subject by themselves.  Used for subpanels on F3
-MS_plot_event_phase(cfg_event)
+cfg_event.Subjects = {'all'}; % for speed
+% cfg_event.Subjects = {'R102', 'R104', 'R107', 'R108', 'R112','R122','R123'}; % each subject by themselves.  Used for subpanels on F3
+Phase_events_out = MS_plot_event_phase(cfg_event)
 
 
 
@@ -163,9 +163,18 @@ MS_plot_event_phase(cfg_event)
     
     
    
-%% Naris power by distance.  Used for stats only.  
+%% Distance LMEs   Used for stats only.  
+% Naris power by distance.
 cfg_dist_stats = [];
-MS_get_naris_dist(cfg_dist_stats, all_Naris);
+MS_get_naris_dist_OB_PC(cfg_dist_stats, all_Naris);
+
+% session coherence 
+cfg_dist_stats = [];
+MS_get_phase_distance_LMEs(cfg_dist_stats, all_Naris);
+
+% ipsi-contra coherence/amp
+cfg_dist_stats = [];
+MS_get_naris_phase_distance(cfg_dist_stats, all_Naris);
 
 
 %% Figure S2 all coherence for each site pair (no piri)
@@ -179,11 +188,11 @@ cfg_S2 = [];
 cfg_S2.measure = 'amp';
 
 MS_Figure_S2(cfg_S2, all_Naris);
-
-close all
-% just for debugging
-cfg_S2 = [];
-cfg_S2.measure = 'lag';
-
-MS_Figure_S2(cfg_S2, all_Naris);
+% 
+% close all
+% % just for debugging
+% cfg_S2 = [];
+% cfg_S2.measure = 'lag';
+% 
+% MS_Figure_S2(cfg_S2, all_Naris);
 

@@ -1,4 +1,4 @@
-function [h, hStrings] = add_num_imagesc(h, x, n_dec, font_size)
+function [h, hStrings] = add_num_imagesc(h, vals, n_dec, font_size)
 %% add_num_imagesc:  adds the numerical values of a matrix used to generate an imagesc.
 %
 %          Inputs:
@@ -16,19 +16,19 @@ if nargin <4
     font_size = get(gca, 'fontsize');
 end
 if n_dec == 0
-    textStrings = num2str(x(:),'%0.0f');  %# Create strings from the matrix values
+    textStrings = num2str(vals(:),'%0.0f');  %# Create strings from the matrix values
 elseif n_dec == 1
-    textStrings = num2str(x(:),'%0.1f');  %# Create strings from the matrix values
+    textStrings = num2str(vals(:),'%0.1f');  %# Create strings from the matrix values
 elseif n_dec == 2
-    textStrings = num2str(x(:),'%0.2f');  %# Create strings from the matrix values
+    textStrings = num2str(vals(:),'%0.2f');  %# Create strings from the matrix values
 elseif n_dec == 3
-    textStrings = num2str(x(:),'%0.3f');  %# Create strings from the matrix values
+    textStrings = num2str(vals(:),'%0.3f');  %# Create strings from the matrix values
 elseif n_dec == 4
-    textStrings = num2str(x(:),'%0.4f');  %# Create strings from the matrix values
+    textStrings = num2str(vals(:),'%0.4f');  %# Create strings from the matrix values
 elseif n_dec == 5
-    textStrings = num2str(x(:),'%0.5f');  %# Create strings from the matrix values
+    textStrings = num2str(vals(:),'%0.5f');  %# Create strings from the matrix values
 end
 textStrings = strtrim(cellstr(textStrings));  %# Remove any space padding
-[x,y] = meshgrid(1:length(x));   %# Create x and y coordinates for the strings
+[x, y]=meshgrid(1:size(vals,1), 1:size(vals,2));   %# Create x and y coordinates for the strings
 hStrings = text(x(:),y(:),textStrings(:),'HorizontalAlignment','center');
 set(hStrings,'fontsize',font_size)

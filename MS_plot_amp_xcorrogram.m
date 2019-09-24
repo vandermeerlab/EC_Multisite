@@ -641,7 +641,7 @@ times_pre =  cfg.pre_x_lim(1)-1:cfg.Fs_restrict:cfg.pre_x_lim(2)+1;    % cycle a
     SetFigure(cfg_fig,gcf);
     tightfig
     
-    % saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'fig')
+    saveas(gcf, [save_dir sess '_' S{1} '_' S{2} 'OFC_NAc_pre_sample'], 'fig')
     h1 = get(gcf);
     D = h1.PaperPosition; % Returns 1x4 vector [left right width height]
     set(gcf, 'PaperSize', [D(3) D(4)]); %default PaperSize is [8.5 11]
@@ -677,7 +677,7 @@ times_pre =  cfg.pre_x_lim(1)-1:cfg.Fs_restrict:cfg.pre_x_lim(2)+1;    % cycle a
     SetFigure(cfg_fig,gcf);
     tightfig
     
-    % saveas(gcf, [save_dir sess '_' S{1} '_' S{2} '_Coherogram'], 'fig')
+    saveas(gcf, [save_dir sess '_' S{1} '_' S{2} 'OFC_NAc_ipsi_sample'], 'fig')
     h1 = get(gcf);
     D = h1.PaperPosition; % Returns 1x4 vector [left right width height]
     set(gcf, 'PaperSize', [D(3) D(4)]); %default PaperSize is [8.5 11]

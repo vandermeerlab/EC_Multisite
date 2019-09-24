@@ -157,9 +157,9 @@ for iSub = cfg.Subjects
                                                 lags_out(iEvt) = lag(idx);
                                             end
                                             all_mean.AMP_AC_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = nanmean(t_max);
-                                            all_mean.AMP_AC_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = nanmean(t_max);
+                                            all_std.AMP_AC_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = nanmean(t_max);
                                                                                         
-                                            all_std.AMP_LAG_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = nanstd(lags_out);
+                                            all_mean.AMP_LAG_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = nanstd(lags_out);
                                             all_std.AMP_LAG_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = nanstd(lags_out);
                                             clear lags_out t_max
                                         end
@@ -275,7 +275,7 @@ c_labels ={};
 for ii = 1:length(labels)
     for jj = 1:length(labels)
         if low_mat(ii, jj)
-            c_labels = cat(2,c_labels,labels{ii, jj});
+            c_labels = cat(2,c_labels,labels{ii, jj});            
         end
     end
 end
@@ -299,7 +299,7 @@ for iMs = 1:length(measures)
                         if strcmp(bands{iBand}, 'low')
                             comp_mat = low_mat;
                         elseif strcmp(bands{iBand}, 'high')
-                            comp_mat = high_mat;
+                            comp_mat = high_mat';
                         end
                         
                         if isempty(strfind(labels{ii,jj}, 'Piri'))

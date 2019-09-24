@@ -67,7 +67,7 @@ save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris.mat'], 'Naris', '-v7.3')
 %         load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris_amp.mat'])
 %     end
 
-%% get amplitude xcorr for each event .
+%% get amplitude xcorr for each session .
 %for iSub = length(PARAMS.Subjects):-1:5
     sess_list = fieldnames(data);
     for iSess = 1:length(sess_list)
