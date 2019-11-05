@@ -22,10 +22,15 @@ cfg_def.color.green = double([168,221,181])/255;
 cfg_def.color.OFC_NAc = double([123,225,160])/255;
 % cfg_def.color.OFC_CG= double([255,168,213])/255;% old too bright
 cfg_def.color.OFC_CG= double([158 1 66])/255;
-cfg_def.lgd_size = 24; 
+cfg_def.lgd_size = 24;
+cfg_def.measures = [3 10]; % which measures to use. Default is amplitude xcorr and phase slope. 
+
+% If there is a specified measure or set of measures find the index
+
 cfg = ProcessConfig2(cfg_def, cfg_in);
 
 cfg.stats_dir = fopen([PARAMS.stats_dir  'Phase_Event_stats.txt'], 'w'); % can be used to append to a text file
+
 
 
 %%
@@ -43,23 +48,6 @@ for iSub = cfg.Subjects
         mat_in = Phase_mat;
         clear Phase_mat;
     end
-    %%
-    % function MS_plot_phase(cfg_in, mat_in)
-    %% MS_plot_phase: plots the outputs from the three phase measures in the
-    %       MS project: Phase correlation, amplitude cross-corelation, phase
-    %       slope index.  mat_in is an input taken from the
-    %       MS_get_phase_metrics.
-    %
-    %   Inputs:
-    %       - cfg_in [strcut]: contains configuration parameters.  Inludes:
-    %                  - cfg_in.type : what type of phase measure to plot. can
-    %                  be 'phase_coh", "amp_xcorr", 'psi'.
-    %
-    %       - mat_in [struct]:
-    %
-    %
-    
-    
     
     %% pre allocate all the sufields of the different analyses;
     sess_list = fieldnames(mat_in);
@@ -146,7 +134,7 @@ for iSub = cfg.Subjects
                                     % work around for amp_lag max values
                                     if strcmp(measures{iMs}, 'AMP_AC')
                                         if isempty(temp)
-                                            all_mean.AMP_AC_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = NaN; 
+                                            all_mean.AMP_AC_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = NaN;
                                             all_mean.AMP_LAG_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = NaN;
                                             all_std.AMP_AC_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = NaN;
                                             all_std.AMP_LAG_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = NaN;
@@ -157,9 +145,9 @@ for iSub = cfg.Subjects
                                                 lags_out(iEvt) = lag(idx);
                                             end
                                             all_mean.AMP_AC_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = nanmean(t_max);
-                                            all_mean.AMP_AC_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = nanmean(t_max);
-                                                                                        
-                                            all_std.AMP_LAG_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = nanstd(lags_out);
+                                            all_std.AMP_AC_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = nanmean(t_max);
+                                            
+                                            all_mean.AMP_LAG_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = nanstd(lags_out);
                                             all_std.AMP_LAG_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = nanstd(lags_out);
                                             clear lags_out t_max
                                         end
@@ -178,12 +166,12 @@ end
 
 %% get the average within the frequency bands
 
-% EC this needs to be cleaned up. 
+% EC this needs to be cleaned up.
 for iPhase = 1:length(PARAMS.Phases)
     for iBand = 1:length(bands)
         for ii = size(labels,1):-1:1
             for jj = size(labels,2):-1:1
-
+                
                 % Coh
                 if isempty(all_mean.COH_cxx.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj})
                     Coh_mean.(bands{iBand})(ii, jj) = NaN;
@@ -204,7 +192,7 @@ for iPhase = 1:length(PARAMS.Phases)
                 elseif ismember(Idx_mat(ii, jj), tril(Idx_mat,-1))
                     Phase_diff.(bands{iBand})(ii, jj) = all_mean.Phase_lag_mean.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj};
                     Phase_diff_std.(bands{iBand})(ii, jj) = all_std.Phase_lag_mean.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj};
-
+                    
                 end
                 
                 
@@ -224,10 +212,10 @@ for iPhase = 1:length(PARAMS.Phases)
                     this_f = all_mean.PS_F.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj};
                     PS_slope_mean.(bands{iBand})(ii, jj) = nanmean(this_ps(nearest_idx(cfg.(['filter' num2str(iBand)]).f(1), this_f):nearest_idx(cfg.(['filter' num2str(iBand)]).f(2), this_f)));
                     PS_slope_std.(bands{iBand})(ii, jj) = nanstd(this_ps(nearest_idx(cfg.(['filter' num2str(iBand)]).f(1), this_f):nearest_idx(cfg.(['filter' num2str(iBand)]).f(2), this_f)));
-
+                    
                 end
                 
-             
+                
                 
                 % AMP_Ac_MAx
                 if isempty(all_mean.AMP_AC_max.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj})
@@ -259,7 +247,7 @@ for iPhase = 1:length(PARAMS.Phases)
     mean_out.PS_slope_out.(PARAMS.Phases{iPhase})  = tril(PS_slope_mean.low) + tril(PS_slope_mean.high,-1)';
     
     % same for STD
-        std_out.Coh_out.(PARAMS.Phases{iPhase}) = tril(Coh_std.low) + tril(Coh_std.high,-1)';
+    std_out.Coh_out.(PARAMS.Phases{iPhase}) = tril(Coh_std.low) + tril(Coh_std.high,-1)';
     std_out.Phase_diff_out.(PARAMS.Phases{iPhase}) = tril(Phase_diff_std.low) + tril(Phase_diff_std.high,-1)';
     %         mean_out.Evt_count_out.(PARAMS.Phases{iPhase})  = tril(Evt_count.low) + tril(Evt_count.high,-1)';
     std_out.AMP_AC_max_out.(PARAMS.Phases{iPhase})  = tril(AMP_AC_max_std.low) + tril(AMP_AC_max_std.high,-1)';
@@ -299,7 +287,7 @@ for iMs = 1:length(measures)
                         if strcmp(bands{iBand}, 'low')
                             comp_mat = low_mat;
                         elseif strcmp(bands{iBand}, 'high')
-                            comp_mat = high_mat;
+                            comp_mat = high_mat';
                         end
                         
                         if isempty(strfind(labels{ii,jj}, 'Piri'))
@@ -417,7 +405,7 @@ end
 
 %% same thing but each site-pair gets a single plot.  (used for figure 3)
 %% cycle through measures to get plots
-for iMs = 1:length(measures)
+for iMs = cfg.measures%[3 10]%1:length(measures)
     % get the line plots for certain veriables
     if strcmp(measures{iMs}, 'Phase_lag_cxy') || strcmp(measures{iMs}, 'PS_slope') || strcmp(measures{iMs}, 'COH_cxx') || strcmp(measures{iMs}, 'AMP_AC')
         
@@ -429,244 +417,276 @@ for iMs = 1:length(measures)
                     
                     if strcmp(bands{iBand}, 'low')
                         comp_mat = low_mat;
-                        mean_ii = ii; % used for getting the mean and STD values.  Set up as a upper/lower matrix earlier. Pain to dig out.
-                        mean_jj = jj;
+                        mean_ii = jj; % used for getting the mean and STD values.  Set up as a upper/lower matrix earlier. Pain to dig out.
+                        mean_jj = ii;
                     elseif strcmp(bands{iBand}, 'high')
                         comp_mat = high_mat';
-                        mean_ii = jj; % swap so that it is using the upper of the matrix which is for high gamma.
-                        mean_jj = ii;
+                        mean_ii = ii; % swap so that it is using the upper of the matrix which is for high gamma.
+                        mean_jj = jj;
                     end
-                 
-                    if isempty(strfind(labels{ii,jj}, 'Piri'))
+                    
+%                     if isempty(strfind(labels{ii,jj}, 'Piri'))
                         if ~isempty(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj}) %&& comp_mat(ii, jj)
                             % for the coherence
-                            if strcmp(labels{ii,jj}, 'NAc_OFC') || strcmp(labels{ii,jj}, 'OFC_NAc') || strcmp(labels{ii,jj}, 'CG_OFC') || strcmp(labels{ii,jj}, 'OFC_CG')
-                                h_curr= figure();
+                            h_curr= figure();
+                            hold on
+                            if strcmp(labels{ii,jj}, 'CG_OFC') || strcmp(labels{ii,jj}, 'OFC_CG')
+                                this_color = cfg_def.color.OFC_CG;
+                            elseif strcmp(labels{ii,jj}, 'CG_OFC') || strcmp(labels{ii,jj}, 'OFC_CG')
+                                this_color = cfg_def.color.OFC_NAc;
+                            else
+                                if sum(ismember(c_labels, labels{ii, jj}))
+                                    this_color = c_ord(ismember(c_labels, labels{ii, jj}),:);
+                                else
+                                    this_color = c_ord(ismember(c_labels, labels{jj, ii}),:);  % get the colour for that pair by swapping order and finding.
+                                end
+                            end
+                            % Coherence (not used)
+%                             if strcmp(measures{iMs}, 'COH_cxx')
+%                                 h =shadedErrorBar(all_mean.COH_fxx.contra.(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).contra.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj})));
+%                                 h.mainLine.Color = this_color;
+%                                 h.patch.FaceColor = this_color;
+%                                 h.patch.FaceAlpha = .5;
+%                                 h.patch.EdgeColor = this_color;
+%                                 h.edge(1).Color = this_color;
+%                                 h.edge(2).Color = this_color;
+%                                 if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
+%                                     h2 =shadedErrorBar(all_mean.COH_fxx.ipsi.(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})));
+%                                     h2.mainLine.Color = [.6 .6 .6];
+%                                     h2.patch.FaceColor = [.6 .6 .6];
+%                                     h2.patch.FaceAlpha = .5;
+%                                     h2.patch.EdgeColor = [.6 .6 .6];
+%                                     h2.edge(1).Color = [.6 .6 .6];
+%                                     h2.edge(2).Color = [.6 .6 .6];
+%                                 end
+%                                 y_lim = [0 1];
+%                                 ylabel('Coherence'); xlabel('Frequency')
+%                                 x_lim=([0 100]);
+%                                 box_pos =  [0, 0, 100, 1];
+%                                 gamma_box_h = 1;
+%                                 
+%                             end
+%                             % for the phase lag (not used)
+%                             if strcmp(measures{iMs}, 'Phase_lag_cxy')
+%                                 sem =  rad2deg(all_std.Phase_lag_cxy.contra.(bands{iBand}){ii, jj})/sqrt(length(all_mean.Phase_lag_cxy.contra.(bands{iBand}){ii, jj}));
+%                                 h =shadedErrorBar(all_mean.Phase_lag_F.contra.(bands{iBand}){ii, jj}, rad2deg(all_mean.Phase_lag_cxy.contra.(bands{iBand}){ii, jj}),sem);
+%                                 h.mainLine.Color = this_color;
+%                                 h.patch.FaceColor = this_color;
+%                                 h.patch.FaceAlpha = .5;
+%                                 h.patch.EdgeColor = this_color;
+%                                 h.edge(1).Color = this_color;
+%                                 h.edge(2).Color = this_color;
+%                                 
+%                                 if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
+%                                     sem =  rad2deg(all_std.Phase_lag_cxy.ipsi.(bands{iBand}){ii, jj})/sqrt(length(all_mean.Phase_lag_cxy.ipsi.(bands{iBand}){ii, jj}));
+%                                     h2 =shadedErrorBar(all_mean.Phase_lag_F.ipsi.(bands{iBand}){ii, jj}, rad2deg(all_mean.Phase_lag_cxy.ipsi.(bands{iBand}){ii, jj}),sem);
+%                                     h2.mainLine.Color = [.6 .6 .6];
+%                                     h2.patch.FaceColor = [.6 .6 .6];
+%                                     h2.patch.FaceAlpha = .5;
+%                                     h2.patch.EdgeColor = [.6 .6 .6];
+%                                     h2.edge(1).Color = [.6 .6 .6];
+%                                     h2.edge(2).Color = [.6 .6 .6];
+%                                 end
+%                                 
+%                                 %                                 hE(iC) = plot(all_mean.Phase_lag_F.(PARAMS.Phases{iPhase}).low{ii, jj}, rad2deg(all_mean.Phase_lag_cxy.(PARAMS.Phases{iPhase}).low{ii, jj}), 'o', 'color', c_ord(iC,:), 'markerfacecolor', c_ord(iC,:));
+%                                 %                                 hE(iC) = errorbar(all_mean.Phase_lag_F.(PARAMS.Phases{iPhase}).low{ii, jj}, rad2deg(all_mean.Phase_lag_cxy.(PARAMS.Phases{iPhase}).low{ii, jj}), sem, 'o', 'color', c_ord(iC,:))%, 'CapSize',2);
+%                                 
+%                                 y_lim = [-200 0 200];
+%                                 ylabel('Phase lag (deg)');
+%                                 x_lim=([0 100]);
+%                                 box_pos =  [0, -200, 100, 400];
+%                                 gamma_box_h = 400;
+%                                 
+%                                 
+%                             end
+                            % for the phase slope
+                            if strcmp(measures{iMs}, 'PS_slope')
+                                
                                 hold on
-                                if strcmp(labels{ii,jj}, 'CG_OFC') || strcmp(labels{ii,jj}, 'OFC_CG')
-                                    this_color = cfg_def.color.OFC_CG;
-                                else
-                                    this_color = cfg_def.color.OFC_NAc;
-                                end
-                                if strcmp(measures{iMs}, 'COH_cxx')
-                                    h =shadedErrorBar(all_mean.COH_fxx.contra.(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).contra.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj})));
-                                    h.mainLine.Color = this_color;
-                                    h.patch.FaceColor = this_color;
-                                    h.patch.FaceAlpha = .5;
-                                    h.patch.EdgeColor = this_color;
-                                    h.edge(1).Color = this_color;
-                                    h.edge(2).Color = this_color;
-                                    if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
-                                        h2 =shadedErrorBar(all_mean.COH_fxx.ipsi.(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})));
-                                        h2.mainLine.Color = [.6 .6 .6];
-                                        h2.patch.FaceColor = [.6 .6 .6];
-                                        h2.patch.FaceAlpha = .5;
-                                        h2.patch.EdgeColor = [.6 .6 .6];
-                                        h2.edge(1).Color = [.6 .6 .6];
-                                        h2.edge(2).Color = [.6 .6 .6];
-                                    end
-                                    y_lim = [0 1];
-                                    ylabel('Coherence'); xlabel('Frequency')
-                                    x_lim=([0 100]);
-                                    box_pos =  [0, 0, 100, 1];
-                                    gamma_box_h = 1;
-                                    
-                                end
-                                % for the phase lag
-                                if strcmp(measures{iMs}, 'Phase_lag_cxy')
-                                    sem =  rad2deg(all_std.Phase_lag_cxy.contra.(bands{iBand}){ii, jj})/sqrt(length(all_mean.Phase_lag_cxy.contra.(bands{iBand}){ii, jj}));
-                                    h =shadedErrorBar(all_mean.Phase_lag_F.contra.(bands{iBand}){ii, jj}, rad2deg(all_mean.Phase_lag_cxy.contra.(bands{iBand}){ii, jj}),sem);
-                                    h.mainLine.Color = this_color;
-                                    h.patch.FaceColor = this_color;
-                                    h.patch.FaceAlpha = .5;
-                                    h.patch.EdgeColor = this_color;
-                                    h.edge(1).Color = this_color;
-                                    h.edge(2).Color = this_color;
-                                    
-                                    if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
-                                        sem =  rad2deg(all_std.Phase_lag_cxy.ipsi.(bands{iBand}){ii, jj})/sqrt(length(all_mean.Phase_lag_cxy.ipsi.(bands{iBand}){ii, jj}));
-                                        h2 =shadedErrorBar(all_mean.Phase_lag_F.ipsi.(bands{iBand}){ii, jj}, rad2deg(all_mean.Phase_lag_cxy.ipsi.(bands{iBand}){ii, jj}),sem);
-                                        h2.mainLine.Color = [.6 .6 .6];
-                                        h2.patch.FaceColor = [.6 .6 .6];
-                                        h2.patch.FaceAlpha = .5;
-                                        h2.patch.EdgeColor = [.6 .6 .6];
-                                        h2.edge(1).Color = [.6 .6 .6];
-                                        h2.edge(2).Color = [.6 .6 .6];
-                                    end
-                                    
-                                    %                                 hE(iC) = plot(all_mean.Phase_lag_F.(PARAMS.Phases{iPhase}).low{ii, jj}, rad2deg(all_mean.Phase_lag_cxy.(PARAMS.Phases{iPhase}).low{ii, jj}), 'o', 'color', c_ord(iC,:), 'markerfacecolor', c_ord(iC,:));
-                                    %                                 hE(iC) = errorbar(all_mean.Phase_lag_F.(PARAMS.Phases{iPhase}).low{ii, jj}, rad2deg(all_mean.Phase_lag_cxy.(PARAMS.Phases{iPhase}).low{ii, jj}), sem, 'o', 'color', c_ord(iC,:))%, 'CapSize',2);
-                                    
-                                    y_lim = [-200 0 200];
-                                    ylabel('Phase lag (deg)');
-                                    x_lim=([0 100]);
-                                    box_pos =  [0, -200, 100, 400];
-                                    gamma_box_h = 400;
-                                    
-                                    
-                                end
-                                % for the phase slope
-                                if strcmp(measures{iMs}, 'PS_slope')
-                               
-                                    hold on
-                                    if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
-                                        h2 =shadedErrorBar(all_mean.PS_F.ipsi.(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})));
-                                        h2.mainLine.Color = [.8 .8 .8];
-                                        h2.mainLine.LineWidth = 3;
-                                        h2.patch.FaceColor = [.6 .6 .6];
-                                        h2.patch.FaceAlpha = .5;
-                                        h2.patch.EdgeColor = [.6 .6 .6];
-                                        h2.edge(1).Color = [.6 .6 .6];
-                                        h2.edge(2).Color = [.6 .6 .6];
-                                    end
-                                    
-                                    % swap order or else it is hard to see
-                                         h =shadedErrorBar(all_mean.PS_F.contra.(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).contra.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj})));
-                                    h.mainLine.Color = this_color;
-                                    h.mainLine.LineWidth = 3;
-                                    h.patch.FaceColor = this_color;
-                                    h.patch.FaceAlpha = .7;
-                                    h.patch.EdgeColor = this_color;
-                                    h.edge(1).Color = this_color;
-                                    h.edge(2).Color = this_color;
-                                    
-                                    y_lim = [-15, 0, 15];
-                                    ylabel('Phase offset (ms)'); xlabel('Frequency');
-                                    x_lim=([30 100]);
-                                    box_pos =  [30, -5, 100, 40];
-                                    gamma_box_h = 2;
-                                    
-                                    % add text for means SD
-%                                     y_max = max([max(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj})+(all_std.(measures{iMs}).contra.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj}))),...
-%                                        max(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})+(all_std.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})))]);
-%                                     %   % for contra
-                                    text(70, 13, ['mean:' num2str(mean_out.PS_slope_out.contra(mean_ii, mean_jj),'%.2f') ' ' char(177) ' ' ...
-                                        num2str(std_out.AMP_AC_max_out.contra(mean_ii, mean_jj),'%.2f')], 'color', 'k', 'fontsize', 36, 'FontName', 'helvetica');
-                                    % for ipsi
-                                    text(70, 11, ['mean:' num2str(mean_out.PS_slope_out.ipsi(mean_ii, mean_jj),'%.2f') ' ' char(177) ' ' ...
-                                        num2str(std_out.AMP_AC_max_out.ipsi(mean_ii, mean_jj),'%.2f')], 'color', [.7 .7 .7], 'fontsize', 36, 'FontName', 'helvetica');
-                               
-                                end
-                                
-                                if strcmp(measures{iMs}, 'AMP_AC')
-                                    h =shadedErrorBar(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}*1000, all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).contra.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj})));
-                                    h.mainLine.Color = this_color;
-                                    h.patch.FaceColor = this_color;
-                                    h.patch.FaceAlpha = .5;
-                                    h.patch.EdgeColor = this_color;
-                                    h.edge(1).Color = this_color;
-                                    h.edge(2).Color = this_color;
-                                    [con_val, con_idx] = max(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj});
-                                    hold on
-                                    
-                                    if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
-                                        h2 =shadedErrorBar(all_mean.AMP_LAG.ipsi.(bands{iBand}){ii, jj}*1000, all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})));
-                                        h2.mainLine.Color = [.6 .6 .6];
-                                        h2.patch.FaceColor = [.6 .6 .6];
-                                        h2.patch.FaceAlpha = .5;
-                                        h2.patch.EdgeColor = [.6 .6 .6];
-                                        h2.edge(1).Color = [.6 .6 .6];
-                                        h2.edge(2).Color = [.6 .6 .6];
-                                        [ip_val, ip_idx] = max(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj});
-                                    end
-                                    y_lim =[0 1];
-                                    ylabel('Amplitude xcor');
-                                    x_lim=([-50 0 50]);
-                                    xlabel('time (ms)')
-                                    box_pos =  [-0.05, 0, .1, 1];
-                                    gamma_box_h = 1;
-                                    ylim([y_lim(1) y_lim(end)]);xlim([x_lim(1) x_lim(end)])
-                                    h_con = vline(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx));
-                                    h_con.Color = this_color; h_con.LineStyle = '- -'; h_con.LineWidth = 3;
-                                    
-                            
-                                    if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
-                                        h_ip = [];
-                                        h_ip = vline(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(ip_idx));
-                                        h_ip.Color = [.6 .6 .6]; h_ip.LineStyle =  ':'; h_ip.LineWidth = 3;
-                                        lgd = legend([h_con, h_ip],['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)*1000,2) 'ms'],...
-                                            [ 'Ipsi lag:' num2str(all_mean.AMP_LAG.ipsi.(bands{iBand}){ii, jj}(ip_idx)*1000) 'ms'], 'location', 'northwest');
-                                    else
-                                        lgd = legend(h_con,['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)*1000,2) 'ms'],'location', 'northwest');
-                                    end
-                                    
-                                    lgd.FontSize = cfg.lgd_size ; lgd.Box = 'off';
-                                    
-                                    % add text for means SD
-                                    %   % for contra
-                                    mean_txt = text(20, .95, ['mean:' num2str(mean_out.AMP_AC_max_out.contra(mean_ii, mean_jj),'%.2f') ' ' char(177) ' ' ...
-                                        num2str(std_out.AMP_AC_max_out.contra(mean_ii, mean_jj),'%.2f')], 'color', 'k', 'fontsize', cfg.lgd_size, 'FontName', 'helvetica');
-                                    % for ipsi
-                                    mean_txt_ip = text(20, .89, ['mean:' num2str(mean_out.AMP_AC_max_out.ipsi(mean_ii, mean_jj),'%.2f') ' ' char(177) ' ' ...
-                                        num2str(std_out.AMP_AC_max_out.ipsi(mean_ii, mean_jj),'%.2f')], 'color', [.7 .7 .7], 'fontsize', cfg.lgd_size, 'FontName', 'helvetica');
-                                    
-                                end
-                                
-                                ylim([y_lim(1) y_lim(end)]);xlim([x_lim(1) x_lim(end)])
-                                if strcmp(measures{iMs}, 'AMP_AC')
-                                    v_zero = vline(0, 'k');
-                                else
-                                    % put boxes for the gamma bands
-                                    rectangle('position', [cfg.filter1.f(1), y_lim(1), (cfg.filter1.f(2)-cfg.filter1.f(1)), gamma_box_h],  'facecolor', [cfg.color.blue 0.3], 'edgecolor', [cfg.color.blue 0.3])
-                                    rectangle('position', [cfg.filter2.f(1), y_lim(1), (cfg.filter2.f(2)-cfg.filter2.f(1)), gamma_box_h],  'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
-                                    chi=get(gca, 'Children');
-                                    set(gca, 'Children',flipud(chi))
-                                end
-                                set(findall(gca, 'Type', 'Line'),'LineWidth',2)
-                                if strcmp(measures{iMs}, 'AMP_AC')
-                                    h_ip.LineWidth = 3;
-                                    h_con.LineWidth = 3;
-                                    v_zero.LineWidth = 1;
-                                    uistack(v_zero, 'bottom')
-                                end
-                                set(gca, 'ytick', y_lim, 'xtick',x_lim)
-                                %                                     ylabel([]); xlabel([]); %remove the labels for clerity in the figure.
-                                
-                                
-                                cfg.set_fig.ft_size = 36;
-                                SetFigure(cfg.set_fig, gcf)
-                                
-                                mkdir(PARAMS.inter_dir, 'Phase_plots')
-                                % save the version with the ipsi for the
-                                % suppliment
-                                saveas(gcf, [PARAMS.inter_dir 'Phase_plots/' iSub{1} '_' measures{iMs} '_' labels{ii,jj} '_' bands{iBand} 'S2.fig']);
-                                saveas_eps([iSub{1} '_' measures{iMs} '_' labels{ii,jj} '_' bands{iBand} 'S2'], [PARAMS.inter_dir 'Phase_plots/'])
-                                print(gcf, '-dpng', [PARAMS.inter_dir 'Phase_plots/' iSub{1} '_' measures{iMs} '_' labels{ii,jj} '_' bands{iBand} 'S2.png'],'-r300')
-                                
-                                % same thing but without the ipsi line
                                 if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
-                                    set(h2.patch, 'visible', 'off'); set(h2.edge, 'visible', 'off'); set(h2.mainLine, 'visible', 'off')
-                                    if strcmp(measures{iMs}, 'AMP_AC')
-                                        h_ip.Visible = 'off';
-                                        lgd = legend(h_con,['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)*1000,2) 'ms']);
-                                        lgd.FontSize = 24; lgd.Box = 'off';
-                                        clear h_ip
-                                    end
+                                    h2 =shadedErrorBar(all_mean.PS_F.ipsi.(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})));
+                                    h2.mainLine.Color = [.8 .8 .8];
+                                    h2.mainLine.LineWidth = 3;
+                                    h2.patch.FaceColor = [.6 .6 .6];
+                                    h2.patch.FaceAlpha = .5;
+                                    h2.patch.EdgeColor = [.6 .6 .6];
+                                    h2.edge(1).Color = [.6 .6 .6];
+                                    h2.edge(2).Color = [.6 .6 .6];
                                 end
-                                set(gca, 'ytick', y_lim, 'xtick',x_lim)
-                                cfg.set_fig.ft_size = 36;
-                                SetFigure(cfg.set_fig, gcf)
-                                ylim([y_lim(1) y_lim(end)]);xlim([x_lim(1) x_lim(end)])
-                                %                                     ylabel([]); xlabel([]); %remove the labels for clerity in the figure.
                                 
-                                %                                 rectangle('position', [cfg.filter1.f(1), y_lim(1), (cfg.filter1.f(2)-cfg.filter1.f(1)), gamma_box_h],  'facecolor', [cfg.color.blue 0.3], 'edgecolor', [cfg.color.blue 0.3])
-                                %                                 rectangle('position', [cfg.filter2.f(1), y_lim(1), (cfg.filter2.f(2)-cfg.filter2.f(1)), gamma_box_h],  'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
-                                chi=get(gca, 'Children');
-                                set(gca, 'Children',flipud(chi))
+                                % swap order or else it is hard to see
+                                h =shadedErrorBar(all_mean.PS_F.contra.(bands{iBand}){ii, jj}, all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).contra.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj})));
+                                h.mainLine.Color = this_color;
+                                h.mainLine.LineWidth = 3;
+                                h.patch.FaceColor = this_color;
+                                h.patch.FaceAlpha = .7;
+                                h.patch.EdgeColor = this_color;
+                                h.edge(1).Color = this_color;
+                                h.edge(2).Color = this_color;
                                 
-                                saveas(gcf, [PARAMS.inter_dir 'Phase_plots/' iSub{1} '_' measures{iMs} '_' labels{ii,jj} '_' bands{iBand} 'F3.fig']);
-                                saveas_eps([iSub{1} '_' measures{iMs} '_' labels{ii,jj} '_' bands{iBand} 'F3'], [PARAMS.inter_dir 'Phase_plots/'])
-                                print(gcf, '-dpng', [PARAMS.inter_dir 'Phase_plots/' iSub{1} '_' measures{iMs} '_' labels{ii,jj} '_' bands{iBand} 'F3.png'],'-r300')
-                                close all
+                                y_lim = [-15, 0, 15];
+                                ylabel('Phase offset (ms)'); xlabel('Frequency');
+                                x_lim=([30 100]);
+                                box_pos =  [30, -5, 100, 40];
+                                gamma_box_h = 2;
+                                
+                                if ~isempty(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj})
+                                    % add text for mean PS value for each gamma
+                                    this_ps = all_mean.PS_slope.contra.(bands{iBand}){ii,jj};
+                                    this_f = all_mean.PS_F.contra.(bands{iBand}){ii,jj};
+                                    contra_mean = nanmean(this_ps(nearest_idx(cfg.(['filter' num2str(iBand)]).f(1), this_f):nearest_idx(cfg.(['filter' num2str(iBand)]).f(2), this_f)));
+                                    contra_std = nanstd(this_ps(nearest_idx(cfg.(['filter' num2str(iBand)]).f(1), this_f):nearest_idx(cfg.(['filter' num2str(iBand)]).f(2), this_f)));
+                                    % add text
+                                    mean_txt = text(60, 13, ['mean:' num2str(contra_mean,'%.2f') ' ' char(177) ' ' ...
+                                        num2str(contra_std,'%.2f')], 'color', 'k', 'fontsize', 48, 'FontName', 'helvetica');
+                                end
+                                % find the ipsi
+                                if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
+                                    this_ps = all_mean.PS_slope.ipsi.(bands{iBand}){ii,jj};
+                                    this_f = all_mean.PS_F.ipsi.(bands{iBand}){ii,jj};
+                                    ipsi_mean = nanmean(this_ps(nearest_idx(cfg.(['filter' num2str(iBand)]).f(1), this_f):nearest_idx(cfg.(['filter' num2str(iBand)]).f(2), this_f)));
+                                    ipsi_std = nanstd(this_ps(nearest_idx(cfg.(['filter' num2str(iBand)]).f(1), this_f):nearest_idx(cfg.(['filter' num2str(iBand)]).f(2), this_f)));
+                                    % add text
+                                    mean_txt_ip = text(60, 10, ['mean:' num2str(ipsi_mean,'%.2f') ' ' char(177) ' ' ...
+                                        num2str(ipsi_std,'%.2f')], 'color', [.7 .7 .7], 'fontsize', 48, 'FontName', 'helvetica');
+                                end
                             end
                             
+                            if strcmp(measures{iMs}, 'AMP_AC')
+                                
+                                hold on
+                                
+                                if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
+                                    h2 =shadedErrorBar(all_mean.AMP_LAG.ipsi.(bands{iBand}){ii, jj}*1000, all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})));
+                                    h2.mainLine.Color = [.6 .6 .6];
+                                    h2.patch.FaceColor = [.6 .6 .6];
+                                    h2.patch.FaceAlpha = .5;
+                                    h2.patch.EdgeColor = [.6 .6 .6];
+                                    h2.edge(1).Color = [.6 .6 .6];
+                                    h2.edge(2).Color = [.6 .6 .6];
+                                    [ip_val, ip_idx] = max(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj});
+                                end
+                                h =shadedErrorBar(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}*1000, all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj}, all_std.(measures{iMs}).contra.(bands{iBand}){ii, jj}/sqrt(length(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj})));
+                                h.mainLine.Color = this_color;
+                                h.patch.FaceColor = this_color;
+                                h.patch.FaceAlpha = .5;
+                                h.patch.EdgeColor = this_color;
+                                h.edge(1).Color = this_color;
+                                h.edge(2).Color = this_color;
+                                [con_val, con_idx] = max(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj});
+                                
+                                
+                                y_lim =[0 1];
+                                ylabel('Amplitude xcor');
+                                x_lim=([-50 0 50]);
+                                xlabel('time (ms)')
+                                box_pos =  [-0.05, 0, .1, 1];
+                                gamma_box_h = 1;
+                                ylim([y_lim(1) y_lim(end)]);xlim([x_lim(1) x_lim(end)])
+                                h_con = vline(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx));
+                                h_con.Color = this_color; h_con.LineStyle = '- -'; h_con.LineWidth = 3;
+                                
+                                
+                                if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
+                                    h_ip = [];
+                                    h_ip = vline(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(ip_idx));
+                                    h_ip.Color = [.6 .6 .6]; h_ip.LineStyle =  ':'; h_ip.LineWidth = 3;
+                                    lgd = legend([h_con, h_ip],['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)*1000,2) 'ms'],...
+                                        [ 'Ipsi lag:' num2str(all_mean.AMP_LAG.ipsi.(bands{iBand}){ii, jj}(ip_idx)*1000) 'ms'], 'location', 'northwest');
+                                else
+                                    lgd = legend(h_con,['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)*1000,2) 'ms'],'location', 'northwest');
+                                end
+                                
+                                lgd.FontSize = cfg.lgd_size ; lgd.Box = 'off';
+                                
+                                % add text for means SD
+                                %   % for contra
+                                [max_val, max_id] = max(all_mean.(measures{iMs}).contra.(bands{iBand}){ii, jj});
+                                mean_txt = text(2, .94, ['mean:' num2str(max_val,'%.2f') ' ' char(177) ' ' ...
+                                    num2str(all_std.(measures{iMs}).contra.(bands{iBand}){ii, jj}(max_id),'%.2f')], 'color', 'k', 'fontsize', cfg.lgd_size, 'FontName', 'helvetica');
+                                % for ipsi
+                                [max_val, max_id] = max(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj});
+                                mean_txt_ip = text(2, .85, ['mean:' num2str(max_val,'%.2f') ' ' char(177) ' ' ...
+                                    num2str(all_std.(measures{iMs}).ipsi.(bands{iBand}){ii, jj}(max_id),'%.2f')], 'color', [.7 .7 .7], 'fontsize', cfg.lgd_size, 'FontName', 'helvetica');
+                                
+                            end
+                            
+                            ylim([y_lim(1) y_lim(end)]);xlim([x_lim(1) x_lim(end)])
+                            if strcmp(measures{iMs}, 'AMP_AC')
+                                v_zero = vline(0, 'k');
+                            else
+                                % put boxes for the gamma bands
+                                rectangle('position', [cfg.filter1.f(1), y_lim(1), (cfg.filter1.f(2)-cfg.filter1.f(1)), gamma_box_h],  'facecolor', [cfg.color.blue 0.3], 'edgecolor', [cfg.color.blue 0.3])
+                                rectangle('position', [cfg.filter2.f(1), y_lim(1), (cfg.filter2.f(2)-cfg.filter2.f(1)), gamma_box_h],  'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
+                                chi=get(gca, 'Children');
+                                set(gca, 'Children',flipud(chi))
+                            end
+                            set(findall(gca, 'Type', 'Line'),'LineWidth',2)
+                            if strcmp(measures{iMs}, 'AMP_AC')
+                                if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
+                                h_ip.LineWidth = 3;
+                                end
+                                h_con.LineWidth = 3;
+                                v_zero.LineWidth = 1;
+                                uistack(v_zero, 'bottom')
+                            end
+                            set(gca, 'ytick', y_lim, 'xtick',x_lim)
+                            %                                 ylabel([]); xlabel([]); %remove the labels for clerity in the figure.
+                            
+                            
+                            cfg.set_fig.ft_size = 36;
+                            SetFigure(cfg.set_fig, gcf)
+                            
+                            mkdir(PARAMS.inter_dir, 'Phase_plots')
+                            % save the version with the ipsi for the
+                            % suppliment
+                            saveas(gcf, [PARAMS.inter_dir 'Phase_plots/' iSub{1} '_' measures{iMs} '_' labels{ii,jj} '_' bands{iBand} 'S2.fig']);
+                            saveas_eps([iSub{1} '_' measures{iMs} '_' labels{ii,jj} '_' bands{iBand} 'S2'], [PARAMS.inter_dir 'Phase_plots/'])
+                            print(gcf, '-dpng', [PARAMS.inter_dir 'Phase_plots/' iSub{1} '_' measures{iMs} '_' labels{ii,jj} '_' bands{iBand} 'S2.png'],'-r300')
+                            
+                            
+                            if strcmp(labels{ii,jj}, 'NAc_OFC') || strcmp(labels{ii,jj}, 'OFC_NAc') || strcmp(labels{ii,jj}, 'CG_OFC') || strcmp(labels{ii,jj}, 'OFC_CG')
+
+                            % same thing but without the ipsi line
+                            if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
+                                set(h2.patch, 'visible', 'off'); set(h2.edge, 'visible', 'off'); set(h2.mainLine, 'visible', 'off')
+                                if strcmp(measures{iMs}, 'AMP_AC')
+                                    h_ip.Visible = 'off';
+                                    lgd = legend(h_con,['Contra lag: ' num2str(all_mean.AMP_LAG.contra.(bands{iBand}){ii, jj}(con_idx)*1000,2) 'ms']);
+                                    lgd.FontSize = 24; lgd.Box = 'off';
+                                    clear h_ip
+                                end
+                            end
+                            % remove ipsi text
+                            
+                            mean_txt_ip.Visible = 'off';
+                            
+                            
+                            set(gca, 'ytick', y_lim, 'xtick',x_lim)
+                            cfg.set_fig.ft_size = 36;
+                            SetFigure(cfg.set_fig, gcf)
+                            ylim([y_lim(1) y_lim(end)]);xlim([x_lim(1) x_lim(end)])
+                            %                                     ylabel([]); xlabel([]); %remove the labels for clerity in the figure.
+                            
+                            %                                 rectangle('position', [cfg.filter1.f(1), y_lim(1), (cfg.filter1.f(2)-cfg.filter1.f(1)), gamma_box_h],  'facecolor', [cfg.color.blue 0.3], 'edgecolor', [cfg.color.blue 0.3])
+                            %                                 rectangle('position', [cfg.filter2.f(1), y_lim(1), (cfg.filter2.f(2)-cfg.filter2.f(1)), gamma_box_h],  'facecolor', [cfg.color.green 0.3], 'edgecolor', [cfg.color.green 0.3])
+                            chi=get(gca, 'Children');
+                            set(gca, 'Children',flipud(chi))
+                            
+                            saveas(gcf, [PARAMS.inter_dir 'Phase_plots/' iSub{1} '_' measures{iMs} '_' labels{ii,jj} '_' bands{iBand} 'F3.fig']);
+                            saveas_eps([iSub{1} '_' measures{iMs} '_' labels{ii,jj} '_' bands{iBand} 'F3'], [PARAMS.inter_dir 'Phase_plots/'])
+                            print(gcf, '-dpng', [PARAMS.inter_dir 'Phase_plots/' iSub{1} '_' measures{iMs} '_' labels{ii,jj} '_' bands{iBand} 'F3.png'],'-r300')
+                            end
+                            close all
                         end
-                    end
+                        
+%                     end
                 end
             end
         end
     end
 end
+
 %% plot the single values for each pair in matrix format
 mean_measures = fieldnames(mean_out);
 for iMs = 1:length(mean_measures)
