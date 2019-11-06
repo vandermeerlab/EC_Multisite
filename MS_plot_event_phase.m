@@ -24,7 +24,7 @@ cfg_def.color.OFC_NAc = double([123,225,160])/255;
 cfg_def.color.OFC_CG= double([158 1 66])/255;
 cfg_def.lgd_size = 24;
 cfg_def.measures = [3 10]; % which measures to use. Default is amplitude xcorr and phase slope. 
-
+cfg_def.amp_xcorr_lags = -0.05:0.0005:0.05;
 % If there is a specified measure or set of measures find the index
 
 cfg = ProcessConfig2(cfg_def, cfg_in);
@@ -103,8 +103,16 @@ for iSub = cfg.Subjects
                                 if isempty(temp) || size(temp,1) <10
                                     all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = [];
                                     all_std.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} =  [];
-                                    
+                                    all_collect.AMP_LAG.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = [];
+                                    all_collect.AMP_AC.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj} = [];
                                 else
+                                    if strcmp(measures{iMs}, 'AMP_AC') % collect all of the amp xcorr values
+                                        for iEvt = size(temp,1):-1:1
+                                            [all_collect.AMP_AC.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj}(iEvt),max_idx] = max(temp(iEvt,:));
+                                            all_collect.AMP_LAG.(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj}(iEvt) = cfg.amp_xcorr_lags(max_idx); % uses standard -0.05:0.0005:0.05
+                                        end
+                                    end
+                                    
                                     %                         end
                                     if strcmp(measures{iMs}, 'Phase_lag_cxy')
                                         all_mean.(measures{iMs}).(PARAMS.Phases{iPhase}).(bands{iBand}){ii,jj}=  circ_mean(temp);
@@ -163,6 +171,62 @@ for iSub = cfg.Subjects
     end
     clear all_out
 end
+%% get stats for AMP_xcorr max and lag [only used descriptives
+stats_id = [PARAMS.stats_dir 'EVENT_AMP_stats.txt'];
+stats_file = fopen(stats_id, 'w');
+
+
+fprintf(stats_file,['**************** EVENT_AMP_stats ****************\n']);
+fprintf(stats_file,['**************** ' date ' ****************\n']);
+for iBand = 1:2
+temp_con = all_collect.AMP_AC.contra.(bands{iBand});
+temp_ipsi = all_collect.AMP_AC.ipsi.(bands{iBand});
+sig_mat.AMP_AC.(bands{iBand}) = cell(size(temp_con));
+for ii = size(temp_con,1):-1:1
+    for jj = size(temp_con,2):-1:1
+        if isempty(temp_con{ii,jj})
+            temp_con{ii,jj} = NaN;
+            desc_con(ii,jj) = NaN; desc_ipsi(ii,jj) = NaN;
+
+        else
+            % get mean for descriptives
+            desc_con(ii,jj) = nanmean(temp_con{ii,jj});
+            desc_ipsi(ii,jj) = nanmean(temp_ipsi{ii,jj});
+            % get KS p values if needed. might use to add an astrix to the
+            % sig plots or something
+            if ~isempty(temp_con{ii,jj}) && ~isempty(temp_ipsi{ii,jj})
+            [~,p] = kstest2(temp_con{ii,jj}, temp_ipsi{ii,jj});
+            ks_mat.AMP_AC.(bands{iBand})(ii,jj) = p; 
+            if p <0.001
+                sig_mat.AMP_AC.(bands{iBand}){ii,jj} = '***';
+            elseif p >=0.001 && p< 0.01
+                sig_mat.AMP_AC.(bands{iBand}){ii,jj} = '**';
+            elseif p >=0.01 && p<0.05
+                sig_mat.AMP_AC.(bands{iBand}){ii,jj} = '*';
+            else
+                sig_mat.AMP_AC.(bands{iBand}){ii,jj} = 'n/s';
+            end
+            else
+                sig_mat.AMP_AC.(bands{iBand}){ii,jj} = 'N/A';
+                ks_mat.AMP_AC.(bands{iBand})(ii,jj) = NaN;
+            end
+        end
+    end
+end
+fprintf(stats_file,['\n**************** CONTRA MEAN: ' bands{iBand} ' ****************\n']);
+fprintf_table_EC(stats_file, desc_con, PARAMS.all_sites, PARAMS.all_sites);
+
+fprintf(stats_file,['\n**************** IPSI MEAN: ' bands{iBand} ' ****************\n']);
+fprintf_table_EC(stats_file, desc_con, PARAMS.all_sites, PARAMS.all_sites);
+
+fprintf(stats_file,['\n**************** KS: ' bands{iBand} ' ****************\n']);
+fprintf_table_EC(stats_file, ks_mat.AMP_AC.(bands{iBand}), PARAMS.all_sites, PARAMS.all_sites);
+
+fprintf(stats_file,['\n**************** KS SIG: ' bands{iBand} ' ****************\n']);
+fprintf_table_EC(stats_file, sig_mat.AMP_AC.(bands{iBand}), PARAMS.all_sites, PARAMS.all_sites);
+
+end
+fclose(stats_file);
 
 %% get the average within the frequency bands
 

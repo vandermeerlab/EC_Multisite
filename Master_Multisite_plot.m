@@ -140,7 +140,7 @@ close all
 close all
 cfg_event = [];
 cfg_event.Subjects = {'all'}; % for speed
-cfg_event.measures = [3 10];   %measures: use the idx
+cfg_event.measures = [3];   %measures: use the idx
         % 'COH_cxx'
         % 'COH_fxx'
         % 'AMP_AC' (usefule)
