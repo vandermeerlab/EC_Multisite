@@ -1,0 +1,502 @@
+% Multi-site spike sandbox
+addpath(genpath('C:\Users\ecarm\Documents\GitHub\vandermeerlab\code-matlab\shared'));
+
+addpath(genpath('C:\Users\ecarm\Documents\GitHub\EC_Multisite'))
+ft_path = 'C:\Users\ecarm\Documents\GitHub\fieldtrip';
+cd('M:\Multi_spike\Cat_Spikes')
+% %%  try to cut them.
+% restoredefaultpath
+% addpath(genpath('C:\Users\ecarm\Documents\GitHub\vandermeerlab\code-matlab\toolboxes\MClust-3.5'))
+%
+%
+% %% try simple cut.
+% restoredefaultpath
+% addpath(genpath('C:\Users\ecarm\Documents\GitHub\simpleclust'))
+% %% load the spikes
+% cd('M:\Multi_spike\Cat_Spikes\R108-2017-08-01')
+% addpath(genpath('/home/ecarmichael/Documents/GitHub/vandermeerlab/code-matlab/shared'));
+%%
+cd('M:\Multi_spike\Cat_Spikes\R123_2017_02_26\')
+cfg = [] ;
+cfg.fc = {};
+cfg.getTTnumbers = 0;
+S = LoadSpikes(cfg);
+firstSpike(S);
+fprintf('Total recording time in S: %0.0fs\n', lastSpike(S) - firstSpike(S));
+plot(S)
+
+Evt = LoadEvents([]);
+
+Starts = MS_extract_TS(Evt, 'Starting Recording');
+Stops = MS_extract_TS(Evt, 'Stopping Recording');
+
+for ii = 1:1:8
+    disp((Stops.t{1}(ii)- Starts.t{1}(ii))/60)
+end
+
+
+%% JG data
+
+Starts = ts({sort([Evt.t{1}, Evt.t{3}])});
+Stops = ts({sort([Evt.t{2}, Evt.t{4}, Evt.t{5}(1)])});
+for ii = 1:4
+    disp((Stops.t{1}(ii)- Starts.t{1}(ii))/60)
+end
+
+S_pre = restrict(S, Starts.t{1}(1), Stops.t{1}(1));
+
+S_ipsi = restrict(S, Starts.t{1}(2), Stops.t{1}(2));
+
+S_contra= restrict(S, Starts.t{1}(3), Stops.t{1}(3));
+
+S_post = restrict(S, Starts.t{1}(4), Stops.t{1}(4));
+
+%% [In reality this will be done to match the LFP data with a strict cut at 10mins] restrict to specific periods (need to grab cat events files for start/stops).
+S_pre = restrict(S, Starts.t{1}(1), Stops.t{1}(1));
+
+S_ipsi = restrict(S, Starts.t{1}(3), Stops.t{1}(3));
+
+S_contra= restrict(S, Starts.t{1}(5), Stops.t{1}(5));
+
+S_post = restrict(S, Starts.t{1}(7), Stops.t{1}(7));
+
+%% get the mean firing rate and ISI
+
+for iCell = length(S.t):-1:1
+    %     ISI{iCell} = mean(diff(S.t{iCell}));
+    %     Rate{iCell} = 1/mean(diff(S.t{iCell}));
+    % get mean ISI
+    
+    nSpike_pre{iCell} = length(S_pre.t{iCell}); 
+    nSpike_ipsi{iCell} = length(S_ipsi.t{iCell});
+    nSpike_contra{iCell} = length(S_contra.t{iCell}); 
+    nSpike_post{iCell} = length(S_post.t{iCell}); 
+
+    
+    ISI_pre{iCell} = median(diff(S_pre.t{iCell}));
+    ISI_ipsi{iCell} = median(diff(S_ipsi.t{iCell}));
+    ISI_contra{iCell} = median(diff(S_contra.t{iCell}));
+    ISI_post{iCell} = median(diff(S_post.t{iCell}));
+    
+    % std
+    ISI_pre_sd{iCell} = std(diff(S_pre.t{iCell}));
+    ISI_ipsi_sd{iCell} = std(diff(S_ipsi.t{iCell}));
+    ISI_contra_sd{iCell} = std(diff(S_contra.t{iCell}));
+    ISI_post_sd{iCell} = std(diff(S_post.t{iCell}));
+    
+    %     % get firing rate.
+    Rate_pre{iCell} = 1./median(diff(S_pre.t{iCell}));
+    Rate_ipsi{iCell} = 1./median(diff(S_ipsi.t{iCell}));    %(length(S_ipsi.t{iCell})) ./((lastSpike(S_ipsi) - firstSpike(S_ipsi)))
+    Rate_contra{iCell} = 1./median(diff(S_contra.t{iCell}));  %(length(S_contra.t{iCell})) ./((lastSpike(S_contra) - firstSpike(S_contra)))
+    Rate_post{iCell} = 1./median(diff(S_post.t{iCell}));    %(length(S_post.t{iCell})) ./((lastSpike(S_post) - firstSpike(S_post)))
+    
+    % FR std
+    Rate_pre_sd{iCell} = 1./std(diff(S_pre.t{iCell}));
+    Rate_ipsi_sd{iCell} = 1./std(diff(S_ipsi.t{iCell}));    %(length(S_ipsi.t{iCell})) ./((lastSpike(S_ipsi) - firstSpike(S_ipsi)))
+    Rate_contra_sd{iCell} = 1./std(diff(S_contra.t{iCell}));  %(length(S_contra.t{iCell})) ./((lastSpike(S_contra) - firstSpike(S_contra)))
+    Rate_post_sd{iCell} = 1./std(diff(S_post.t{iCell}));    %(length(S_post.t{iCell})) ./((lastSpike(S_post) - firstSpike(S_post)))
+end
+
+
+
+%% cross cor
+figure(103)
+c_ord = linspecer(4); 
+
+% gen subplot vals
+sub_id = reshape(1:(length(S_pre.t)*4), 4, length(S_pre.t))';
+cfg_ccf = [];
+cfg_ccf.max_t = 0.2;
+for iCell = 1:length(S_pre.t)
+    %     figure(iCell)
+    %     sgtitle(['Cell: ' S_pre.label{iCell}])
+    %     subplot(4,3,3)
+    subplot(length(S_pre.t),4,sub_id(iCell, 1))
+    [ccf_val,tvec] = ccf(cfg_ccf,S_pre.t{iCell},S_pre.t{iCell});
+    plot(tvec, ccf_val, 'color', c_ord(1,:))
+    text(-.35, 0.1, strrep(S_pre.label{iCell}(end-7:end-2), '_', '-'));
+    text(-.2, 0.09, ['nSpikes: ' num2str(nSpike_pre{iCell},'%2.2f') ],'FontSize',8);
+        text(-.2, 0.06, ['Rate: ' num2str(Rate_pre{iCell},'%2.2f') 'Hz'],'FontSize',8);
+    text(-.2, 0.03, ['ISI: ' num2str(ISI_pre{iCell}*1000,'%2.0f') 'ms'],'FontSize',8);
+
+    
+%     text(-.2, 0.06, ['Rate: ' num2str(Rate_pre{iCell},'%2.2f') '+/-' num2str(Rate_pre_sd{iCell},'%2.2f') 'Hz'],'FontSize',8);
+%     text(-.2, 0.03, ['ISI: ' num2str(ISI_pre{iCell}*1000,'%2.0f') '+/-' num2str(ISI_pre_sd{iCell}*1000,'%2.0f') 'ms'],'FontSize',8);
+    %     xlabel('pre')
+    ylim([0 .1])
+    if iCell ~= length(S_pre.t)
+        set(gca, 'xtick', []);
+        set(gca, 'ytick', []);
+    end
+    
+    %     subplot(4,3,6)
+    subplot(length(S_pre.t),4,sub_id(iCell, 2))
+    [ccf_val,tvec] = ccf(cfg_ccf,S_ipsi.t{iCell},S_ipsi.t{iCell});
+    plot(tvec, ccf_val, 'color', c_ord(2,:))
+    %     xlabel('ipsi')
+    ylim([0 .1])
+    text(-.2, 0.09, ['nSpikes: ' num2str(nSpike_ipsi{iCell},'%2.2f') ],'FontSize',8);
+    text(-.2, 0.06, ['Rate: ' num2str(Rate_ipsi{iCell},'%2.2f') 'Hz'],'FontSize',8);
+    text(-.2, 0.03, ['ISI: ' num2str(ISI_ipsi{iCell}*1000,'%2.0f') 'ms'],'FontSize',8);
+    if iCell ~= length(S_pre.t)
+        set(gca, 'xtick', []);
+        set(gca, 'ytick', []);
+    end
+    %     subplot(4,3,9)
+    subplot(length(S_pre.t),4,sub_id(iCell, 3))
+    [ccf_val,tvec] = ccf(cfg_ccf,S_contra.t{iCell},S_contra.t{iCell});
+    plot(tvec, ccf_val, 'color', c_ord(3,:))
+    %     xlabel('contra')
+    ylim([0 .1])
+    text(-.2, 0.09, ['nSpikes: ' num2str(nSpike_contra{iCell},'%2.0f') ],'FontSize',8);
+    text(-.2, 0.06, ['Rate: ' num2str(Rate_contra{iCell},'%2.2f') 'Hz'],'FontSize',8);
+    text(-.2, 0.03, ['ISI: ' num2str(ISI_contra{iCell}*1000,'%2.0f') 'ms'],'FontSize',8);
+    if iCell ~= length(S_pre.t)
+        set(gca, 'xtick', []);
+        set(gca, 'ytick', []);
+    end
+    %     subplot(4,3,12)
+    subplot(length(S_pre.t),4,sub_id(iCell, 4))
+    [ccf_val,tvec] = ccf(cfg_ccf,S_post.t{iCell},S_post.t{iCell});
+    plot(tvec, ccf_val, 'color', c_ord(4,:))
+    %     xlabel('post')
+    ylim([0 .1])
+    text(-.2, 0.09, ['nSpikes: ' num2str(nSpike_post{iCell},'%2.0f') ],'FontSize',8);
+    text(-.2, 0.06, ['Rate: ' num2str(Rate_post{iCell},'%2.2f') 'Hz'],'FontSize',8);
+    text(-.2, 0.03, ['ISI: ' num2str(ISI_post{iCell}*1000,'%2.0f') 'ms'],'FontSize',8);
+    if iCell ~= length(S_pre.t)
+        set(gca, 'xtick', []);
+        set(gca, 'ytick', []);
+    end
+end
+
+
+%% LFP for MS data 
+cfg.fc= {'CSC9_pre.ncs'}; 
+csc_pre = MS_LoadCSC(cfg);
+
+cfg.fc= {'CSC9_ipsi.ncs'}; 
+csc_ipsi = MS_LoadCSC(cfg);
+
+cfg.fc= {'CSC9_contra.ncs'}; 
+csc_contra = MS_LoadCSC(cfg);
+
+cfg.fc= {'CSC9_post.ncs'}; 
+csc_post = MS_LoadCSC(cfg);
+
+t_temp_pre = csc_pre.tvec - csc_pre.tvec(1);
+t_temp_ipsi = csc_ipsi.tvec - csc_ipsi.tvec(1);
+t_temp_contra = csc_contra.tvec - csc_contra.tvec(1);
+t_temp_post = csc_post.tvec - csc_post.tvec(1);
+
+csc_pre = restrict(csc_pre, Starts.t{1}(1), csc_pre.tvec(nearest_idx3(600,t_temp_pre))); 
+csc_ipsi = restrict(csc_ipsi, Starts.t{1}(3), csc_ipsi.tvec(nearest_idx3(600,t_temp_ipsi))); 
+csc_contra = restrict(csc_contra, Starts.t{1}(5), csc_contra.tvec(nearest_idx3(600,t_temp_contra))); 
+csc_post = restrict(csc_post, Starts.t{1}(7), csc_post.tvec(nearest_idx3(600,t_temp_post))); 
+
+cfg_filt.type = 'cheby1'; %Cheby1 is sharper than butter
+cfg_filt.f  = [30 90]; % broad, could use 150-200?
+cfg_filt.order = 5; %type filter order (fine for this f range)
+cfg_filt.display_filter = 0; % use this to see the fvtool
+
+csc_all = csc_pre;
+if csc_ipsi.tvec(1) < csc_contra.tvec(1)
+    csc_all.data = [csc_pre.data, csc_ipsi.data, csc_contra.data, csc_post.data];
+    csc_all.tvec = [csc_pre.tvec; csc_ipsi.tvec; csc_contra.tvec; csc_post.tvec];
+else
+    csc_all.data = [csc_pre.data, csc_contra.data, csc_ipsi.data, csc_post.data];
+    csc_all.tvec = [csc_pre.tvec; csc_contra.tvec; csc_ipsi.tvec; csc_post.tvec];
+end
+
+csc_lg = FilterLFP(cfg_filt, csc_all);
+
+
+% check durations
+
+disp(['pre ' num2str((csc_pre.tvec(end) - csc_pre.tvec(1))/60) 'min'])
+disp(['ipsi ' num2str((csc_ipsi.tvec(end) - csc_ipsi.tvec(1))/60) 'min'])
+disp(['contra ' num2str((csc_contra.tvec(end) - csc_contra.tvec(1))/60) 'min'])
+disp(['post ' num2str((csc_post.tvec(end) - csc_post.tvec(1))/60) 'min'])
+
+
+
+%% same thing but Spike-LFP on Jimmie data. 
+cfg.fc= {'R152-2018-06-03-CSC34.ncs'}; 
+csc = MS_LoadCSC(cfg);
+
+cfg_filt.type = 'cheby1'; %Cheby1 is sharper than butter
+cfg_filt.f  = [30 90]; % broad, could use 150-200?
+cfg_filt.order = 5; %type filter order (fine for this f range)
+cfg_filt.display_filter = 0; % use this to see the fvtool
+csc_lg = FilterLFP(cfg_filt, csc);
+
+
+csc_pre = restrict(csc, Starts.t{1}(1), Stops.t{1}(1)); 
+csc_ipsi = restrict(csc, Starts.t{1}(2), Stops.t{1}(2)); 
+csc_contra = restrict(csc, Starts.t{1}(3), Stops.t{1}(3)); 
+csc_post = restrict(csc, Starts.t{1}(4), Stops.t{1}(4)); 
+
+
+%% get STA using matlab only from vandermeerlab tutorials. 
+dt = 1/csc_pre.cfg.hdr{1}.SamplingFrequency;
+ w = [-.5 .5]; % time window to compute STA over
+tvec = w(1):1/csc_pre.cfg.hdr{1}.SamplingFrequency:w(2); % time axis for STA
+len = length(tvec);
+
+
+for iC = length(S_pre.t):-1:1
+ 
+    % pre block
+    bin_edges = csc_pre.tvec+(dt/2);
+    
+    Sr = restrict(S_pre,csc_pre.tvec(1)-w(1),csc_pre.tvec(end)-w(2));
+    spk_t = Sr.t{iC}+w(1); % times corresponding to start of window
+    
+    [~,spk_bins] = histc(spk_t,bin_edges); % index into data for start of window
+    
+    spk_bins2 = spk_bins(:,ones(len,1));
+    toadd = repmat(0:len-1,[length(spk_bins) 1]);
+    
+    spk_bins3 = spk_bins2+toadd;
+    
+    sta_pre{iC} = csc_pre.data(spk_bins3);
+    
+        % ipsi block
+    bin_edges = csc_ipsi.tvec+(dt/2);
+    
+    Sr = restrict(S_ipsi,csc_ipsi.tvec(1)-w(1),csc_ipsi.tvec(end)-w(2));
+    spk_t = Sr.t{iC}+w(1); % times corresponding to start of window
+    
+    [~,spk_bins] = histc(spk_t,bin_edges); % index into data for start of window
+    
+    spk_bins2 = spk_bins(:,ones(len,1));
+    toadd = repmat(0:len-1,[length(spk_bins) 1]);
+    
+    spk_bins3 = spk_bins2+toadd;
+    
+    sta_ipsi{iC} = csc_ipsi.data(spk_bins3);
+    
+    
+        % contra block
+    bin_edges = csc_contra.tvec+(dt/2);
+    
+    Sr = restrict(S_contra,csc_contra.tvec(1)-w(1),csc_contra.tvec(end)-w(2));
+    spk_t = Sr.t{iC}+w(1); % times corresponding to start of window
+    
+    [~,spk_bins] = histc(spk_t,bin_edges); % index into data for start of window
+    
+    spk_bins2 = spk_bins(:,ones(len,1));
+    toadd = repmat(0:len-1,[length(spk_bins) 1]);
+    
+    spk_bins3 = spk_bins2+toadd;
+    
+    sta_contra{iC} = csc_contra.data(spk_bins3);
+    
+    
+        % post block
+    bin_edges = csc_post.tvec+(dt/2);
+    
+    Sr = restrict(S_post,csc_post.tvec(1)-w(1),csc_post.tvec(end)-w(2));
+    spk_t = Sr.t{iC}+w(1); % times corresponding to start of window
+    
+    [~,spk_bins] = histc(spk_t,bin_edges); % index into data for start of window
+    
+    spk_bins2 = spk_bins(:,ones(len,1));
+    toadd = repmat(0:len-1,[length(spk_bins) 1]);
+    
+    spk_bins3 = spk_bins2+toadd;
+    
+    sta_post{iC} = csc_post.data(spk_bins3);
+
+
+end
+%% plot
+figure(104)
+% gen subplot vals
+sub_id = reshape(1:(length(S_pre.t)*4), 4, length(S_pre.t))';
+
+for iCell = 1:length(S_pre.t)
+
+    m_val = max([nanmean(sta_pre{iCell}), nanmean(sta_ipsi{iCell}),...
+        nanmean(sta_contra{iCell}), nanmean(sta_post{iCell})]);
+    
+    min_val = min([nanmean(sta_pre{iCell}), nanmean(sta_ipsi{iCell}),...
+        nanmean(sta_contra{iCell}), nanmean(sta_post{iCell})]);
+    
+    subplot(length(S_pre.t),4,sub_id(iCell, 1))
+    plot(tvec, nanmean(sta_pre{iCell}), 'color', c_ord(1,:))
+    xlim([tvec(1) tvec(end)])
+        text(-.8, mean(nanmean(sta_pre{iCell})), strrep(S_pre.label{iCell}(end-7:end-2), '_', '-'));
+    
+        ylim([min_val m_val])
+    if iCell ~= length(S_pre.t)
+        set(gca, 'xtick', []);
+        set(gca, 'ytick', []);
+    else
+        xlabel('time (s)')
+    end
+    
+    %     subplot(4,3,6)
+    subplot(length(S_pre.t),4,sub_id(iCell, 2))
+    plot(tvec, nanmean(sta_ipsi{iCell}), 'color', c_ord(2,:))
+    xlim([tvec(1) tvec(end)])
+        ylim([min_val m_val])
+
+    if iCell ~= length(S_pre.t)
+        set(gca, 'xtick', []);
+        set(gca, 'ytick', []);
+    end
+    %     subplot(4,3,9)
+    subplot(length(S_pre.t),4,sub_id(iCell, 3))
+    plot(tvec, nanmean(sta_contra{iCell}), 'color', c_ord(3,:))
+    xlim([tvec(1) tvec(end)])
+        ylim([min_val m_val])
+
+    if iCell ~= length(S_pre.t)
+        set(gca, 'xtick', []);
+        set(gca, 'ytick', []);
+    end
+    %     subplot(4,3,12)
+    subplot(length(S_pre.t),4,sub_id(iCell, 4))
+    plot(tvec, nanmean(sta_post{iCell}), 'color', c_ord(4,:))
+    xlim([tvec(1) tvec(end)])
+        ylim([min_val m_val])
+
+    if iCell ~= length(S_pre.t)
+        set(gca, 'xtick', []);
+        set(gca, 'ytick', []);
+    end
+end
+
+%% spike gamma phase histogram
+lg_phase = angle(hilbert(csc_lg.data)); 
+lg_phase = rad2deg(lg_phase); 
+p_bins = rad2deg(-pi:pi/8:3*pi); 
+p_center = p_bins(1:end-1)+30/2;
+
+
+for iCell = 1:length(S_pre.t)
+spike_phase_idx = nearest_idx3(S_pre.t{iCell}, csc_lg.tvec);
+stim_phase = lg_phase(spike_phase_idx);
+phase_S_pre{iCell} = histc([stim_phase stim_phase+360], p_bins);
+
+% ipsi
+spike_phase_idx = nearest_idx3(S_ipsi.t{iCell}, csc_lg.tvec);
+stim_phase = lg_phase(spike_phase_idx);
+phase_S_ipsi{iCell} = histc([stim_phase stim_phase+360], p_bins);
+
+% contra
+spike_phase_idx = nearest_idx3(S_contra.t{iCell}, csc_lg.tvec);
+stim_phase = lg_phase(spike_phase_idx);
+phase_S_contra{iCell} = histc([stim_phase stim_phase+360], p_bins);
+
+% post
+spike_phase_idx = nearest_idx3(S_post.t{iCell}, csc_lg.tvec);
+stim_phase = lg_phase(spike_phase_idx);
+phase_S_post{iCell} = histc([stim_phase stim_phase+360], p_bins);
+
+end
+
+figure(105)
+% gen subplot vals
+sub_id = reshape(1:(length(S_pre.t)*4), 4, length(S_pre.t))';
+c_ord = linspecer(4); 
+for iCell = 1:length(S_pre.t)
+    m_val = max( [phase_S_pre{iCell}(1:end-1)./length(S_pre.t{iCell}),...
+        phase_S_ipsi{iCell}(1:end-1)./length(S_ipsi.t{iCell}), ...
+        phase_S_contra{iCell}(1:end-1)./length(S_contra.t{iCell}), ...
+        phase_S_post{iCell}(1:end-1)./length(S_post.t{iCell})]);
+    
+    m_val = m_val*1.25; 
+    
+    subplot(length(S_pre.t),4,sub_id(iCell, 1))
+    bar(p_center, phase_S_pre{iCell}(1:end-1)./length(S_pre.t{iCell}), 'FaceColor',c_ord(1,:),'EdgeColor',c_ord(1,:))
+    text(-400, mean(phase_S_pre{iCell}(1:end-1)./length(S_pre.t{iCell})), strrep(S_pre.label{iCell}(end-7:end-2), '_', '-'));
+    if iCell == 1
+    text(-180, m_val, ['Filt: ' num2str(cfg_filt.f)])
+    text(-180, m_val*.7, ['id: ' strrep(csc_pre.cfg.SessionID, '_', '-')])
+    end
+    ylim([0 m_val]);
+    set(gca, 'xtick', -180:180:540);
+    if iCell == length(S_pre.t)
+        xlabel('lg phase (deg)')
+    else
+        set(gca, 'xtick', []);
+        set(gca, 'ytick', []);
+    end
+    
+    subplot(length(S_pre.t),4,sub_id(iCell, 2))
+    bar(p_center, phase_S_ipsi{iCell}(1:end-1)./length(S_ipsi.t{iCell}),  'FaceColor',c_ord(2,:),'EdgeColor',c_ord(2,:))
+    ylim([0 m_val]);
+    set(gca, 'xtick', -180:180:540);
+    if iCell ~= length(S_pre.t)
+        set(gca, 'xtick', []);
+        set(gca, 'ytick', []);
+    end
+    
+    subplot(length(S_pre.t),4,sub_id(iCell, 3))
+    bar(p_center, phase_S_contra{iCell}(1:end-1)./length(S_contra.t{iCell}),  'FaceColor',c_ord(3,:),'EdgeColor',c_ord(3,:))
+    ylim([0 m_val]);
+    set(gca, 'xtick', -180:180:540);
+    if iCell ~= length(S_pre.t)
+        set(gca, 'xtick', []);
+        set(gca, 'ytick', []);
+    end
+    
+    subplot(length(S_pre.t),4,sub_id(iCell, 4))
+    bar(p_center, phase_S_post{iCell}(1:end-1)./length(S_post.t{iCell}),  'FaceColor',c_ord(4,:),'EdgeColor',c_ord(4,:))
+    ylim([0 m_val]);
+    set(gca, 'xtick', -180:180:540);
+    if iCell ~= length(S_pre.t)
+        set(gca, 'xtick', []);
+        set(gca, 'ytick', []);
+    end
+end
+%% Ft method
+
+addpath(ft_path)
+ft_defaults
+
+
+% load spikes
+all_spike = [];
+for iS = 1:length(S.label)
+        
+spike = ft_read_spike(S.label{iS}); % needs fixed read_mclust_t.m
+
+all_spike = ft_appendspike([], all_spike, spike);
+end
+data = ft_read_neuralynx_interp(fc);
+data_all = ft_appendspike([],data, spike);
+%%
+spk_t = Pre_S.t{1};
+max_t = 1;
+binsize = 0.01;
+xbin_centers = -max_t-binsize:binsize:max_t+binsize; % first and last bins are to be deleted later
+ac = zeros(size(xbin_centers));
+
+for iSpk = 1:length(spk_t)
+    
+    relative_spk_t = spk_t - spk_t(iSpk);
+    
+    ac = ac + hist(relative_spk_t,xbin_centers); % note that hist() puts all spikes outside the bin centers in the first and last bins! delete later.
+    
+end
+
+xbin = xbin_centers(2:end-1); % remove unwanted bins
+ac = ac(2:end-1);
+
+ac = ac./max(ac); % normalize
+
+%%
+spk_t = S.t{1}; % spike times
+isi = diff(spk_t); % interspike intervals
+
+dt = 0.001; % in s, because spike times are in s
+isi_edges = 0:dt:0.25; % bin edges for ISI histogram
+isi_centers = isi_edges(1:end-1)+dt/2; % for plotting
+
+isih = histc(isi,isi_edges);
+
+bar(isi_centers,isih(1:end-1)); % remember to ignore the last bin of histc() output
+set(gca,'FontSize',20,'XLim',[0 0.25]); xlabel('ISI (s)'); ylabel('count'); grid on;
