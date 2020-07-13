@@ -110,7 +110,7 @@ out_norm.high(out_norm.high == inf) = NaN;
 %% collect the output
 % out_norm.low = circshift(
 
-stats_file = fopen([PARAMS.stats_dir 'Count_stats.txt'], 'w');
+stats_file = fopen([PARAMS.stats_dir 'Count_stats2020.txt'], 'w');
 types= {'Four', 'Piri'};
 for iTypes = 1:length(types)
     if strcmp(types{iTypes}, 'Four')

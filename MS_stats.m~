@@ -153,8 +153,11 @@ elseif strcmp(cfg.stats_method, 'lme')
         % cat all the data together into a 1d array for each variable
         sess_lme = [sess_1d, sess_1d];
         subject_lme = [subject_1d, subject_1d];
-        power_lme = [ipsi_1d, contra_1d];
-        condition_lme = [ipsi_id_1d, contra_id_1d];
+        
+        %                 power_lme = [ipsi_1d, contra_1d];
+        %         condition_lme = [ipsi_id_1d, contra_id_1d];
+        power_lme = [contra_1d,ipsi_1d];
+        condition_lme = [contra_id_1d,ipsi_id_1d];
         
         %% build the LME for this site
         D_power.tbl = table(subject_lme', sess_lme', power_lme', condition_lme','VariableNames',{'SubjectID','SessID', 'Power', 'Condition'});

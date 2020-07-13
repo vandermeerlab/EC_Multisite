@@ -24,9 +24,10 @@ global PARAMS
 c_ord = [linspecer(length(PARAMS.Phases)); [.6 .6 .6]];
 
 %% Collect all the power ratios across the different sites per subject/session
-stats_file = fopen([PARAMS.stats_dir 'AOC_stats.txt'], 'w');
+stats_file = fopen([PARAMS.stats_dir 'AOC_stats_2020.txt'], 'w');
+% stats_file_high = fopen([PARAMS.stats_dir 'AOC_stats_high_2020.txt'], 'w');
 
-for iComp = {'Pink', 'Exp2'}
+for iComp = {'Exp2'}
     
     AOC_low = []; AOC_high = [];
     AOC_con_low = []; AOC_con_high = [];
@@ -120,7 +121,7 @@ for iComp = {'Pink', 'Exp2'}
             cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
             cfg_stats.s_idx= s_idx;
             cfg_stats.ft_size= 20;
-            cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
+            cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit2020'];
             cfg_stats.stats_dir = stats_file;
             MS_stats(cfg_stats, all_AOC_low.(types{iType}));
             
@@ -136,7 +137,7 @@ for iComp = {'Pink', 'Exp2'}
             cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
             cfg_stats.s_idx= s_idx;
             cfg_stats.ft_size= 20;
-            cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
+            cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit2020'];
             cfg_stats.stats_dir = stats_file;
             
             MS_stats(cfg_stats, all_AOC_high.(types{iType}));
