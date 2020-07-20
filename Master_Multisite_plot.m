@@ -101,7 +101,6 @@ close all
 cfg_pow_ratio = [];
 cfg_pow_ratio.method = 'median';
 cfg_pow_ratio.stats_method = 'lme';
-
 MS_plot_power_ratio(cfg_pow_ratio, all_Naris)
 close all
 

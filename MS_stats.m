@@ -43,7 +43,21 @@ switch cfg.method
 end
 
 std_vals = nanstd(data_in, [], 3)';
-SEM_vals = (nanstd(data_in,[],3)./sqrt(size(data_in,3)))';
+
+% get the number of valid session for computing the 
+for ii = size(data_in,1):-1:1;
+    for jj = size(data_in,2):-1:1;
+        this_site = data_in(ii,jj,:); 
+        size_mat(ii, jj) = length(this_site(~isnan(this_site)));
+        sqrt_mat(ii, jj) = sqrt(size_mat(ii, jj)); 
+%         std_mat(ii,jj) = nanstd(this_site); 
+%         SEM_vals(ii,jj) = std_mat(ii,jj)./sqrt_mat(ii,jj); % double check. 
+    end
+end
+% SEM_vals = SEM_vals'; 
+SEM_vals = (nanstd(data_in,[],3)./sqrt_mat)';
+
+% SEM_vals = (nanstd(data_in,[],3)./sqrt(size(data_in,3)))';
 
 fprintf(cfg.stats_dir,['**************** ' cfg.title ' ****************\n']);
 fprintf(cfg.stats_dir,['**************** ' date ' ****************\n']);
@@ -143,6 +157,8 @@ elseif strcmp(cfg.stats_method, 'lme')
         end
     end
     %% loop over targets.  One target per LME for ipsi_v_contra
+            fprintf(cfg.stats_dir, '\n<strong>%s</strong>', 'Ipsi-Contra'); 
+
     for iSite = 1:length(cfg.row_names)
         sess_1d = reshape(squeeze(sess_id(1,iSite,:)), 1, size(sess_id,3));
         subject_1d = reshape(squeeze(subject_id(1,iSite,:)), 1, size(subject_id,3));
@@ -153,8 +169,11 @@ elseif strcmp(cfg.stats_method, 'lme')
         % cat all the data together into a 1d array for each variable
         sess_lme = [sess_1d, sess_1d];
         subject_lme = [subject_1d, subject_1d];
+        
         power_lme = [ipsi_1d, contra_1d];
         condition_lme = [ipsi_id_1d, contra_id_1d];
+%         power_lme = [contra_1d,ipsi_1d];
+%         condition_lme = [contra_id_1d,ipsi_id_1d];
         
         %% build the LME for this site
         D_power.tbl = table(subject_lme', sess_lme', power_lme', condition_lme','VariableNames',{'SubjectID','SessID', 'Power', 'Condition'});
@@ -189,37 +208,37 @@ elseif strcmp(cfg.stats_method, 'lme')
         
         fprintf(cfg.stats_dir,['\n' PARAMS.all_sites{iSite} '& Ipsi-Contra  ']);
         if Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val >= 0.05
-            fprintf(cfg.stats_dir,' & (%2.0f) %4.2f p = %4.2f & %4.2f & %4.2f ',Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).df,...
-               Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).tstat,...
-               Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val,...
-               Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).Lower, Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).Upper);
+            p_val_string = ['p$=$ ' num2str(Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val,'%10.2e')];
             h_ip_con(iSite) = 0; % use for assigning markers later.
             
         elseif (0.049999 > Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val) && (Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val >= 0.01);
-            fprintf(cfg.stats_dir,' & (%2.0f) %4.2f * & %4.2f & %4.2f',Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).df,...
-                Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).tstat,...
-            Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).Lower, Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).Upper); % was p $<$ 0.05
+            p_val_string = '*';
             h_ip_con(iSite) = 1;
             
         elseif (0.009999 > Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val) && (Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val >= 0.001);
-            fprintf(cfg.stats_dir,' & (%2.0f) %4.2f ** & %4.2f & %4.2f',Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).df,...
-                Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).tstat,...
-                Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).Lower,Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).Upper); %p $<$ 0.01
+            p_val_string = '**';
             h_ip_con(iSite) = 1;
             
         elseif 0.0009999 > Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).P_val
-            fprintf(cfg.stats_dir,' & (%2.0f) %4.2f *** & %4.2f & %4.2f',Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).df,...
-                Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).tstat,...
-                Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).Lower,Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).Upper); % p $<$ 0.001
+            p_val_string = '***';
             h_ip_con(iSite) = 1;
-            
         end
+        
+        
+            fprintf(cfg.stats_dir,'& %4.2f & (%2.0f) %4.2f %s & %4.2f & %4.2f',...
+            Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).Est,...
+            Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).df,...
+            Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).tstat,...
+            p_val_string,...
+            Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).Lower,...
+            Stats_out.ipsi_contra.(PARAMS.all_sites{iSite}).Upper); 
+        
         
     end
     
     %% loop over targets.  One target per LME for ipsi_v_control
-    fprintf(cfg.stats_dir,'\nIpsi Vs Control\n');
     
+    fprintf(cfg.stats_dir, '\n<strong>%s</strong>', 'Ipsi-Control'); 
     for iSite = 1:length(cfg.row_names)
         sess_1d = reshape(squeeze(sess_id(1,iSite,:)), 1, size(sess_id,3));
         subject_1d = reshape(squeeze(subject_id(1,iSite,:)), 1, size(subject_id,3));
@@ -233,6 +252,7 @@ elseif strcmp(cfg.stats_method, 'lme')
         power_lme = [ipsi_1d, ctrl_1d];
         condition_lme = [ipsi_id_1d, ctrl_id_1d];
         
+
         %% build the LME for this site
         D_power.tbl = table(subject_lme', sess_lme', power_lme', condition_lme','VariableNames',{'SubjectID','SessID', 'Power', 'Condition'});
         D_power.tbl.SubjectID = nominal(D_power.tbl.SubjectID);
@@ -262,35 +282,36 @@ elseif strcmp(cfg.stats_method, 'lme')
         
         fprintf(cfg.stats_dir,['\n' PARAMS.all_sites{iSite} '& Ipsi-Control  ']);
         if Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val >= 0.05
-            fprintf(cfg.stats_dir,' & (%2.0f) %4.2f p $=$ %4.2f & %4.2f & %4.2f',Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).df,...
-                Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).tstat,...
-                Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val,...
-                Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).Lower, Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).Upper);
+            p_val_string = ['p$=$ ' num2str(Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val,'%10.2e')];
+            
             h_ip_ctr(iSite) = 0; % use for assigning markers later.
             
         elseif (0.0499999 > Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val) && (Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val >= 0.01);
-            fprintf(cfg.stats_dir,' & (%2.0f) %4.2f * & %4.2f & %4.2f',Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).df,...
-                Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).tstat,...
-                Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).Lower, Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).Upper); % was p $<$ 0.05
+            p_val_string = '*';
             h_ip_ctr(iSite) = 1;
             
         elseif (0.0099999> Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val) && (Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val >= 0.001);
-            fprintf(cfg.stats_dir,' & (%2.0f) %4.2f ** & %4.2f & %4.2f',Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).df,...
-                Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).tstat,...
-                Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).Lower, Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).Upper);
+            p_val_string = '**';
             h_ip_ctr(iSite) = 1;
             
         elseif 0.0009999 > Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).P_val
-            fprintf(cfg.stats_dir,'& (%2.0f) %4.2f *** & %4.2f & %4.2f',Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).df,...
-                Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).tstat,...
-                Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).Lower, Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).Upper);
+            p_val_string = '***';
             h_ip_ctr(iSite) = 1;
             
         end
         
+            fprintf(cfg.stats_dir,'& %4.2f & (%2.0f) %4.2f %s & %4.2f & %4.2f',...
+            Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).Est,...
+            Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).df,...
+            Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).tstat,...
+            p_val_string,...
+            Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).Lower,...
+            Stats_out.ipsi_ctrl.(PARAMS.all_sites{iSite}).Upper); % p $<$ 0.001
+        
     end
     %% loop over targets.  One target per LME for Control_v_contra
-    fprintf(cfg.stats_dir,'\nContra Vs Control\n');
+        fprintf(cfg.stats_dir, '\n<strong>%s</strong>', 'Contra-Control'); 
+
     for iSite = 1:length(cfg.row_names)
         sess_1d = reshape(squeeze(sess_id(1,iSite,:)), 1, size(sess_id,3));
         subject_1d = reshape(squeeze(subject_id(1,iSite,:)), 1, size(subject_id,3));
@@ -304,6 +325,12 @@ elseif strcmp(cfg.stats_method, 'lme')
         power_lme = [contra_1d, ctrl_1d];
         condition_lme = [contra_id_1d, ctrl_id_1d];
         
+        % double checking.  Error bars overlap for NAc con-ctr but LME says
+        % sig diff. this is because we have random effects and a mean +/-SEM plot
+        % will not take that into acount
+%         this_SEM_contra = nanstd(contra_1d)./sqrt(length(contra_1d(~isnan(contra_1d))));
+%         this_SEM_ctrl = nanstd(ctrl_1d)./sqrt(length(ctrl_1d(~isnan(ctrl_1d))));
+
         %% build the LME for this site
         D_power.tbl = table(subject_lme', sess_lme', power_lme', condition_lme','VariableNames',{'SubjectID','SessID', 'Power', 'Condition'});
         D_power.tbl.SubjectID = nominal(D_power.tbl.SubjectID);
@@ -331,31 +358,30 @@ elseif strcmp(cfg.stats_method, 'lme')
         
         fprintf(cfg.stats_dir,['\n' PARAMS.all_sites{iSite} ' & Contra-Control  ']);
         if Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val >= 0.05
-            fprintf(cfg.stats_dir,'& (%2.0f) %4.2f p $=$ %4.2f  & %4.2f & %4.2f',Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).df,...
-                Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).tstat,...
-                Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val,...
-                Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).Lower, Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).Upper);
+            p_val_string = ['p$=$ ' num2str(Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val,'%10.2e')];
             h_con_ctr(iSite) = 0; % use for assigning markers later.
             
         elseif (0.0499999 > Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val) && (Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val >= 0.01);
-            fprintf(cfg.stats_dir,'& (%2.0f) %4.2f * & %4.2f & %4.2f',Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).df,...
-                Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).tstat,...
-                Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).Lower, Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).Upper);
+            p_val_string = '*';
             h_con_ctr(iSite) = 1;
             
         elseif (0.0099999 > Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val) && (Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val >= 0.001);
-            fprintf(cfg.stats_dir,'& (%2.0f) %4.2f ** & %4.2f & %4.2f',Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).df,...
-                Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).tstat,...
-                Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).Lower, Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).Upper);
+            p_val_string = '**';
             h_con_ctr(iSite) = 1;
             
         elseif 0.00099999 > Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).P_val
-            fprintf(cfg.stats_dir,'& (%2.0f) %4.2f *** & %4.2f & %4.2f',Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).df,...
-                Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).tstat,...
-                Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).Lower, Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).Upper);
+            p_val_string = '***';
             h_con_ctr(iSite) = 1;
             
         end
+        
+        fprintf(cfg.stats_dir,'& %4.2f & (%2.0f) %4.2f %s & %4.2f & %4.2f',...
+            Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).Est,...
+            Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).df,...
+            Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).tstat,...
+            p_val_string,...
+            Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).Lower,...
+            Stats_out.contra_ctrl.(PARAMS.all_sites{iSite}).Upper); % p $<$ 0.001
         
     end
 else
@@ -467,6 +493,12 @@ else
 end
 
 %close the text file
+
+out.(cfg.method) =avg_vals; 
+out.SEM = SEM_vals; 
+out.LME = Stats_out; 
+
+
 end
 
 
