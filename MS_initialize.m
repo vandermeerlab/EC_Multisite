@@ -51,5 +51,5 @@ set(groot, 'DefaultLegendInterpreter', 'none')
 set(groot,'defaulttextinterpreter','none');
 
 %MS_amp_xcorr_session
-%Master_Multisite_preprocess;
+Master_Multisite_preprocess;
 
