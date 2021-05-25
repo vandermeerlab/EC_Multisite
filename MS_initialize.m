@@ -7,9 +7,9 @@ global PARAMS
 
 if isunix
     PARAMS.data_dir = '/Users/jericcarmichael/Documents/Multisite/'; % where to find the raw data
-    PARAMS.inter_dir = '/Users/jericcarmichael/Documents/Multisite/Temp/'; % where to put intermediate files
+    PARAMS.inter_dir = '/Volumes/Fenrir/MS_2021/'; % where to put intermediate files
     %     PARAMS.stats_dir = '/Users/jericcarmichael/Documents/Multisite/Stats/'; % where to put the statistical output .txt
-    PARAMS.stats_dir = '/Volumes/Fenrir/MS_temp/Stats2/'; % where to put the statistical output .txt
+    PARAMS.stats_dir = '/Volumes/Fenrir/MS_2021/Stats2/'; % where to put the statistical output .txt
     PARAMS.code_base_dir = '/Users/jericcarmichael/Documents/GitHub/vandermeerlab/code-matlab/shared'; % where the codebase repo can be found
     PARAMS.code_MS_dir = '/Users/jericcarmichael/Documents/GitHub/EC_Multisite'; % where the multisite repo can be found
     PARAMS.Chronux_dir = '/Users/jericcarmichael/Documents/chronux_2_11';
@@ -51,5 +51,7 @@ set(groot, 'DefaultLegendInterpreter', 'none')
 set(groot,'defaulttextinterpreter','none');
 
 %MS_amp_xcorr_session
-Master_Multisite_preprocess;
+% Master_Multisite_preprocess;
+
+% Master_Multisite_postprocess;
 

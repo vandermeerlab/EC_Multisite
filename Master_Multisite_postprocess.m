@@ -55,6 +55,18 @@ for iSub = 1%1:length(PARAMS.Subjects)
         fprintf(PARAMS.log, '...complete');
         close all
     end
+    
+    
+    fprintf(PARAMS.log,'\n\nExtracting Bandpower');
+    sess_list = fieldnames(data);
+    for iSess  = 1:length(sess_list)
+        fprintf(['Session ' sess_list{iSess} '\n'])
+        fprintf(PARAMS.log,['\nGetting Bandpower ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+        Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_get_bandpower([],data.(strrep(sess_list{iSess}, '-', '_')), Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
+        fprintf(PARAMS.log, '...complete');
+    end
+
+    
 % end
 
 
