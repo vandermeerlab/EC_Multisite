@@ -20,20 +20,36 @@ fprintf(PARAMS.log, date);
 cd(PARAMS.inter_dir)
 
 %% loop through subjects
-for iSub = 1%1:length(PARAMS.Subjects)
+for iSub = 1:length(PARAMS.Subjects)
 
-% iSub = 4;
     load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
     
-    %%%%%%%%%%%%%%% Power Measures %%%%%%%%%%%%%%%%%
     
+    %% remove the 'trk' segments since they are not used in this project
+    sess_list = fieldnames(data);
+    for iSess  = 1:length(sess_list)
+        fprintf(['<strong>Removing TRK:</strong> ' sess_list{iSess} '\n'])
+        phases = fieldnames(data.(strrep(sess_list{iSess}, '-', '_'))); % get the phases
+        for iPhase = 1:length(phases)
+            sites = fieldnames(data.(strrep(sess_list{iSess}, '-', '_')).(phases{iPhase})); % get the sites 
+            for iSite = 1:length(sites)
+                if contains(sites{iSite}, 'trk') % rem
+                data.(strrep(sess_list{iSess}, '-', '_')).(phases{iPhase}) = ...
+                    rmfield(data.(strrep(sess_list{iSess}, '-', '_')).(phases{iPhase}), sites{iSite});
+                end
+            end
+        end
+    end
+    
+    %% %%%%%%%%%%%%% Power Measures %%%%%%%%%%%%%%%%%
+        fprintf(PARAMS.log,'\n\nExtracting Power Metrics');
+
     
     % generate the PSD for each session for each site
-    fprintf(PARAMS.log,'\n\nExtracting Power Metrics');
     sess_list = fieldnames(data);
     for iSess  = 1:length(sess_list)
         fprintf(['Session ' sess_list{iSess} '\n'])
-        fprintf(PARAMS.log,['\nGetting Power ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+        fprintf(PARAMS.log,['\nGetting PSD ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
         Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')) = MS_collect_psd([],data.(strrep(sess_list{iSess}, '-', '_')));
         fprintf(PARAMS.log, '...complete');
     end
@@ -83,7 +99,7 @@ save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris.mat'], 'Naris', '-v7.3')
 %for iSub = length(PARAMS.Subjects):-1:5
     sess_list = fieldnames(data);
     for iSess = 1:length(sess_list)
-        fprintf(PARAMS.log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+        fprintf(PARAMS.log,['\nGetting amp xcorr ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
         Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).amp = MS_amp_xcorr_session_2([], data.(strrep(sess_list{iSess}, '-', '_')));
         fprintf(PARAMS.log, '...complete');
     end
@@ -93,7 +109,7 @@ save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Naris.mat'], 'Naris', '-v7.3')
 % for iSub = 1:length(PARAMS.Subjects)
     sess_list = fieldnames(data);
     for iSess = 1:length(sess_list)
-        fprintf(PARAMS.log,['\nPlotting Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+        fprintf(PARAMS.log,['\nGetting coherence Spec ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
         Naris.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')).coh = MS_coh_session([], data.(strrep(sess_list{iSess}, '-', '_')));
         fprintf(PARAMS.log, '...complete');
     end
@@ -110,7 +126,7 @@ clearvars -except iSub PARAMS
 end
 
 %% Collect the phase information in an 'All' structure
-MS_collect_phase()
+% MS_collect_phase()
 
 
 

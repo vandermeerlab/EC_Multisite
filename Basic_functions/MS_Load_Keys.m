@@ -26,6 +26,18 @@ if nargin ==1 % if specified, just run it.
     
 else
     file_name = dir('*Keys.m');
+    if length(file_name) > 1
+        for ii =length(file_name):-1:1
+            if strcmpi(file_name(ii).name(1), '.')
+                rm_idx(ii) = 1;
+            else
+                rm_idx(ii) = 0;
+            end
+        end
+        
+    file_name(logical(rm_idx)) = [];
+    end
+
     if isempty(file_name)
         error('No *Keys.m files found here')
     end
@@ -34,6 +46,8 @@ else
     
 
 end
+if exist('Keys')
 ExpKeys = Keys; 
+end
 clear file_name
 end

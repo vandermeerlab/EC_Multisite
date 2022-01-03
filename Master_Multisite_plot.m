@@ -16,7 +16,7 @@
 %% make a log
 global PARAMS
 fprintf(PARAMS.log, date);
-PARAMS.inter_dir = '/Volumes/Fenrir/MS_temp/';
+% PARAMS.inter_dir = '/Volumes/Fenrir/MS_temp/';
 
 %% Extract the data from each recroding phase within each session and separate pot vs track sections
 close all
@@ -103,6 +103,14 @@ cfg_pow_ratio.method = 'median';
 cfg_pow_ratio.stats_method = 'lme';
 MS_plot_power_ratio(cfg_pow_ratio, all_Naris)
 close all
+
+% plot all the power ratio statistics
+cfg_pow_ratio = [];
+cfg_pow_ratio.method = 'median';
+cfg_pow_ratio.stats_method = 'lme';
+MS_plot_bandpower_ratio(cfg_pow_ratio, all_Naris)
+close all
+
 
 % plot all the gamma event statistics
 cfg_count = [];

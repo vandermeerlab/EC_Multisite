@@ -477,7 +477,7 @@ SetFigure([], gcf);
 
 
 %% save the figure
-mkdir(cfg.save_dir)
+if exist(cfg.save_dir, 'dir'); mkdir(cfg.save_dir); end % check is the stats dir exists, if not make the folder. 
 save_name = strrep(cfg.title, ' ', '_');
 if isunix
     fprintf(cfg.stats_dir,['\n\nSaving output in:      '  cfg.save_dir '/' save_name '\n\n']);

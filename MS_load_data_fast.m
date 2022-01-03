@@ -30,7 +30,7 @@ else
     cd([PARAMS.data_dir '\' cfg.fname(1:4) '\' cfg.fname ])
 end
 
-LoadExpKeys()
+ExpKeys = MS_Load_Keys();
 %%
 for iPhase = 1:length(PARAMS.Phases)
     if isunix
