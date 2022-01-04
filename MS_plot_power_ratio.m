@@ -24,9 +24,10 @@ global PARAMS
 c_ord = [linspecer(length(PARAMS.Phases)); [.6 .6 .6]];
 
 %% Collect all the power ratios across the different sites per subject/session
-stats_file = fopen([PARAMS.stats_dir 'AOC_stats.txt'], 'w');
+stats_file = fopen([PARAMS.stats_dir 'AOC_stats_2020.txt'], 'w');
+% stats_file_high = fopen([PARAMS.stats_dir 'AOC_stats_high_2020.txt'], 'w');
 
-for iComp = {'Pink', 'Exp2'}
+for iComp = {'Exp2'}
     
     AOC_low = []; AOC_high = [];
     AOC_con_low = []; AOC_con_high = [];
@@ -120,9 +121,9 @@ for iComp = {'Pink', 'Exp2'}
             cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
             cfg_stats.s_idx= s_idx;
             cfg_stats.ft_size= 20;
-            cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
+            cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit2020'];
             cfg_stats.stats_dir = stats_file;
-            MS_stats(cfg_stats, all_AOC_low.(types{iType}));
+            stats_out.(types{iType}).(Exp{iExp}).low = MS_stats(cfg_stats, all_AOC_low.(types{iType}));
             
             close all
             
@@ -136,10 +137,10 @@ for iComp = {'Pink', 'Exp2'}
             cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post'};
             cfg_stats.s_idx= s_idx;
             cfg_stats.ft_size= 20;
-            cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit'];
+            cfg_stats.save_dir= [PARAMS.inter_dir 'AOC_fit2020'];
             cfg_stats.stats_dir = stats_file;
             
-            MS_stats(cfg_stats, all_AOC_high.(types{iType}));
+            stats_out.(types{iType}).(Exp{iExp}).high = MS_stats(cfg_stats, all_AOC_high.(types{iType}));
             close all
              end
     end
@@ -147,7 +148,7 @@ end
             
             
 %% descriptive stats
-fid = fopen([PARAMS.stats_dir 'AUC_descriptive.txt'], 'w');
+fid = fopen([PARAMS.stats_dir 'AUC_descriptive2020.txt'], 'w');
 
 bands = {'low', 'high'};
 phases = {'pre'  'ipsi'  'contra'  'post', 'control'};
@@ -157,28 +158,35 @@ fprintf(fid, ['**************** ' date ' ****************\n']);
 fprintf(fid, ['\nAUC using White_Pxx and ' iComp{1} '\n']);
 for iBand= 1:length(bands)
     this_pow = [];
-if strcmp(bands{iBand}, 'low')
-    this_pow = all_AOC_low.White_Pxx; 
-elseif strcmp(bands{iBand}, 'high')
-    this_pow = all_AOC_high.White_Pxx; 
-end
+    if strcmp(bands{iBand}, 'low')
+        this_pow = all_AOC_low.White_Pxx;
+    elseif strcmp(bands{iBand}, 'high')
+        this_pow = all_AOC_high.White_Pxx;
+    end
+    
+    
     fprintf(fid,['\n-------- ' bands{iBand} '---------\n']);
     for iSite = 1:length(sites)
         n_spaces = 6 - length(sites{iSite});
         fprintf(fid,[sites{iSite} ':%s' ], repmat(' ', 1,n_spaces));
         fprintf(fid,repmat('\b', 1, length(sites{iSite})));
         for iPhase = 1:size(this_pow,1)
-            all_AUC.(bands{iBand})(iSite, iPhase) = nanmedian(this_pow(iPhase, iSite,:));
-            all_AUC_std.(bands{iBand})(iSite, iPhase) = nanstd(this_pow(iPhase, iSite,:))./sqrt(size(this_pow(iPhase, iSite,:),1));
-            fprintf(fid,[phases{iPhase} ' median= %.2f +/- %.2f  '], all_AUC.(bands{iBand})(iSite, iPhase), all_AUC_std.(bands{iBand})(iSite,iPhase)); 
+            
+            %             all_AUC.(bands{iBand})(iSite, iPhase) = nanmedian(this_pow(iPhase, iSite,:));
+            %             all_AUC_std.(bands{iBand})(iSite, iPhase) = nanstd(this_pow(iPhase, iSite,:))./sqrt(size(this_pow(iPhase, iSite,:),3));
+            %             fprintf(fid,[phases{iPhase} ' median= %.2f +/- %.2f  '], all_AUC.(bands{iBand})(iSite, iPhase), all_AUC_std.(bands{iBand})(iSite,iPhase));
+            these_vals = this_pow(iPhase, iSite,:);
+            SEM = nanstd(these_vals)/   sqrt(length(these_vals(~isnan(these_vals))));
+            fprintf(fid,[phases{iPhase} ' median= %.2f +/- %.2f  '], nanmedian(these_vals), SEM);
+            
         end
-        fprintf(fid,'\n')
+        fprintf(fid,'\n');
     end
 end
 
 
 
-fclose(fid)
+fclose(fid);
             % same but using normalized
             
 %             cfg_stats = [];

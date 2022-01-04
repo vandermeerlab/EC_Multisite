@@ -22,8 +22,9 @@ for iPhase = 1:length(phases)
     
     % get the psd for each site. 
     for iSite = 1:length(sites)
-       fprintf(['\n' 'Processing Phase: '  phases{iPhase} '  Site: ' sites{iSite}])
+       fprintf('\n<strong>%s</strong> Processing Phase: %s Site: %s',mfilename, phases{iPhase}, sites{iSite})
        MS_data_out.(phases{iPhase}).(sites{iSite}).psd = MS_get_psd([], MS_data_in.(phases{iPhase}).(sites{iSite})); 
     end
     
 end
+fprintf('\n')

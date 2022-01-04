@@ -110,7 +110,7 @@ out_norm.high(out_norm.high == inf) = NaN;
 %% collect the output
 % out_norm.low = circshift(
 
-stats_file = fopen([PARAMS.stats_dir 'Count_stats.txt'], 'w');
+stats_file = fopen([PARAMS.stats_dir 'Count_stats2020.txt'], 'w');
 types= {'Four', 'Piri'};
 for iTypes = 1:length(types)
     if strcmp(types{iTypes}, 'Four')
@@ -118,57 +118,57 @@ for iTypes = 1:length(types)
     else strcmp(types{iTypes}, 'Piri')
         s_idx = [3 4 5 6];
     end
-    cfg_stats = [];
-    cfg_stats.title = ['Count low gamma ' types{iTypes}] ;
-    cfg_stats.method= 'median';
-    cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
-    cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post', 'control'};
-    cfg_stats.s_idx= s_idx;
-    cfg_stats.ft_size= 20;
-    cfg_stats.stats_method = 'lme';
-    cfg_stats.save_dir= [PARAMS.inter_dir 'Count'];
-    cfg_stats.stats_dir = stats_file;
-    MS_stats(cfg_stats,out.low)
-    close all
-    
-    cfg_stats = [];
-    cfg_stats.title = ['Count high gamma ' types{iTypes}];
-    cfg_stats.method= 'median';
-    cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
-    cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post', 'control'};
-    cfg_stats.s_idx= s_idx;
-    cfg_stats.ft_size= 20;
-    cfg_stats.stats_method = 'lme';
-    cfg_stats.save_dir= [PARAMS.inter_dir 'Count'];
-    cfg_stats.stats_dir = stats_file;
-    MS_stats(cfg_stats,out.high)
-    
-    %normalized
-    cfg_stats = [];
-    cfg_stats.title = ['Count low gamma norm ' types{iTypes}];
-    cfg_stats.method= 'median';
-    cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
-    cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post', 'control'};
-    cfg_stats.s_idx= s_idx;
-    cfg_stats.ft_size= 20;
-    cfg_stats.stats_method = 'lme';
-    cfg_stats.save_dir= [PARAMS.inter_dir 'Count'];
-    cfg_stats.stats_dir = stats_file;
-    MS_stats(cfg_stats,out_norm.low)
-    close all
-    
-    cfg_stats = [];
-    cfg_stats.title = ['Count high gamma norm ' types{iTypes}];
-    cfg_stats.method= 'median';
-    cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
-    cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post', 'control'};
-    cfg_stats.s_idx= s_idx;
-    cfg_stats.ft_size= 20;
-    cfg_stats.stats_method = 'lme';
-    cfg_stats.save_dir= [PARAMS.inter_dir 'Count'];
-    cfg_stats.stats_dir = stats_file;
-    MS_stats(cfg_stats,out_norm.high)
-    close all
+%     cfg_stats = [];
+%     cfg_stats.title = ['Count low gamma ' types{iTypes}] ;
+%     cfg_stats.method= 'median';
+%     cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
+%     cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post', 'control'};
+%     cfg_stats.s_idx= s_idx;
+%     cfg_stats.ft_size= 20;
+%     cfg_stats.stats_method = 'lme';
+%     cfg_stats.save_dir= [PARAMS.inter_dir 'Count2020'];
+%     cfg_stats.stats_dir = stats_file;
+%     MS_stats(cfg_stats,out.low)
+%     close all
+%     
+%     cfg_stats = [];
+%     cfg_stats.title = ['Count high gamma ' types{iTypes}];
+%     cfg_stats.method= 'median';
+%     cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
+%     cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post', 'control'};
+%     cfg_stats.s_idx= s_idx;
+%     cfg_stats.ft_size= 20;
+%     cfg_stats.stats_method = 'lme';
+%     cfg_stats.save_dir= [PARAMS.inter_dir 'Count2020'];
+%     cfg_stats.stats_dir = stats_file;
+%     MS_stats(cfg_stats,out.high)
+%     
+%     %normalized
+%     cfg_stats = [];
+%     cfg_stats.title = ['Count low gamma norm ' types{iTypes}];
+%     cfg_stats.method= 'median';
+%     cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
+%     cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post', 'control'};
+%     cfg_stats.s_idx= s_idx;
+%     cfg_stats.ft_size= 20;
+%     cfg_stats.stats_method = 'lme';
+%     cfg_stats.save_dir= [PARAMS.inter_dir 'Count2020'];
+%     cfg_stats.stats_dir = stats_file;
+%     MS_stats(cfg_stats,out_norm.low)
+%     close all
+%     
+%     cfg_stats = [];
+%     cfg_stats.title = ['Count high gamma norm ' types{iTypes}];
+%     cfg_stats.method= 'median';
+%     cfg_stats.row_names= {'PL'  'IL'  'OFC'  'Piri OFC'  'NAc'  'Piri NAc'  'CG'};
+%     cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post', 'control'};
+%     cfg_stats.s_idx= s_idx;
+%     cfg_stats.ft_size= 20;
+%     cfg_stats.stats_method = 'lme';
+%     cfg_stats.save_dir= [PARAMS.inter_dir 'Count'];
+%     cfg_stats.stats_dir = stats_file;
+%     MS_stats(cfg_stats,out_norm.high)
+%     close all
     
     % get stats for the rate
         %normalized
@@ -180,9 +180,9 @@ for iTypes = 1:length(types)
     cfg_stats.s_idx= s_idx;
     cfg_stats.ft_size= 20;
     cfg_stats.stats_method = 'lme';
-    cfg_stats.save_dir= [PARAMS.inter_dir 'Count'];
+    cfg_stats.save_dir= [PARAMS.inter_dir 'Count2020'];
     cfg_stats.stats_dir = stats_file;
-    MS_stats(cfg_stats,rate.low)
+    stats_out.(types{iTypes}).low = MS_stats(cfg_stats,rate.low);
     close all
     
     cfg_stats = [];
@@ -193,69 +193,81 @@ for iTypes = 1:length(types)
     cfg_stats.s_idx= s_idx;
     cfg_stats.ft_size= 20;
     cfg_stats.stats_method = 'lme';
-    cfg_stats.save_dir= [PARAMS.inter_dir 'Count'];
+    cfg_stats.save_dir= [PARAMS.inter_dir 'Count2020'];
     cfg_stats.stats_dir = stats_file;
-    MS_stats(cfg_stats,rate.high)
+    stats_out.(types{iTypes}).low = MS_stats(cfg_stats,rate.high);
     close all
 end
 
 
 %% descriptive stats
-fid = fopen([PARAMS.stats_dir 'Count_descriptive.txt'], 'w');
+fid = fopen([PARAMS.stats_dir 'Count_descriptive2020.txt'], 'w');
 
 % Get the length and rate
 all_len.low = []; all_rate.low = [];
 all_len.high = []; all_rate.high = [];
 
 
-fprintf(fid, ['**************** ' date ' ****************\n'])
+fprintf(fid, ['**************** ' date ' ****************\n']);
 
-fprintf(fid, '\nnumber of events\n')
+fprintf(fid, '\nnumber of events\n');
 for iBand= 1:length(bands)
-    fprintf(fid,['\n-------- ' bands{iBand} '---------\n'])
+    fprintf(fid,['\n-------- ' bands{iBand} '---------\n']);
     for iSite = 1:length(sites)
-        fprintf(fid,[sites{iSite} ':       '])
-        fprintf(fid,repmat('\b', 1, length(sites{iSite})))
+        fprintf(fid,[sites{iSite} ':       ']);
+        fprintf(fid,repmat('\b', 1, length(sites{iSite})));
         for iPhase = 1:length(phases)
-            all_count.(bands{iBand})(iSite, iPhase) = nanmedian(all_events_count.(bands{iBand}).(sites{iSite}).(phases{iPhase}));
-            all_count_std.(bands{iBand})(iSite, iPhase) = nanstd(all_events_count.(bands{iBand}).(sites{iSite}).(phases{iPhase}))./sqrt(size(all_events_count.(bands{iBand}).(sites{iSite}).(phases{iPhase}),1));
-            fprintf(fid,[phases{iPhase} ' median= %.2f +/- %.2f   '], all_count.(bands{iBand})(iSite, iPhase), all_count_std.(bands{iBand})(iSite, iPhase))
+%             all_count.(bands{iBand})(iSite, iPhase) = nanmedian(all_events_count.(bands{iBand}).(sites{iSite}).(phases{iPhase}));
+%             all_count_std.(bands{iBand})(iSite, iPhase) = nanstd(all_events_count.(bands{iBand}).(sites{iSite}).(phases{iPhase}))./sqrt(size(all_events_count.(bands{iBand}).(sites{iSite}).(phases{iPhase}),1));
+%             
+            these_vals = all_events_count.(bands{iBand}).(sites{iSite}).(phases{iPhase}); 
+            SEM = nanstd(these_vals)/   sqrt(length(these_vals(~isnan(these_vals))));
+            fprintf(fid,[phases{iPhase} ' median= %.2f +/- %.2f  '], nanmedian(these_vals), SEM);
+            
+%             fprintf(fid,[phases{iPhase} ' median= %.2f +/- %.2f   '], all_count.(bands{iBand})(iSite, iPhase), all_count_std.(bands{iBand})(iSite, iPhase))
         end
-        fprintf(fid,'\n')
+        fprintf(fid,'\n');
     end
 end
 
-fprintf(fid, '\nRate of events\n')
+fprintf(fid, '\nRate of events\n');
 for iBand= 1:length(bands)
-    fprintf(fid,['\n-------- ' bands{iBand} '---------\n'])
+    fprintf(fid,['\n-------- ' bands{iBand} '---------\n']);
     for iSite = 1:length(sites)
-        fprintf(fid,[sites{iSite} ':       '])
-        fprintf(fid,repmat('\b', 1, length(sites{iSite})))
+        fprintf(fid,[sites{iSite} ':       ']);
+        fprintf(fid,repmat('\b', 1, length(sites{iSite})));
         for iPhase = 1:length(phases)
-            all_rate.(bands{iBand})(iSite, iPhase) = nanmedian(rate.(bands{iBand})(iPhase, iSite, :));
-            all_rate_std.(bands{iBand})(iSite, iPhase) = nanstd(rate.(bands{iBand})(iPhase, iSite, :))./sqrt(size(rate.(bands{iBand})(iPhase, iSite, :),1));
-            fprintf(fid,[phases{iPhase} ' median= %.2f +/- %.2f   '], all_rate.(bands{iBand})(iSite, iPhase), all_rate_std.(bands{iBand})(iSite, iPhase))
+%             all_rate.(bands{iBand})(iSite, iPhase) = nanmedian(rate.(bands{iBand})(iPhase, iSite, :));
+%             all_rate_std.(bands{iBand})(iSite, iPhase) = nanstd(rate.(bands{iBand})(iPhase, iSite, :))./sqrt(size(rate.(bands{iBand})(iPhase, iSite, :),1));
+%             fprintf(fid,[phases{iPhase} ' median= %.2f +/- %.2f   '], all_rate.(bands{iBand})(iSite, iPhase), all_rate_std.(bands{iBand})(iSite, iPhase))
+            these_vals = rate.(bands{iBand})(iPhase, iSite, :); 
+            SEM = nanstd(these_vals)/   sqrt(length(these_vals(~isnan(these_vals))));
+            fprintf(fid,[phases{iPhase} ' median= %.2f +/- %.2f  '], nanmedian(these_vals), SEM);
         end
-        fprintf(fid,'\n')
+        fprintf(fid,'\n');
     end
 end
 
-fprintf(fid, '\nLength of events\n')
-for iBand= 1:length(bands)
-    fprintf(fid,['\n-------- ' bands{iBand} '---------\n'])
-    for iSite = 1:length(sites)
-        fprintf(fid,[sites{iSite} ':       '])
-        fprintf(fid,repmat('\b', 1, length(sites{iSite})))
+fprintf(fid, '\nLength of events\n');
+for iBand= 1:length(bands);
+    fprintf(fid,['\n-------- ' bands{iBand} '---------\n']);
+    for iSite = 1:length(sites);
+        fprintf(fid,[sites{iSite} ':       ']);
+        fprintf(fid,repmat('\b', 1, length(sites{iSite})));
         for iPhase = 1:length(phases)
-            all_len.(bands{iBand})(iSite, iPhase) = nanmedian(all_events_len.(bands{iBand}).(sites{iSite}).(phases{iPhase}));
-            all_len_std.(bands{iBand})(iSite, iPhase) = nanstd(all_events_len.(bands{iBand}).(sites{iSite}).(phases{iPhase}))./sqrt(size(all_events_len.(bands{iBand}).(sites{iSite}).(phases{iPhase}),1));
-            fprintf(fid,[phases{iPhase} ' median= %.2f +/- %.2f   '], all_len.(bands{iBand})(iSite, iPhase)*1000, all_len_std.(bands{iBand})(iSite, iPhase)*1000)
+%             all_len.(bands{iBand})(iSite, iPhase) = nanmedian(all_events_len.(bands{iBand}).(sites{iSite}).(phases{iPhase}));
+%             all_len_std.(bands{iBand})(iSite, iPhase) = nanstd(all_events_len.(bands{iBand}).(sites{iSite}).(phases{iPhase}))./sqrt(size(all_events_len.(bands{iBand}).(sites{iSite}).(phases{iPhase}),1));
+%             fprintf(fid,[phases{iPhase} ' median= %.2f +/- %.2f   '], all_len.(bands{iBand})(iSite, iPhase)*1000, all_len_std.(bands{iBand})(iSite, iPhase)*1000)
+            these_vals = all_events_len.(bands{iBand}).(sites{iSite}).(phases{iPhase}); 
+            SEM = nanstd(these_vals)/   sqrt(length(these_vals(~isnan(these_vals))));
+            fprintf(fid,[phases{iPhase} ' median= %.2f +/- %.2f  '], nanmedian(these_vals)*1000, SEM*1000);
+
         end
-        fprintf(fid,'\n')
+        fprintf(fid,'\n');
     end
 end
 
-fclose(fid)
+fclose(fid);
 % % make a box plot (sample)
 % this_data = [all_events_len.low.PL.pre; all_events_len.low.PL.contra, ];
 % % this_group =
@@ -310,7 +322,7 @@ c = get(gca, 'Children');
 legend(c(1:4), 'pre', 'ipsi', 'contra', 'post' );
 ylabel('Event length (ms)')
 SetFigure([], gcf)
-cfg.save_dir = [PARAMS.inter_dir 'Count'];
+cfg.save_dir = [PARAMS.inter_dir 'Count2020'];
 save_name = 'all_site_length';
 if isunix
     %           fprintf(cfg.stats_dir,['\n\nSaving output in:      '  cfg.save_dir '/' save_name '\n\n'])
@@ -366,7 +378,7 @@ legend(c(1:4), 'pre', 'ipsi', 'contra', 'post' );
 ylabel('Event length (ms)')
 SetFigure([], gcf)
 
-cfg.save_dir = [PARAMS.inter_dir 'Count'];
+cfg.save_dir = [PARAMS.inter_dir 'Count2020'];
 save_name = 'four_site_length';
 if isunix
     %           fprintf(cfg.stats_dir,['\n\nSaving output in:      '  cfg.save_dir '/' save_name '\n\n'])
@@ -420,7 +432,7 @@ legend(c(1:4), 'pre', 'ipsi', 'contra', 'post' );
 ylabel('Event length (ms)')
 SetFigure([], gcf)
 
-cfg.save_dir = [PARAMS.inter_dir 'Count'];
+cfg.save_dir = [PARAMS.inter_dir 'Count2020'];
 save_name = 'piri_site_length';
 if isunix
     %           fprintf(cfg.stats_dir,['\n\nSaving output in:      '  cfg.save_dir '/' save_name '\n\n'])

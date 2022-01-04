@@ -44,7 +44,7 @@ Naris_out = Naris_in;
 % from 1 -120Hz.
 ii = 200;
 type = {'Pxx', 'F'; 'White_Pxx','White_F'};
-for iType = 1:length(type);
+for iType = 1:length(type)
     sites = fieldnames(Naris_in.pre);
     for iSite = 1:length(sites)
         Naris_in.control.(sites{iSite}).psd.(type{iType,1}) = mean([Naris_in.pre.(sites{iSite}).psd.(type{iType,1}), Naris_in.post.(sites{iSite}).psd.(type{iType,1})],2);

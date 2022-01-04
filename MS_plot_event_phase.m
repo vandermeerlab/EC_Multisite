@@ -57,6 +57,7 @@ for iSub = cfg.Subjects
     all_mean = []; all_std = [];
     measures = fieldnames(mat_in.(sess_list{1}).(PARAMS.Phases{1}));
     
+    
     for ii = size(labels,1):-1:1
         for jj = size(labels,2):-1:1
             Idx_mat(ii, jj) = str2double([num2str(ii) num2str(jj)]);
@@ -333,7 +334,7 @@ for ii = 1:length(labels)
 end
 c_ord = linspecer(length(c_labels));
 %% cycle through measures to get plots (used for checks)
-for iMs = 1:length(measures)
+for iMs = cfg.measures
     % get the line plots for certain veriables
     if strcmp(measures{iMs}, 'Phase_lag_cxy') || strcmp(measures{iMs}, 'PS_slope') || strcmp(measures{iMs}, 'COH_cxx') || strcmp(measures{iMs}, 'AMP_AC')
         Phase_c = linspecer(4);
@@ -496,7 +497,7 @@ for iMs = cfg.measures%[3 10]%1:length(measures)
                             hold on
                             if strcmp(labels{ii,jj}, 'CG_OFC') || strcmp(labels{ii,jj}, 'OFC_CG')
                                 this_color = cfg_def.color.OFC_CG;
-                            elseif strcmp(labels{ii,jj}, 'CG_OFC') || strcmp(labels{ii,jj}, 'OFC_CG')
+                            elseif strcmp(labels{ii,jj}, 'NAc_OFC') || strcmp(labels{ii,jj}, 'OFC_NAc')
                                 this_color = cfg_def.color.OFC_NAc;
                             else
                                 if sum(ismember(c_labels, labels{ii, jj}))
@@ -603,7 +604,14 @@ for iMs = cfg.measures%[3 10]%1:length(measures)
                                     % add text
                                     mean_txt = text(60, 13, ['mean:' num2str(contra_mean,'%.2f') ' ' char(177) ' ' ...
                                         num2str(contra_std,'%.2f')], 'color', 'k', 'fontsize', 48, 'FontName', 'helvetica');
-                                end
+                                    
+                                    % just for text in paper (get 55-70Hz) mean for CG-OFC
+                                    if (iMs ==10 && iBand ==1 && strcmp(labels{ii,jj}, 'CG_OFC')) || (iMs ==10 && iBand ==1 &&strcmp(labels{ii,jj}, 'OFC_CG')) 
+                                        contra_mid_mean = nanmean(this_ps(nearest_idx(55, this_f):nearest_idx(70, this_f)));
+                                        contra_mid_std = nanstd(this_ps(nearest_idx(55, this_f):nearest_idx(70, this_f)));
+                                        fprintf('\nOFC-CG 55-70Hz mean %.2fms sd %.2fms \n', contra_mid_mean, contra_mid_std)
+                                    
+                                    end
                                 % find the ipsi
                                 if ~isempty(all_mean.(measures{iMs}).ipsi.(bands{iBand}){ii, jj})
                                     this_ps = all_mean.PS_slope.ipsi.(bands{iBand}){ii,jj};

@@ -16,7 +16,7 @@
 %% make a log
 global PARAMS
 fprintf(PARAMS.log, date);
-PARAMS.inter_dir = '/Volumes/Fenrir/MS_temp/';
+% PARAMS.inter_dir = '/Volumes/Fenrir/MS_temp/';
 
 %% Extract the data from each recroding phase within each session and separate pot vs track sections
 close all
@@ -101,9 +101,16 @@ close all
 cfg_pow_ratio = [];
 cfg_pow_ratio.method = 'median';
 cfg_pow_ratio.stats_method = 'lme';
-
 MS_plot_power_ratio(cfg_pow_ratio, all_Naris)
 close all
+
+% plot all the power ratio statistics
+cfg_pow_ratio = [];
+cfg_pow_ratio.method = 'median';
+cfg_pow_ratio.stats_method = 'lme';
+MS_plot_bandpower_ratio(cfg_pow_ratio, all_Naris)
+close all
+
 
 % plot all the gamma event statistics
 cfg_count = [];
@@ -140,19 +147,19 @@ close all
 close all
 cfg_event = [];
 cfg_event.Subjects = {'all'}; % for speed
-cfg_event.measures = [3];   %measures: use the idx
-        % 'COH_cxx'
-        % 'COH_fxx'
-        % 'AMP_AC' (usefule)
-        % 'AMP_LAG'
-        % 'AMP_AC_max'
-        % 'AMP_LAG_max'
-        % 'Phase_lag_cxy'
-        % 'Phase_lag_F'
-        % 'Phase_lag_mean'
-        % 'PS_slope' (useful)
-        % 'PS_F'
-        % 'EVT_COUNT'
+cfg_event.measures = [10];   %measures: use the idx
+        % 1 'COH_cxx'
+        % 2 'COH_fxx'
+        % 3 'AMP_AC' (usefule)
+        % 4 'AMP_LAG'
+        % 5 'AMP_AC_max'
+        % 6 'AMP_LAG_max'
+        % 7 'Phase_lag_cxy'
+        % 8 'Phase_lag_F'
+        % 9 'Phase_lag_mean'
+        % 10 'PS_slope' (useful)
+        % 11 'PS_F'
+        % 12 'EVT_COUNT' (not used, better implementation elseware )
 % cfg_event.Subjects = {'R102', 'R104', 'R107', 'R108', 'R112','R122','R123'}; % each subject by themselves.  Used for subpanels on F3
 Phase_events_out = MS_plot_event_phase(cfg_event);
 

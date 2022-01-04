@@ -132,6 +132,13 @@ for iSub = 1:length(subjects) % loop subjects
                     S2_dist_idx = find(not(cellfun('isempty',strfind(dist_labels, sites{2}))));
                     
                     
+%                          % distance to PC using mean distance
+%                         dist_val = mean([distance_pc(S1_dist_idx, 1,iSub),distance_pc(S1_dist_idx, 1,iSub)]);
+%                                   % distance to PC using mean distance
+%                         dist_val = sum([distance_pc(S1_dist_idx, 1,iSub),distance_pc(S1_dist_idx, 1,iSub)]);
+%                   
+%                     
+%                     % distance to PC using max val 
                     if distance_pc(S1_dist_idx, 1,iSub) > distance_pc(S2_dist_idx, 1,iSub)
                         dist_val = distance_pc(S1_dist_idx, 1,iSub);
                     elseif distance_pc(S1_dist_idx, 1,iSub) < distance_pc(S2_dist_idx, 1,iSub)
@@ -139,6 +146,15 @@ for iSub = 1:length(subjects) % loop subjects
                     else
                         dist_val = distance_pc(S1_dist_idx, 1,iSub);
                     end
+                    
+%                         % distance to PC using min val 
+%                     if distance_pc(S1_dist_idx, 1,iSub) > distance_pc(S2_dist_idx, 1,iSub)
+%                         dist_val = distance_pc(S2_dist_idx, 1,iSub);
+%                     elseif distance_pc(S1_dist_idx, 1,iSub) < distance_pc(S2_dist_idx, 1,iSub)
+%                         dist_val = distance_pc(S1_dist_idx, 1,iSub);
+%                     else
+%                         dist_val = distance_pc(S2_dist_idx, 1,iSub);
+%                     end
                     
                     % hold the segment values for each case
                     temp.(PARAMS.Phases{iPhase}).low_coh = this_low_coh;
@@ -161,6 +177,12 @@ for iSub = 1:length(subjects) % loop subjects
                     (temp.contra.high_amp - temp.ipsi.high_amp)./(temp.contra.high_amp + temp.ipsi.high_amp),...
                     (temp.contra.low_coh - temp.ipsi.low_coh)./(temp.contra.low_coh + temp.ipsi.low_coh),...
                     (temp.contra.high_coh - temp.ipsi.high_coh)./(temp.contra.high_coh + temp.ipsi.high_coh)]);
+                
+%                                 out_matrix.contrast = cat(1, out_matrix.contrast,[dist_val, iSub, iSess, pair_idx,...
+%                     (temp.contra.low_amp - temp.ipsi.low_amp),...
+%                     (temp.contra.high_amp - temp.ipsi.high_amp),...
+%                     (temp.contra.low_coh - temp.ipsi.low_coh),...
+%                     (temp.contra.high_coh - temp.ipsi.high_coh)]);
                 
                 % hold values for comparisons later on
                 comp_low_coh_array(5,pair_idx,count) =  nanmean([temp.pre.low_coh, temp.post.low_coh]);
@@ -189,7 +211,7 @@ comp_high_coh_array(:,unused_pairs, :) = [];
 comp_low_amp_array(:,unused_pairs, :) = [];
 comp_high_amp_array(:,unused_pairs, :) = [];
 
-stats_file = fopen([PARAMS.stats_dir 'COH_low_LME_stats.txt'], 'w');
+stats_file = fopen([PARAMS.stats_dir 'COH_low_LME_stats_2020.txt'], 'w');
 
 
 cfg_stats = [];
@@ -201,65 +223,64 @@ cfg_stats.col_names= {'pre'  'ipsi'  'contra'  'post', 'control'};
 cfg_stats.s_idx= 1:length(cfg_stats.row_names);
 cfg_stats.ft_size= 20;
 cfg_stats.stats_method = 'lme';
-cfg_stats.save_dir= [PARAMS.inter_dir 'Phase_Stats_low_coh'];
+cfg_stats.save_dir= [PARAMS.inter_dir 'Phase_Stats_low_coh_2020'];
 cfg_stats.stats_dir = stats_file;
 MS_stats_Pairs(cfg_stats,comp_low_coh_array)
 
 close all
 % same thing for high coh
 cfg_stats.title = 'Coh high gamma';
-cfg_stats.save_dir= [PARAMS.inter_dir 'Phase_Stats_high_coh'];
-stats_file = fopen([PARAMS.stats_dir 'COH_high_LME_stats.txt'], 'w');
+cfg_stats.save_dir= [PARAMS.inter_dir 'Phase_Stats_high_coh_2020'];
+stats_file = fopen([PARAMS.stats_dir 'COH_high_LME_stats_2020.txt'], 'w');
 cfg_stats.stats_dir = stats_file;
 MS_stats_Pairs(cfg_stats,comp_high_coh_array)
 close all
 
 % same thing for low amp
 cfg_stats.title = 'Amp low gamma';
-cfg_stats.save_dir= [PARAMS.inter_dir 'Phase_Stats_low_amp'];
-stats_file = fopen([PARAMS.stats_dir 'AMP_low_LME_stats.txt'], 'w');
+cfg_stats.save_dir= [PARAMS.inter_dir 'Phase_Stats_low_amp_2020'];
+stats_file = fopen([PARAMS.stats_dir 'AMP_low_LME_stats_2020.txt'], 'w');
 cfg_stats.stats_dir = stats_file;
 MS_stats_Pairs(cfg_stats,comp_low_amp_array)
 close all
 
 % same thing for high amp
 cfg_stats.title = 'Amp high gamma';
-cfg_stats.save_dir= [PARAMS.inter_dir 'Phase_Stats_high_amp'];
-stats_file = fopen([PARAMS.stats_dir 'AMP_high_LME_stats.txt'], 'w');
+cfg_stats.save_dir= [PARAMS.inter_dir 'Phase_Stats_high_amp_2020'];
+stats_file = fopen([PARAMS.stats_dir 'AMP_high_LME_stats_2020.txt'], 'w');
 cfg_stats.stats_dir = stats_file;
 MS_stats_Pairs(cfg_stats,comp_high_amp_array)
 close all
 
 %% match distance to each subject/site/session for the difference between contra and ipsi power
-% Subjects = {'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7'};
-% sites = {'PL', 'IL', 'OFC', 'NAc', 'CG'};
-
-% %% apply the distance to OB in a corresponding array.
-% c_ord = linspecer(length(sites));
-% m_ord = {'o', '+', '*', 'x', 's', 'd', 'p'};
-% figure(100)
-% hold on
-% for iSub = 1:length(Subjects)
-%     for iSite = 1:length(sites)
-%         if ~isnan(distance_ob(iSite,1,iSub))
-% %         plot(distance_ob(iSite,:,iSub), this_power_mat(iSite,:,iSub),m_ord{iSub}
-%         plot(out_matrix.contra(:,1), out_matrix.contra(:,7), 'markersize', 10)
-%         end
-%     end
-% end
-% xlabel('Distance from PC (mm)')
-% ylabel('Ipsi/Contra contrast index')
-% % annoying forced legend.  Avoids issue of markers and colors not working properly.
-% hold on
-% h = zeros(length(sites), 1);
-% for iSite = 1:length(sites)
-%     h(iSite) = plot(NaN,NaN,'color', c_ord(iSite,:));
-% end
-% [~, hobj, ~, ~] = legend(h, sites, 'location', 'northeast');
-% hl = findobj(hobj,'type','line');
-% set(hl,'LineWidth',3);
-% % legend(sites, 'location', 'southeast')
-% SetFigure([], gcf)
+Subjects = {'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7'};
+sites = {'PL', 'IL', 'OFC', 'NAc', 'CG'};
+pairs = unique(out_matrix.contra(:,4));
+%% apply the distance to OB in a corresponding array.
+c_ord = linspecer(length(pairs));
+m_ord = {'o', '+', '*', 'x', 's', 'd', 'p'};
+figure(100)
+hold on
+for iSub = 1:length(Subjects)
+    for iSite = 1:length(pairs)
+        p_idx = find(out_matrix.contra(:,4) == pairs(iSite) & out_matrix.contra(:,2) == iSub);
+%         plot(distance_ob(iSite,:,iSub), out_matrix.contra(:,7),m_ord{iSub})
+        plot(out_matrix.contra(p_idx,1), out_matrix.contra(p_idx,5),m_ord{iSub},'MarkerEdgeColor', c_ord(iSite,:), 'markersize', 10)
+    end
+end
+xlabel('Distance from PC (mm)')
+ylabel('Ipsi/Contra contrast index')
+% annoying forced legend.  Avoids issue of markers and colors not working properly.
+hold on
+h = zeros(length(sites), 1);
+for iSite = 1:length(pairs)
+    h(iSite) = plot(NaN,NaN,'color', c_ord(iSite,:));
+end
+[~, hobj, ~, ~] = legend(h, PARAMS.all_pairs(pairs), 'location', 'northeast');
+hl = findobj(hobj,'type','line');
+set(hl,'LineWidth',3);
+% legend(sites, 'location', 'southeast')
+SetFigure([], gcf)
 
 
 %% make a talbe
@@ -316,16 +337,16 @@ D_coh.tbl.Pair = nominal(D_coh.tbl.Pair);
 
 % make some models
 % Amp low
-D_coh.lme_baseline_amp_low = fitlme(D_coh.tbl,'Amp_low~1+SessID +(RatID)');
+D_coh.lme_baseline_amp_low = fitlme(D_coh.tbl,'Amp_low~1+(1|RatID)+(1|SessID)');
 D_coh.lme_amp_low = fitlme(D_coh.tbl,'Amp_low~1+Distance_pc+(1|RatID)+(1|SessID)');
 %Amp high
-D_coh.lme_baseline_amp_high = fitlme(D_coh.tbl,'Amp_high~1+SessID +(RatID)');
+D_coh.lme_baseline_amp_high = fitlme(D_coh.tbl,'Amp_high~1+(1|RatID)+(1|SessID)');
 D_coh.lme_amp_high = fitlme(D_coh.tbl,'Amp_high~1+Distance_pc+(1|RatID)+(1|SessID)');
 % coh low
-D_coh.lme_baseline_coh_low = fitlme(D_coh.tbl,'Coh_low~1+SessID +(RatID)');
+D_coh.lme_baseline_coh_low = fitlme(D_coh.tbl,'Coh_low~1+(1|RatID)+(1|SessID)');
 D_coh.lme_coh_low = fitlme(D_coh.tbl,'Coh_low~1+Distance_pc+(1|RatID)+(1|SessID)');
 % coh high
-D_coh.lme_baseline_coh_high = fitlme(D_coh.tbl,'Coh_high~1+SessID +(RatID)');
+D_coh.lme_baseline_coh_high = fitlme(D_coh.tbl,'Coh_high~1+(1|RatID)+(1|SessID)');
 D_coh.lme_coh_high = fitlme(D_coh.tbl,'Coh_high~1+Distance_pc+(1|RatID)+(1|SessID)');
 
 % comparisons
@@ -340,12 +361,12 @@ D_coh.comp_coh_high = compare(D_coh.lme_baseline_coh_high,D_coh.lme_coh_high);
 
 
 %% write the output
-if exist(['LME_phase_Naris' datestr(date, 'YY_mm_dd') '.txt'], 'file');
-    delete(['LME_phase_Naris' datestr(date, 'YY_mm_dd') '.txt'])
+if exist(['LME_phase_Naris' datestr(date, 'YY_mm_dd') '2020.txt'], 'file');
+    delete(['LME_phase_Naris' datestr(date, 'YY_mm_dd') '2020.txt'])
 end
 clc
 diary('on')
-diary(['LME_phase_Naris' datestr(date, 'YY_mm_dd') '.txt'])
+diary(['LME_phase_Naris' datestr(date, 'YY_mm_dd') '2020.txt'])
 disp(' LME amp_low' )
 disp(D_coh.lme_amp_low)
 disp(' LME Anova Out amp_low')
@@ -375,7 +396,7 @@ anova(D_coh.lme_coh_high)
 disp('Compare coh_high to baseline')
 compare(D_coh.lme_baseline_coh_high,D_coh.lme_coh_high)
 diary('off')
-movefile(['LME_phase_Naris' datestr(date, 'YY_mm_dd') '.txt'], PARAMS.stats_dir);
+movefile(['LME_phase_Naris' datestr(date, 'YY_mm_dd') '2020.txt'], PARAMS.stats_dir);
 % %% try it as a logistic for 'prox' vs 'dist'.  Did not use.
 % % this didn't work.
 % clear L_power
