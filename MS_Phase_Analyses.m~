@@ -100,31 +100,7 @@ for iPhase = 1:length(PARAMS.Phases)
             data.(PARAMS.Phases{iPhase}).PiriN_trk = data.(PARAMS.Phases{iPhase}).(f_names{iF});
             data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'Piri_NAc_trk');
             
-        %update for OT
-        elseif strcmp(f_names{iF}, 'OT_O_pot')
-            data.(PARAMS.Phases{iPhase}).OTO_pot = data.(PARAMS.Phases{iPhase}).(f_names{iF});
-            data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'OT_O_pot');
-        elseif   strcmp(f_names{iF}, 'OT_OFC_pot')
-            data.(PARAMS.Phases{iPhase}).OTO_pot = data.(PARAMS.Phases{iPhase}).(f_names{iF});
-            data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'OT_OFC_pot');
-        elseif strcmp(f_names{iF}, 'OT_O_trk')
-            data.(PARAMS.Phases{iPhase}).OTO_trk = data.(PARAMS.Phases{iPhase}).(f_names{iF});
-            data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'OT_O_trk');
-        elseif   strcmp(f_names{iF}, 'OT_OFC_trk')
-            data.(PARAMS.Phases{iPhase}).OTO_trk = data.(PARAMS.Phases{iPhase}).(f_names{iF});
-            data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'OT_OFC_trk');
-        elseif strcmp(f_names{iF}, 'OT_N_pot')
-            data.(PARAMS.Phases{iPhase}).OTN_pot = data.(PARAMS.Phases{iPhase}).(f_names{iF});
-            data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'OT_N_pot');
-        elseif strcmp(f_names{iF}, 'OT_NAc_pot')
-            data.(PARAMS.Phases{iPhase}).OTN_pot = data.(PARAMS.Phases{iPhase}).(f_names{iF});
-            data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'OT_NAc_pot');
-        elseif strcmp(f_names{iF}, 'OT_N_trk')
-            data.(PARAMS.Phases{iPhase}).OTN_trk = data.(PARAMS.Phases{iPhase}).(f_names{iF});
-            data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'OT_N_trk');
-        elseif strcmp(f_names{iF}, 'OT_NAc_trk')
-            data.(PARAMS.Phases{iPhase}).OTN_trk = data.(PARAMS.Phases{iPhase}).(f_names{iF});
-            data.(PARAMS.Phases{iPhase}) = rmfield(data.(PARAMS.Phases{iPhase}), 'OT_NAc_trk');
+            %update for OT
         end
     end
 end

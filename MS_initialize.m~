@@ -1,6 +1,6 @@
 %% MS_initialize: initialize the default parameters and
 
-clear all;
+% clear all;
 close all
 restoredefaultpath
 global PARAMS
@@ -14,10 +14,10 @@ if isunix && ~strcmp(computer, 'GLNXA64')
     PARAMS.code_MS_dir = '/Users/jericcarmichael/Documents/GitHub/EC_Multisite'; % where the multisite repo can be found
     PARAMS.Chronux_dir = '/Users/jericcarmichael/Documents/chronux_2_11';
 elseif strcmp(computer, 'GLNXA64')
-    PARAMS.data_dir = '/media/ecarmichael/Fenrir/MS_2022/'; % where to find the raw data
-    PARAMS.inter_dir = '/media/ecarmichael/Fenrir/MS_2022/inter/'; % where to put intermediate files
+    PARAMS.data_dir = '/media/ecarmichael/Fenrir/Multisite/'; % where to find the raw data
+    PARAMS.inter_dir = '/media/ecarmichael/Fenrir/Multisite/inter/'; % where to put intermediate files
     %     PARAMS.stats_dir = '/Users/jericcarmichael/Documents/Multisite/Stats/'; % where to put the statistical output .txt
-    PARAMS.stats_dir = '/media/ecarmichael/Fenrir/MS_2022/inter/Stats2/'; % where to put the statistical output .txt
+    PARAMS.stats_dir = '/media/ecarmichael/Fenrir/Multisite/inter/Stats2/'; % where to put the statistical output .txt
     PARAMS.code_base_dir = '/home/ecarmichael/Documents/GitHub/vandermeerlab/code-matlab/shared'; % where the codebase repo can be found
     PARAMS.code_MS_dir = '/home/ecarmichael/Documents/GitHub/EC_Multisite'; % where the multisite repo can be found
     
@@ -34,7 +34,7 @@ PARAMS.log = fopen([PARAMS.data_dir 'MS_log.txt'], 'w');
 PARAMS.Phases = {'pre', 'ipsi', 'contra', 'post'}; % recording phases within each session
 PARAMS.Subjects = {'R102', 'R104','R107', 'R108', 'R112', 'R122', 'R123'}; %list of subjects
 PARAMS.Sub_xpiri = {'R108', 'R112', 'R122', 'R123'};  % subjects with electrodes spanning the piriform cortex
-PARAMS.all_sites = {'PL', 'IL', 'OFC', 'PiriO', 'NAc', 'PiriN', 'CG', 'OTO', 'OTN'};
+PARAMS.all_sites = {'PL', 'IL', 'OFC', 'PiriO', 'NAc', 'PiriN', 'CG'};
 rng(10,'twister') % for reproducibility
 
 

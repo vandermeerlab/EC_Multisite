@@ -19,8 +19,8 @@ function evts = MS_extract_gamma(cfg_in, data)
 %% Overall
 cfg_def = [];
 cfg_def.debug = 0;
-
-cfg = ProcessConfig2(cfg_def, cfg_in);
+cfg_def.f_bandpass = {[40 55],[70 100]};
+cfg_all = ProcessConfig2(cfg_def, cfg_in);
 %% compare OFCs
 Phases = {'pre', 'ipsi', 'contra', 'post'};
 
@@ -39,7 +39,7 @@ for iSite = 1:length(sites)
 end
 evts = [];
 % check union
-if cfg.debug
+if cfg_all.debug
     figure(100)
     hold on
     plot(Naris.NAc_pot.control.tvec, Naris.NAc_pot.control.data, '--r')
@@ -53,11 +53,11 @@ for iExp = 1:length(exp)
         if strcmp(exp{iExp}, 'control') ==1
             [evts.(sites{iSite}).(exp{iExp}), ~, evt_thr.(sites{iSite}).control] = MS_DetectEvents_thresholds([], Naris.(sites{iSite}).(exp{iExp}), data.pre.ExpKeys);
             cfg= []; cfg.detect_method = 'raw'; cfg.detect_thr = evt_thr.(sites{iSite}).control;
-            cfg.f_bandpass = {[45 65],[70 90]};
+            cfg.f_bandpass = cfg_all.f_bandpass;
             [evts.(sites{iSite}).(exp{iExp}), ~, ~] = MS_DetectEvents(cfg, Naris.(sites{iSite}).(exp{iExp}), data.pre.ExpKeys);
         else
             cfg= []; cfg.detect_method = 'raw'; cfg.detect_thr = evt_thr.(sites{iSite}).control;
-            cfg.f_bandpass = {[45 65],[70 90]};
+            cfg.f_bandpass = cfg_all.f_bandpass;
             [evts.(sites{iSite}).(exp{iExp}), ~, ~] = MS_DetectEvents(cfg, Naris.(sites{iSite}).(exp{iExp}), data.(exp{iExp}).ExpKeys);
         end
         bands = fieldnames(evts.(sites{iSite}).(exp{iExp}));

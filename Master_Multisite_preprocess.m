@@ -19,7 +19,7 @@ fprintf(PARAMS.log, date);
 global PARAMS
 
 
-for iSub = 1:length(PARAMS.Subjects)
+for iSub = 4:length(PARAMS.Subjects)
    %% speed loading
 %    load([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'])
 %    d_t = data;
@@ -64,6 +64,7 @@ fprintf(PARAMS.log,'\n\nCollecting Events');
     sess_list = fieldnames(data.(PARAMS.Subjects{iSub}));
     for iSess  = 1:length(sess_list)
         fprintf(PARAMS.log,['\nEvents ' PARAMS.Subjects{iSub} '  ' sess_list{iSess}]);
+        cfg = []; cfg.f_bandpass = {[40 55],[70 100]}; 
         [Events.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_'))] = MS_extract_gamma([],data.(PARAMS.Subjects{iSub}).(strrep(sess_list{iSess}, '-', '_')));
         fprintf(PARAMS.log, '...complete');
     end
@@ -95,6 +96,7 @@ fprintf(PARAMS.log,'\n\nCollecting Events');
     end
     
     fprintf('/nSaving Phase_mat output...');
+    mkdir([PARAMS.inter_dir '/Phase_outputs/']); 
     save([PARAMS.inter_dir '/Phase_outputs/' (PARAMS.Subjects{iSub}) '_phase_out.mat'], 'Phase_mat', '-v7.3')
     fprintf('...Complete');
 
@@ -103,7 +105,7 @@ fprintf(PARAMS.log,'\n\nCollecting Events');
 % end
 %% save the intermediate files
 fprintf(PARAMS.log,'\n\nSaving intermediates');
-% mkdir(PARAMS.data_dir, 'temp');
+mkdir(PARAMS.data_dir, 'temp');
 data = data.(PARAMS.Subjects{iSub}); 
 save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Data.mat'], 'data', '-v7.3')
 save([PARAMS.inter_dir PARAMS.Subjects{iSub} '_Events.mat'], 'Events', '-v7.3')
